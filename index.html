@@ -45,7 +45,11 @@
         <div style="margin:5px;"><button onclick="clickCounter()" type="button">Click me!</button></div>
         <div id="result" style="margin:5px;"></div>
         <script>
-            document.getElementById("result").innerHTML = "You have clicked the button " + localStorage.clickcount + " times.";
+            if (localStorage.clickcount) {
+                document.getElementById("result").innerHTML = "You have clicked the button " + localStorage.clickcount + " times.";
+            } else {
+                document.getElementById("result").innerHTML = "You have clicked the button 0 times.";
+            }
             function catImage() {
                 var catscats = document.getElementById("catscats");
                 console.log(catscats);
