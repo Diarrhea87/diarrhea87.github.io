@@ -4,39 +4,43 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">  
         <title>Diaper</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
         <style>
             h1 {
+                margin-left: 5px;
                 color:rgb(135, 71, 218)
             }
             body {
-                background-color: rgb(189, 189, 189);
+                /*background-color: rgb(189, 189, 189);*/
+                font-family: Arial, Helvetica, sans-serif;
+                margin: 0px;
             }
             #hello-world {
                 background-color: lightpink;
                 width: 30%;
             }
-            .footer {
-                position: absolute;
+            footer {
+                position: fixed;
                 color: yellow;
                 bottom: 0px;
                 border: 2px solid pink; 
                 background-color: grey;
-                margin: auto;
+                width: 100%;    
                 text-align: center;
-                padding-bottom: 10px;
-                padding-top: 10px;
+                padding: 10px 0;
             }
             p {
                 margin: 5px;
                 width: 30%;
-            background-color: lightblue;
+                font-weight: 700;
+                background-color: lightblue;
             }
             /*comment*/
         </style>
     </head>
     <body>
         <img id="catscats" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cat03.jpg/1200px-Cat03.jpg" 
-        style="float: right; height:200px; border: 3px solid dodgerblue">
+        style="float: right; height:200px; margin-right: 5px; border: 3px solid dodgerblue">
         <h1 id="hello-world">Hello World</h1>
         <p>It's a beautiful day!</p>
         <footer class="footer">Footer</footer>
@@ -53,7 +57,7 @@
             function catImage() {
                 var catscats = document.getElementById("catscats");
                 console.log(catscats);
-                catscats.src = "https://i.natgeofe.com/n/46b07b5e-1264-42e1-ae4b-8a021226e2d0/domestic-cat_thumb_square.jpg "
+                catscats.src = "https://i.natgeofe.com/n/46b07b5e-1264-42e1-ae4b-8a021226e2d0/domestic-cat_thumb_square.jpg"
             }
             function catCounterReset() {
                 var catscats = document.getElementById("catscats");
@@ -73,7 +77,7 @@
             //Web Workers
         </script>
         <!--Comment-->
-        <svg width="400" height="180">
+        <svg width="400" height="180" onclick="clickCounter()">
             <rect x="5" y="20" rx="20" ry="20" width="50" height="50"
             style="fill:red;stroke:black;stroke-width:5;opacity:0.5" />
         </svg>
