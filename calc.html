@@ -16,6 +16,9 @@
                 if(num % i == 0) {
                     answersArr.push(i)
                 }
+                if (i > 1000000) {
+                    answersArr = ["YOU ARE GAY"]
+                }
             }
             answersArr = answersArr.join(", ")
             console.log(answersArr)
