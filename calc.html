@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Jhed's Calculator</title>
     <script>
         
         function submitinput() {
@@ -12,25 +12,59 @@
             let output = document.getElementById('answer')
             console.log(output)
             let num = document.getElementById('input').value
-            for(let i = 1; i <= num; i++) {
-                if(num % i == 0) {
-                    answersArr.push(i)
+            function generateDivisors(curIndex, curDivisor, arr)
+            {
+            
+                if (curIndex == arr.length) {
+                    answersArr.push(curDivisor);
+                    return;
                 }
-                if (i > 1000000) {
-                    answersArr = ["NUMBER IS TOO LARGE"]
-                    break;
+            
+                for (var i = 0; i <= arr[curIndex][0]; ++i) {
+                    generateDivisors(curIndex + 1, curDivisor, arr);
+                    curDivisor *= arr[curIndex][1];
                 }
-                
             }
-            console.log(num)
+            function findDivisors(n)
+            {
+                arr = [];
+            
+                for (var i = 2; i * i <= n; ++i) {
+                    if (n % i == 0) {
+                        var count = 0;
+                        while (n % i == 0) {
+                            n /= i;
+                            count += 1;
+                        }
+                        arr.push([ count, i ]);
+                    }
+                }
+                if (n > 1) {
+                    arr.push([ 1, n ]);
+                }
+                var curIndex = 0, curDivisor = 1;
+            
+                generateDivisors(curIndex, curDivisor, arr);
+            }
+
+            findDivisors(num)
             if (num === "5433") {
-                answersArr = ["IF YOU READ THIS YOU'RE GAY"]
+                output.innerHTML = `IF YOU READ THIS YOU'RE GAY` 
+            } else if (num === "") {
+                output.innerHTML = `Please input a value` 
+            } else {
+                answersArr = answersArr.join(", ")
+                console.log(answersArr)
+                output.innerHTML = `The factors of ${num} are ${answersArr}.` 
             }
-            answersArr = answersArr.join(", ")
-            console.log(answersArr)
-            output.innerHTML = `The factors of ${num} are ${answersArr}.` 
+            
         }
         
+        function limitKeypress(event, value, maxLength) {
+            if (value != undefined && value.toString().length >= maxLength) {
+                event.preventDefault();
+            }
+        }
         // document.getElementById("submit").addEventListener("click", submitinput);
     </script>
     <style>
@@ -99,14 +133,17 @@
             background-color: whitesmoke;
         }
 
-
+        #answer-container {
+            max-width: 80%;
+            margin: auto;
+        }
     </style>
 </head>
 <body>
     <header><h1>JHED'S CALCULATOR</h1></header>
     <p>Input a number to find its number of factors</p>
-    <input id="input" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+    <input id="input" maxlength="30" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
     <div id="submit" onclick="submitinput()">ENTER</div>
-    <p id="answer"></p>
+    <div id="answer-container"><p id="answer"></p></div>
 </body>
 </html>
