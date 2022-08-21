@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        let answersArr = []
+        function submitinput() {
+            let output = document.getElementById('answer')
+            console.log(output)
+            let num = document.getElementById('input').value
+            for(let i = 1; i <= num; i++) {
+                if(num % i == 0) {
+                    answersArr.push(i)
+                }
+            }
+            answersArr = answersArr.join(", ")
+            console.log(answersArr)
+            output.innerHTML = `The factors of ${num} are ${answersArr}.` 
+        }
+        
+        // document.getElementById("submit").addEventListener("click", submitinput);
+    </script>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+        }
+        header {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* line-height: 50px; */
+            border-bottom: 1px solid grey;
+        }
+        h1 {
+            margin: auto;
+            
+        }
+        p {
+            font-weight: 700;
+            margin: auto;
+            margin-top: 50px;
+            
+            
+        }
+        input {
+            width: 300px;
+            margin: 10px auto;
+            height: 50px;
+            border-radius: 5px;
+            font-size: 30px;
+            border: 1px solid rgb(0 0 0 / 20%);
+            box-shadow: 0 3px 10px rgb(0 0 0 / 20%);
+            text-align: center;
+        }
+
+        
+
+        input:focus{
+            border: 1px solid rgb(0 0 0 / 60%);
+            outline: none;
+            background-color: whitesmoke;
+            transition: ease 0.25s;
+        }
+
+        #submit {
+            border: 0px solid black;
+            background-color: white;
+            font-weight: 600;
+            font-size: 20px;
+            line-height: 40px;
+            margin: 10px auto;
+            width: 200px;
+            height: 40px;
+            text-align: center;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgb(0 0 0 / 20%);
+        }
+
+        #submit:hover {
+            background-color: whitesmoke;
+        }
+
+
+    </style>
+</head>
+<body>
+    <header><h1>JHED'S CALCULATOR</h1></header>
+    <p>Input a number to find its number of factors</p>
+    <input id="input" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+    <div id="submit" onclick="submitinput()">ENTER</div>
+    <p id="answer"></p>
+</body>
+</html>
