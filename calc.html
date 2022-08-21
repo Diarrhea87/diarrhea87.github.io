@@ -17,8 +17,13 @@
                     answersArr.push(i)
                 }
                 if (i > 1000000) {
-                    answersArr = ["YOU ARE GAY"]
+                    answersArr = ["NUMBER IS TOO LARGE"]
+                    break;
                 }
+                
+            }
+            if (num = 5433) {
+                answersArr = ["IF YOU READ THIS YOU'RE GAY"]
             }
             answersArr = answersArr.join(", ")
             console.log(answersArr)
@@ -47,13 +52,14 @@
         }
         h1 {
             margin: auto;
+            color: green;
             
         }
         p {
             font-weight: 700;
             margin: auto;
             margin-top: 50px;
-            
+            color: green;
             
         }
         input {
