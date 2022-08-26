@@ -57,10 +57,10 @@
             } else if (num === "") {
                 output.innerHTML = `Please input a value` 
             } else {
-                answersArr = answersArr.join(", ")
-                answersArr.sort((a, b) => a -b) 
-                console.log(answersArr)
-                output.innerHTML = `The factors of ${num} are ${answersArr}.` 
+                answersArr.sort((a, b) => a -b);
+                answersArr = answersArr.join(", ");
+                console.log(answersArr);
+                output.innerHTML = `The factors of ${num} are ${answersArr}.`
             }
             
         }
