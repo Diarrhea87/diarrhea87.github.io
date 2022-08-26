@@ -58,17 +58,19 @@
                 output.innerHTML = `Please input a value` 
             } else {
                 answersArr = answersArr.join(", ")
+                answersArr.sort((a, b) => a -b) 
                 console.log(answersArr)
                 output.innerHTML = `The factors of ${num} are ${answersArr}.` 
             }
             
         }
         
-        function limitKeypress(event, value, maxLength) {
-            if (value != undefined && value.toString().length >= maxLength) {
-                event.preventDefault();
+        document.onkeypress = function (eventKeyName) {
+            eventKeyName = eventKeyName || window.event;
+            if(eventKeyName.keyCode==13){
+                submitinput();
             }
-        }
+        };
         // document.getElementById("submit").addEventListener("click", submitinput);
     </script>
     <style>
