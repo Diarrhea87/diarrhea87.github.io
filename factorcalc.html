@@ -7,18 +7,80 @@
     <title>Factor Calculator</title>
     <script>
         
+        function customEval(arr) {
+        let arrOperation = arr[1]
+        // console.log(arr)
+        // console.log(arrOperation)
+        let answer;
+        switch (arrOperation) {
+            case "+":
+                // console.log(arr)
+                answer = arr[0] + arr[2]; break;
+            case "-":
+                answer = arr[0] - arr[2]; break;
+            case "*":
+                answer = arr[0] * arr[2]; break;
+            case "/":
+                answer = arr[0] / arr[2]; break;
+            case "^":
+                answer = arr[0] ** arr[2]; break;
+        }
+        return answer;
+    }
+
         function submitinput() {
             let answersArr = [];
             let output = document.getElementById('answer');
             let output2 = document.getElementById('factorcount');
-            console.log(output);
-            console.log(output2);
+            // console.log(output);
+            // console.log(output2);
             let num;
             let inputVal = document.getElementById('input').value;
-            inputVal = inputVal.replace(/\^/g, '**');
+            // inputVal = inputVal.replace(/\^/g, '**');
             inputVal = inputVal.replace(/x/g, '*');
             try {
-                num = eval(inputVal)
+                inputArr = []
+                for (let i = 0; i < inputVal.length; i++) {
+                    function pushNumber(index) {
+                        if (index < inputVal.length - 1) {
+                        if (/[\+\-*/^]/.test(inputVal[index + 1])) {
+                                return inputVal[index];
+                            }
+                        } else {
+                            return inputVal[index];
+                        }
+                        i++
+                        return inputVal[index].concat(pushNumber(index + 1))
+                    }
+
+                    if (/[\d]/.test(inputVal[i])) {
+                        inputArr.push(BigInt(pushNumber(i)))
+                    } else {
+                        inputArr.push(inputVal[i])
+                    }
+                }
+                
+                console.log(inputVal);
+                console.log(inputArr);
+
+                function math(arr) {
+                    
+                    if (arr.length === 3) {
+                        console.log(arr)
+                        return customEval([arr[0], arr[1], arr[2]])
+                    } else if (arr.length > 3) {
+                        console.log(arr)
+                        return math([customEval(arr.slice(0, 3)), arr[3], ...arr.slice(4, arr.length)])
+                        // return customEval([arr[0], arr[1], math(arr.slice())]);
+                    } else {
+                        return arr[0];
+                    }
+                    
+                };
+
+                console.log(math(inputArr))
+                let num = math(inputArr)
+                
 
                     findDivisors(num)
                 if (num === undefined) {
@@ -27,12 +89,13 @@
                 } else {
                     let length = answersArr.length
                     console.log(length)
-                    answersArr.sort((a, b) => a -b) 
+                    answersArr.sort((a, b) => (a < b) ? -1 : ((a > b) ? 1 : 0))
+                    // answersArr.sort((a, b) => a -b) 
                     answersArr = answersArr.join(", ")
                     console.log(answersArr)
                     output.innerHTML = `The factors of ${num} are ${answersArr}.` 
                     output2.innerHTML = `${num} has ${length} factors`
-            }
+                }
 
             } catch (error) {
                 console.log(error)
@@ -48,8 +111,8 @@
                     return;
                 }
             
-                for (var i = 0; i <= arr[curIndex][0]; ++i) {
-                    generateDivisors(curIndex + 1, curDivisor, arr);
+                for (var i = 0n; i <= arr[curIndex][0]; ++i) {
+                    generateDivisors(curIndex + 1n, curDivisor, arr);
                     curDivisor *= arr[curIndex][1];
                 }
             }
@@ -57,7 +120,7 @@
             {
                 arr = [];
             
-                for (var i = 2; i * i <= n; ++i) {
+                for (var i = 2n; i * i <= n; ++i) {
                     if (n % i == 0) {
                         var count = 0;
                         while (n % i == 0) {
@@ -70,7 +133,7 @@
                 if (n > 1) {
                     arr.push([ 1, n ]);
                 }
-                var curIndex = 0, curDivisor = 1;
+                var curIndex = 0n, curDivisor = 1n;
             
                 generateDivisors(curIndex, curDivisor, arr);
             }
@@ -112,7 +175,7 @@
         p {
             font-weight: 700;
             margin: auto;
-            margin-top: 50px;
+            margin-top: 30px;
             
         }
         input {
@@ -156,7 +219,10 @@
         #answer-container {
             max-width: 80%;
             margin: auto;
+            margin-top: 20px;
             text-align: center;
+            max-height: 400px;
+            overflow-x: auto;
         }
     </style>
 </head>
@@ -166,6 +232,6 @@
     <input id="input" maxlength="30">
     <div id="submit" onclick="submitinput()">ENTER</div>
     <div id="answer-container"><p id="answer"></p></div>
-    <div id="answer-container"><p id="factorcount"></p></div>
+    <div id="answer-container" style="margin-bottom: 20px"><p id="factorcount"></p></div>
 </body>
 </html>
