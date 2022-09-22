@@ -946,7 +946,7 @@ function generatePuzzle() {
                 };
             };
 
-            // valuesArr2 = randomSort(valuesArr2)
+            valuesArr2 = randomSort(valuesArr2)
             for (let x of filterDuplicates(valuesArr2)) {    // INITIALIZE SET GENERATION
                 setCycle([x], deleteFirstArrItem(valuesArr2, x));
             };
@@ -1114,7 +1114,7 @@ function generatePuzzle() {
                     };
                 };
             };
-            // valesArr2 = randomSort(valuesArr2)
+            valesArr2 = randomSort(valuesArr2)
             for (let x of filterDuplicates(valuesArr2)) {
                 cycleString([[x]], deleteFirstArrItem(valuesArr2, x), restrictionsOperationArr);
             };
@@ -1195,8 +1195,8 @@ function generatePuzzle() {
         let findPermCount = 0;
 
         if (!noRestrictions) {
-            // restrictionsMap = randomSort(restrictionsMap).slice(0, 10);
-            restrictionsMap = Array.from(restrictionsMap).slice(0, 30);
+            restrictionsMap = randomSort(restrictionsMap).slice(0, 10);
+            // restrictionsMap = Array.from(restrictionsMap).slice(0, 30);
             console.log(restrictionsMap)
             // console.log("PERMUTATION UPPER LIMIT: " + 100000/restrictionsMap.length);
             for (let x of restrictionsMap) {
@@ -1353,8 +1353,8 @@ function generatePuzzle() {
                 };
             };
             if (!values.length) return;
-            // if (Math.random() >= 0.5) {
-            if (false) {
+            if (Math.random() >= 0.5) {
+            // if (false) {
                 if (subtraction) {
                     for (let x of filterDuplicates(values)) {
                         setCycle(arr.concat("-").concat(x), deleteFirstArrItem(values, x));
@@ -1379,7 +1379,7 @@ function generatePuzzle() {
             };
         };
 
-        // valuesArr2 = randomSort(valuesArr2)
+        valuesArr2 = randomSort(valuesArr2)
         for (let x of filterDuplicates(valuesArr2)) {    // INITIALIZE SET GENERATION
             setCycle([x], deleteFirstArrItem(valuesArr2, x));
         };
