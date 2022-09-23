@@ -1653,17 +1653,35 @@ function newPuzzle() {
     console.log(puzzleData.variations)
     console.log(variationsDisplay)
     if (puzzleData.variations.includes('twoSolutions')) {
-        let restriction1 = puzzleData.solution[0].restriction.join("")
-        let restriction2 = puzzleData.solution[1].restriction.join("")
-        restriction1.replace(/</g, "&lt");
-        restriction2.replace(/</g, "&lt");
-        solution1.innerHTML = `<strong>Restriction: </strong>${puzzleData.solution[0].restriction.join("")}, <strong>Solution: </strong>${puzzleData.solution[0].flag}, <strong>Cards: </strong>${puzzleData.solution[0].cards.join(",")}, <strong>Blank Card: </strong>${puzzleData.solution[0].blankCard}`
-        solution2.innerHTML = `<strong>Restriction: </strong>${puzzleData.solution[1].restriction.join("")}, <strong>Solution: </strong>${puzzleData.solution[1].flag}, <strong>Cards: </strong>${puzzleData.solution[1].cards.join(",")}, <strong>Blank Card: </strong>${puzzleData.solution[1].blankCard}`
+        let restriction1
+        let restriction2
+        if (puzzleData.solution[0].restriction === undefined) {
+            restriction1 = "NO RESTRICTION"
+        } else {
+            restriction1 = puzzleData.solution[0].restriction.join("")
+        };
+        if (puzzleData.solution[1].restriction === undefined) {
+            restriction2 = "NO RESTRICTION"
+        } else {
+            restriction2 = puzzleData.solution[1].restriction.join("")
+        };
+        console.log(restriction1)
+        console.log(restriction2)
+        restriction1 = restriction1.replace(/</g, "&lt");
+        restriction2 = restriction2.replace(/</g, "&lt");
+        solution1.innerHTML = `<strong>Restriction: </strong>${restriction1}, <strong>Solution: </strong>${puzzleData.solution[0].flag}, <strong>Cards: </strong>${puzzleData.solution[0].cards.join(",")}, <strong>Blank Card: </strong>${puzzleData.solution[0].blankCard}`
+        solution2.innerHTML = `<strong>Restriction: </strong>${restriction2}, <strong>Solution: </strong>${puzzleData.solution[1].flag}, <strong>Cards: </strong>${puzzleData.solution[1].cards.join(",")}, <strong>Blank Card: </strong>${puzzleData.solution[1].blankCard}`
     } else {
-        let restriction1 = puzzleData.solution[0].restriction.join("")
-        restriction1.replace(/</g, "&lt");
-        solution1.innerHTML = `<strong>Restriction: </strong>${puzzleData.solution.restriction.join("")}, <strong>Solution: </strong>${puzzleData.solution.flag}, <strong>Cards: </strong>${puzzleData.solution.cards.join(",")}, <strong>Blank Card: </strong>${puzzleData.solution.blankCard}`
-    }
+        let restriction1
+        if (puzzleData.solution.restriction === undefined) {
+            restriction1 = "NO RESTRICTION"
+        } else {
+            restriction1 = puzzleData.solution.restriction.join("")
+        };
+        console.log(restriction1)
+        restriction1 = restriction1.replace(/</g, "&lt");
+        solution1.innerHTML = `<strong>Restriction: </strong>${restriction1}, <strong>Solution: </strong>${puzzleData.solution.flag}, <strong>Cards: </strong>${puzzleData.solution.cards.join(",")}, <strong>Blank Card: </strong>${puzzleData.solution.blankCard}`
+    };
 };
 
 function goalAddCube(cube) {
@@ -1693,6 +1711,12 @@ const solutionContainer = document.querySelector("#solution-container")
 const keyboard = document.querySelector("#keyboard-container");
 const cover = document.querySelector("#cover")
 const boardContainer = document.querySelector("#board-container")
+const correctAnswerArrow = document.querySelector('#correct-answer-arrow')
+const correctAnswerViewContainer = document.querySelector('#correct-answer-view-container')
+correctAnswerArrow.addEventListener("click", function(){
+    // correctAnswerArrow.innerText = "^"
+    correctAnswerViewContainer.classList.toggle("hidden");
+})
 solutionContainer.addEventListener("click", showKeyboard, true);
 document.addEventListener("keydown", function(keypress){
     // console.log(keypress.key);
