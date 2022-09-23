@@ -1653,9 +1653,15 @@ function newPuzzle() {
     console.log(puzzleData.variations)
     console.log(variationsDisplay)
     if (puzzleData.variations.includes('twoSolutions')) {
+        let restriction1 = puzzleData.solution[0].restriction.join("")
+        let restriction2 = puzzleData.solution[1].restriction.join("")
+        restriction1.replace(/</g, "&lt");
+        restriction2.replace(/</g, "&lt");
         solution1.innerHTML = `<strong>Restriction: </strong>${puzzleData.solution[0].restriction.join("")}, <strong>Solution: </strong>${puzzleData.solution[0].flag}, <strong>Cards: </strong>${puzzleData.solution[0].cards.join(",")}, <strong>Blank Card: </strong>${puzzleData.solution[0].blankCard}`
         solution2.innerHTML = `<strong>Restriction: </strong>${puzzleData.solution[1].restriction.join("")}, <strong>Solution: </strong>${puzzleData.solution[1].flag}, <strong>Cards: </strong>${puzzleData.solution[1].cards.join(",")}, <strong>Blank Card: </strong>${puzzleData.solution[1].blankCard}`
     } else {
+        let restriction1 = puzzleData.solution[0].restriction.join("")
+        restriction1.replace(/</g, "&lt");
         solution1.innerHTML = `<strong>Restriction: </strong>${puzzleData.solution.restriction.join("")}, <strong>Solution: </strong>${puzzleData.solution.flag}, <strong>Cards: </strong>${puzzleData.solution.cards.join(",")}, <strong>Blank Card: </strong>${puzzleData.solution.blankCard}`
     }
 };
