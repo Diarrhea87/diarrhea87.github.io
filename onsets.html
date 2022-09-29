@@ -14,7 +14,6 @@
             ONSETS PRACTICE
         </h1>
     </header>
-    <div id="cover" class="z-index1"></div>
     <div id="puzzle-container">
         <div id="cards-container">
         </div>
@@ -107,37 +106,55 @@
             </div>
             </div>
         </div>
-        <div id="answer-container">
-            <div id="solution-view-container">
-                <div id="solution-container" class="z-index2"></div>
-                <div id="solution-bar">
-                    <h3 id="solution-text">Solution</h3>
+        <div id="input-container">
+            <div id="blank-wild" class="card">
+                <div class="wild blue"></div>
+                <div class="wild red"></div>
+                <div class="wild green"></div>
+                <div class="wild yellow"></div>
+            </div>
+            <div id="left-input-container">
+                <div id="restriction-view-container">
+                    <div id="restriction-container" class="z-index2"></div>
+                    <div id="restriction-bar">
+                        <h3 id="restriction-text">Restriction</h3>
+                    </div>
+                </div>
+                <div id="solution-view-container">
+                    <div id="solution-container" class="z-index2"></div>
+                    <div id="solution-bar">
+                        <h3 id="solution-text">Solution</h3>
+                    </div>
                 </div>
             </div>
-            <div id="equals-container">
-                <div id="equals-bar1"></div>
-                <div id="equals-bar2"></div>
-            </div>
-            <div id="goal-view-container">
-                <div id="goal-container" class="z-index2"></div>
-                <div id="goal-bar"><h3 id="goal-text">Goal</h3></div>
-            </div>
+                <div id="equals-container">
+                    <div id="equals-bar1"></div>
+                    <div id="equals-bar2"></div>
+                </div>
+                <div id="goal-view-container">
+                    <div id="goal-container" class="z-index2"></div>
+                    <div id="goal-bar"><h3 id="goal-text">Goal</h3></div>
+                </div>
         </div>
     </div>
-    <div id="resources-container">
-        <div class="cube restraint-cube blue z-index2"></div>
-        <div class="cube restraint-cube green z-index2"></div>
-        <div class="cube restraint-cube yellow z-index2"></div>
-        <div class="cube restraint-cube union z-index2"></div>
+    <div id="bottom-puzzle-container">
+        <div id="resources-container">
+            <div class="cube restraint-cube blue z-index2"></div>
+            <div class="cube restraint-cube green z-index2"></div>
+            <div class="cube restraint-cube yellow z-index2"></div>
+            <div class="cube restraint-cube union z-index2"></div>
+        </div>
+        <div id="submit-button">Submit</div>
     </div>
-    <div id="correct-answer-view-container">
+    
+    <div id="correct-answer-view-container" class="hidden">
         <div id="correct-answer-arrow">^</div>
         <div id="correct-answer-container">
             <div id="solution1" class="solution"></div>
             <div id="solution2" class="solution"></div>
         </div>
     </div>
-    <div id="keyboard-container" class="hidden z-index2">
+    <div id="keyboard-container" class="hidden">
         <div class="keyboard-row">
             <button class="keyboard-button">0</button>
             <button class="keyboard-button">1</button>
