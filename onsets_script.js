@@ -1486,14 +1486,15 @@ function generatePuzzle() {
     return new PuzzleData(cubesArr, modifiedCubesArr, universeArr, variationsArr, goalArr, goalShape, goalValues, forbiddenArr, solution)
 };
 
+
 function newPuzzle() {
-    let puzzleData = generatePuzzle()
+    puzzleData = generatePuzzle()
     console.log(puzzleData);
     console.log(puzzleData.forbidden)
     for (let forbiddenCube of puzzleData.forbidden) {
         const newForbiddenCube = document.createElement("div")
-        newForbiddenCube.classList.add("cube", "restraint-cube", "z-index2");
-        newForbiddenCube.addEventListener("click", hideKeyboard)
+        newForbiddenCube.classList.add("cube", "restraint-cube");
+        // newForbiddenCube.addEventListener("click", hideKeyboard)
         switch (forbiddenCube) {
             case "B": newForbiddenCube.classList.add("blue"); break;
             case "R": newForbiddenCube.classList.add("red"); break;
@@ -1505,6 +1506,14 @@ function newPuzzle() {
         forbiddenContainer.append(newForbiddenCube);
     };
     let solutionScores = []
+
+    function goalAddCube(cube) {
+        const newGoalCube = document.createElement("div")
+        newGoalCube.innerText = cube;
+        newGoalCube.classList.add("cube", "goal-cube")
+        goalContainer.append(newGoalCube)
+    }
+
     for (let x of puzzleData.goalValues) goalAddCube(x)
     if (puzzleData.variations.includes("twoSolutions")) {
         for (let currSolution of puzzleData.solution) {
@@ -1568,14 +1577,14 @@ function newPuzzle() {
     }
     for (let requiredCube of requiredArr) {
         const newRequiredCube = document.createElement("div")
-        newRequiredCube.classList.add("cube", "restraint-cube", "z-index2", requiredCube);
-        newRequiredCube.addEventListener("click", hideKeyboard)
+        newRequiredCube.classList.add("cube", "restraint-cube", requiredCube);
+        // newRequiredCube.addEventListener("click", hideKeyboard)
         requiredContainer.append(newRequiredCube);
     };
     for (let resourceCube of resourcesArr) {
         const newResourcesCube = document.createElement("div")
-        newResourcesCube.classList.add("cube", "restraint-cube", "z-index2");
-        newResourcesCube.addEventListener("click", hideKeyboard)
+        newResourcesCube.classList.add("cube", "restraint-cube");
+        // newResourcesCube.addEventListener("click", hideKeyboard)
         switch (resourceCube) {
             case "B": newResourcesCube.classList.add("blue"); break;
             case "R": newResourcesCube.classList.add("red"); break;
@@ -1617,8 +1626,9 @@ function newPuzzle() {
             case "": mapArr[15].classList.add('whitebg'); break;
         }
         const newCard = document.createElement('div');
-        newCard.addEventListener("click", hideKeyboard);
-        newCard.classList.add('card', 'z-index2')
+        newCard.dataset.getCard = card
+        // newCard.addEventListener("click", hideKeyboard);
+        newCard.classList.add('card')
         if (/B/.test(card)) addColorChild(newCard, "blue")
         if (/R/.test(card)) addColorChild(newCard, "red")
         if (/G/.test(card)) addColorChild(newCard, "green")
@@ -1640,12 +1650,13 @@ function newPuzzle() {
                 case "twoSolutions": variationToPush = "Two Sol."; break;
             }
         } else {
+            console.log(currVariation)
             switch (Object.keys(currVariation)[0]) {
                 case "requiredCube": variationToPush = "Req. Cube " + currVariation.requiredCube; break;
                 case "wild": variationToPush = "Wild " + currVariation.wild; break;
                 case "double": variationToPush = "Double " + currVariation.double; break;
-                case "requiredCard": variationToPush = "Req. Card" + currVariation.requiredCard; break;
-                case "forbiddenCard": variationToPush = "Forb. Card" + currVariation.forbiddenCard; break;
+                case "requiredCard": variationToPush = "Req. Card " + currVariation.requiredCard; break;
+                case "forbiddenCard": variationToPush = "Forb. Card " + currVariation.forbiddenCard; break;
             }
         }
         variationsDisplay.children[i].innerText = variationToPush;
@@ -1653,100 +1664,106 @@ function newPuzzle() {
     console.log(puzzleData.variations)
     console.log(variationsDisplay)
     if (puzzleData.variations.includes('twoSolutions')) {
-        let restriction1
-        let restriction2
-        if (puzzleData.solution[0].restriction === undefined) {
-            restriction1 = "NO RESTRICTION"
-        } else {
-            restriction1 = puzzleData.solution[0].restriction.join("")
-        };
-        if (puzzleData.solution[1].restriction === undefined) {
-            restriction2 = "NO RESTRICTION"
-        } else {
-            restriction2 = puzzleData.solution[1].restriction.join("")
-        };
-        console.log(restriction1)
-        console.log(restriction2)
-        restriction1 = restriction1.replace(/</g, "&lt");
-        restriction2 = restriction2.replace(/</g, "&lt");
+        let restriction1 = puzzleData.solution[0].restriction ? puzzleData.solution[0].restriction.join("").replace(/</g, "&lt") : "NO RESTRICTION";
+        let restriction2 = puzzleData.solution[1].restriction ? puzzleData.solution[1].restriction.join("").replace(/</g, "&lt") : "NO RESTRICTION";
         solution1.innerHTML = `<strong>Restriction: </strong>${restriction1}, <strong>Solution: </strong>${puzzleData.solution[0].flag}, <strong>Cards: </strong>${puzzleData.solution[0].cards.join(",")}, <strong>Blank Card: </strong>${puzzleData.solution[0].blankCard}`
         solution2.innerHTML = `<strong>Restriction: </strong>${restriction2}, <strong>Solution: </strong>${puzzleData.solution[1].flag}, <strong>Cards: </strong>${puzzleData.solution[1].cards.join(",")}, <strong>Blank Card: </strong>${puzzleData.solution[1].blankCard}`
     } else {
-        let restriction1
-        if (puzzleData.solution.restriction === undefined) {
-            restriction1 = "NO RESTRICTION"
-        } else {
-            restriction1 = puzzleData.solution.restriction.join("")
-        };
-        console.log(restriction1)
-        restriction1 = restriction1.replace(/</g, "&lt");
+        let restriction1 = puzzleData.solution.restriction ? puzzleData.solution.restriction.join("").replace(/</g, "&lt") : "NO RESTRICTION";
         solution1.innerHTML = `<strong>Restriction: </strong>${restriction1}, <strong>Solution: </strong>${puzzleData.solution.flag}, <strong>Cards: </strong>${puzzleData.solution.cards.join(",")}, <strong>Blank Card: </strong>${puzzleData.solution.blankCard}`
     };
 };
 
-function goalAddCube(cube) {
-    const newGoalCube = document.createElement("div")
-    newGoalCube.innerText = cube;
-    newGoalCube.classList.add("cube", "z-index2", "goal-cube")
-    goalContainer.append(newGoalCube)
-}
-
-const forbiddenContainer = document.querySelector("#forbidden-container");
-const requiredContainer = document.querySelector("#required-container");
+const forbiddenContainer = document.querySelector('#forbidden-container');
+const requiredContainer = document.querySelector('#required-container');
 const resourcesContainer = document.querySelector('#resources-container');
 const cardsContainer = document.querySelector('#cards-container');
 const variationsContainer = document.querySelector('#variations-container')
 const solution1 = document.querySelector('#solution1')
 const solution2 = document.querySelector('#solution2')
 const map = document.querySelector('#map')
-let solutionArr = [];
-const solutionArrWrap = {"values":[0, 0], "row":0};
-const goalContainer = document.querySelector("#goal-container");
+const solutionArrWrap = {'values':[0, 0], 'row':0};
+const goalContainer = document.querySelector('#goal-container');
+
+
+let puzzleData;
 newPuzzle();
 let stopTimer = new Date(); console.log((stopTimer.getTime() - setTimer.getTime())/1000 + " SECONDS");
 let keyboardActive = false;
-console.log(" > DONE")
+console.log(' > DONE')
 
-const solutionContainer = document.querySelector("#solution-container")
-const keyboard = document.querySelector("#keyboard-container");
-const cover = document.querySelector("#cover")
-const boardContainer = document.querySelector("#board-container")
+const solutionContainer = document.querySelector('#solution-container');
+const restrictionContainer = document.querySelector('#restriction-container')
+const keyboard = document.querySelector('#keyboard-container');
+const boardContainer = document.querySelector('#board-container')
+const keyboardContainer = document.querySelector('#keyboard-container')
 const correctAnswerArrow = document.querySelector('#correct-answer-arrow')
 const correctAnswerViewContainer = document.querySelector('#correct-answer-view-container')
-correctAnswerArrow.addEventListener("click", function(){
-    // correctAnswerArrow.innerText = "^"
-    correctAnswerViewContainer.classList.toggle("hidden");
+const submitButton = document.querySelector("#submit-button");
+const blankWild = document.querySelector('#blank-wild')
+
+correctAnswerArrow.addEventListener('click', function(){correctAnswerViewContainer.classList.toggle('hidden');})
+keyboardContainer.addEventListener('click', function(e) {e.stopPropagation()})
+
+blankWild.addEventListener('click', function(e) {
+    if (!e.target.classList.value.includes('card')) e.target.classList.toggle('wild');
 })
-solutionContainer.addEventListener("click", showKeyboard, true);
-document.addEventListener("keydown", function(keypress){
+let currInput;
+
+submitButton.addEventListener('click', submitInput);
+restrictionContainer.addEventListener('click', showKeyboard);
+solutionContainer.addEventListener('click', showKeyboard);
+const newAnswer = document.createElement('div')
+const background = document.createElement('div')
+newAnswer.id = 'new-answer'
+background.id = 'answer-background'
+document.body.append(background)
+document.body.append(newAnswer)
+background.addEventListener('click', function(){
+    newAnswer.classList.remove('shown')
+    background.classList.remove('shown')
+})
+
+let solutionArr = [], restrictionArr = [[]]; restrictionIndex = 0;
+
+document.addEventListener('keydown', function(keypress){
     // console.log(keypress.key);
-    if (!keyboardActive) {
-        return;
-    }
+    if (!currInput) return;
     switch (keypress.key) {
-        case "b": solutionAddCube("blue"); break;
-        case "r": solutionAddCube("red"); break;
-        case "g": solutionAddCube("green"); break;
-        case "y": solutionAddCube("yellow"); break;
-        case "u": solutionAddCube("union"); break;
-        case "n": solutionAddCube("intersect"); break;
-        case "-": solutionAddCube("subtract"); break;
-        case "'": solutionAddCube("not"); break;
-        case "v": solutionAddCube("universe"); break;
-        case "m": solutionAddCube("empty-set"); break;
-        case "<": solutionAddCube("must-contain"); break;
-        case "=": solutionAddCube("equals"); break;
-        case "(": solutionAddCube("left-parenthesis", true); break;
-        case ")": solutionAddCube("right-parenthesis", true); break;
-        case "Backspace": removeCube(); break;
+        case 'b': inputCube('blue'); break;
+        case 'r': inputCube('red'); break;
+        case 'g': inputCube('green'); break;
+        case 'y': inputCube('yellow'); break;
+        case 'u': inputCube('union'); break;
+        case 'n': inputCube('intersect'); break;
+        case '-': inputCube('subtract'); break;
+        case "'": inputCube('not'); break;
+        case 'v': inputCube('universe'); break;
+        case 'm': inputCube('empty-set'); break;
+        case '<': inputCube('must-contain'); break;
+        case '=': inputCube('equals'); break;
+        case '(': inputCube('left-parenthesis'); break;
+        case ')': inputCube('right-parenthesis'); break;
+        case 'Backspace': inputCube('backspace'); break;
     };
 });
-function removeCube() {
-    solutionArr.pop()
-    console.log(solutionArr)
-    solutionContainer.lastElementChild.remove();
-};
-function solutionAddCube(cube, parenthesis) {
+
+function inputCube(cube) {
+    let input;
+    let arr;
+    let wrap;
+    let isRestriction = false;
+    switch (currInput) {
+        case "solution-container":
+            input = solutionContainer;
+            arr = solutionArr;
+            break;
+        case "restriction-container":
+            input = restrictionContainer;
+            arr = restrictionArr;
+            isRestriction = true;
+            break;
+    };
     let currCube;
     switch (cube) {
         case "blue": currCube = "B"; break;
@@ -1759,132 +1776,322 @@ function solutionAddCube(cube, parenthesis) {
         case "not": currCube = "'"; break;
         case "universe": currCube = "V"; break;
         case "empty-set": currCube = "Ʌ"; break;
-        case "must-contain": currCube = "<"; break;
-        case "equals": currCube = "="; break;
+        case "must-contain": 
+            if (!isRestriction) return;
+            currCube = "<"; break;
+        case "equals":
+            if (!isRestriction) return;
+            currCube = "="; break;
         case "left-parenthesis": currCube = "("; break;
         case "right-parenthesis": currCube = ")"; break;
+        case "backspace":
+            if (isRestriction) {
+                if (!arr[0].length) return;
+                if (arr[restrictionIndex].length) {
+                    arr[restrictionIndex].pop()
+                } else {
+                    arr.pop()
+                    arr.pop()
+                    restrictionIndex -= 2
+                }
+            } else {
+                if (!arr.length) return;
+                arr.pop();
+            }
+            console.log(arr)
+            input.lastElementChild.remove();
+            return;
     };
-    solutionArr.push(currCube)
     const solutionCube = document.createElement("div");
-    if (parenthesis) {
+    if (currCube === "(" || currCube === ")") {
         solutionArrWrap.values[solutionArrWrap.row] += 16
-        solutionCube.classList.add("z-index2", cube);
+        solutionCube.classList.add(cube);
     } else {
         solutionArrWrap.values[solutionArrWrap.row] += 48
-        solutionCube.classList.add("cube", "solution-cube", "z-index2", cube);
+        solutionCube.classList.add("cube", "solution-cube", cube);
     };
-    if (solutionArrWrap.values[0] >= 524) {
-        console.log("NEW ROW")
-        alert("TOO LARGE")
-        return;
-        solutionArrWrap.row++
-        boardContainer.classList.add("addRow1")
+    // if (solutionArrWrap.values[0] >= 524) {
+    //     console.log("NEW ROW")
+    //     alert("TOO LARGE")
+    //     return;
+    //     solutionArrWrap.row++
+    //     boardContainer.classList.add("addRow1")
+    // }
+    // console.log(solutionArrWrap)
+    if (isRestriction) {
+        if (currCube === "<" || currCube === "=") {
+            arr.push(currCube);
+            arr.push([])
+            restrictionIndex += 2;
+        } else {
+            arr[restrictionIndex].push(currCube)
+        }
+    } else {
+        arr.push(currCube)
     }
-    console.log(solutionArrWrap)
-    console.log(solutionArr)
-    solutionContainer.append(solutionCube);
+    console.log(arr)
+    input.append(solutionCube);
 };
 
-cover.addEventListener("click", hideKeyboard, true);
-
-function hideKeyboard() {
-    keyboardActive = false;
+document.addEventListener('click', function hideKeyboard() {
+    currInput = undefined;
     keyboard.classList.add("hidden")
-};
-function showKeyboard() {
-    resourcesContainer.scrollTop = resourcesContainer.scrollHeight;
-    keyboardActive = true;
+});
+
+function showKeyboard(e) {
+    e.stopPropagation();
+    // console.log(e.target.parentNode);
+    (e.target.id) ? currInput = e.target.id : currInput = e.target.parentNode.id;
+    console.log(currInput)
+    // resourcesContainer.scrollTop = resourcesContainer.scrollHeight;
     keyboard.classList.remove("hidden")
 };
 
-
-// function cycle(arr, arrangement, values, key) {
+function submitInput() {
+    if (!restrictionArr.length) {
+        alert("Input a Restriction"); return;
+    };
+    if (!solutionArr.length) {
+        alert("Input a Solution"); return;  
+    };
+    
+    function translateBRGY(val) {
+        switch (val) {
+            case "B": return puzzleData.universe.filter(val => /B/.test(val));
+            case "R": return puzzleData.universe.filter(val => /R/.test(val));
+            case "G": return puzzleData.universe.filter(val => /G/.test(val));
+            case "Y": return puzzleData.universe.filter(val => /Y/.test(val));
+            case "V": return puzzleData.universe
+            case "Ʌ": return []
+            default: return val;
+        };
+    };
+    
+    function setOperation(arr) {
+        let val1 = translateBRGY(arr[0]);
+        let val2 = translateBRGY(arr[2]);
+        switch (arr[1]) {
+            case "U":
+            return val1.concat(val2.filter(val => !val1.includes(val)));
+            case "∩":
+            return val1.filter(val => val2.includes(val));
+            case "-":
+            if (puzzleData.variations.includes('symmetricDifference')) {
+                return val1.filter(val => !val2.includes(val)).concat(val2.filter(val => !val1.includes(val)))
+            } else {
+                return val1.filter(val => !val2.includes(val));
+            };
+        };
+    };
                 
-    //     permutationsArr.push(arr)
-    //     if (!values.length) {
-    //         return;
-    //     }
-    //     if (arrangement[key] > 1) {
-            // if (union) {
-            //     for (let x of filterDuplicates(values)) {
-            //         cycle(arr.concat("U").concat(x), subtractKey(arrangement, key), deleteFirstArrItem(values, x), key)
-            //         // let newArr = [...arr]
-            //         // newArr.push("U")
-            //         // newArr.push(x)
-            //         // console.log(newArr)
-            //     }
-            // }  
-
-    //         if (subtraction) {
-
-    //         }
-    //     } else {
-    //         // newKey = key.splice(0) + 2
-    //         // key += 2;
-    //         for (let x of filterDuplicates(values)) {
-    //             // console.log(arrangement)
-    //             // console.log(key)
-    //             cycle(arr.concat(arrangement[key + 1]).concat(x), arrangement, deleteFirstArrItem(values ,x), key + 2)
-    //             // let newArr = [...arr]
-    //             // newArr.push(x)
-    //             // console.log(newArr)
-    //         }
-    //     }
-        
-    // }
-
-    // function subtractKey(arrangement, key) {
-        //     newArrangement = arrangement.slice(0)
-        //     newArrangement[key] -= 1
-        //     return newArrangement
+    function calcSet(arr, type) {
+        // if (arr.length === 1) {
+        //     return translateBRGY(...arr)
+        // } else if (arr.length == 3) {
+        //     console.log()
+        //     return setOperation([calcSet(arr[0]), arr[1], calcSet(arr[2])]);
+        // } else if (arr.length > 3) {
+        //     return setOperation([calcSet(arr.slice(0, 3)), arr[3], ...arr.slice(4, arr.length)])
         // }
+        if (arr.length === 1) {
+            return translateBRGY(...arr)   
+        } else if (arr.length == 3) {
+            return setOperation([arr[0], arr[1], arr[2]]);
+        } else if (arr.length > 3) {
+            return setOperation([calcSet(arr.slice(0, 3)), arr[3], ...arr.slice(4, arr.length)])
+        }
+    }
+    
+    function parseInput(arr) {
+        let index = [0];
+        let returnArr = [];
+        for (let i = 0; i < arr.length; i++) {
+            let currPosition = returnArr
+            for (let i = 0; i < index.length - 1; i++) currPosition = currPosition[index[i]]
+            if (arr[i] === "(") {
+                console.log(index)
+                currPosition[index[index.length - 1]] = [];
+                index.push(0)
+            } else if (arr[i] === ")") {
+                index.pop()
+                currPosition = returnArr
+                for (let i = 0; i < index.length - 2; i++) currPosition = currPosition[index[i]]
+                currPosition[index[index.length - 1]] = calcSet(currPosition[index[index.length - 1]])
+                index[index.length - 1]++
+            } else if (arr[i] === "'") { 
+                let previousSetNot = puzzleData.universe.filter(val => !calcSet(currPosition[index[index.length - 1] - 1]).includes(val))
+                currPosition[index[index.length - 1] - 1] = previousSetNot;
+            } else {
+                currPosition[index[index.length - 1]] = arr[i];
+                index[index.length - 1]++
+            }
+        }
+        return returnArr;
+    }
 
-        // let arrangements = [];
+    let parsedRestrictionArr = []
+    for (let i = 0; i < restrictionArr.length; i++) {
+        (i % 2 === 1) ? parsedRestrictionArr.push(restrictionArr[i]) : parsedRestrictionArr.push(parseInput(restrictionArr[i]))
+    };
+    let parsedSolutionArr = parseInput(solutionArr)
+    
+    console.log(parsedRestrictionArr)
+    console.log(parsedSolutionArr)
+    let restrictedCards = [];
+    let universe = puzzleData.universe
+    for (let i = 0; i < (restrictionArr.length - 1) / 2; i++) {
+        let operation = parsedRestrictionArr[i * 2 + 1]
+        let leftVal = calcSet(parsedRestrictionArr[i * 2])
+        let rightVal = calcSet(parsedRestrictionArr[i * 2 + 2])
+        console.log(leftVal)
+        console.log(rightVal)
+        restrictedCards = restrictedCards.concat(leftVal.filter(val => !rightVal.includes(val)))
+        if (operation === "=") restrictedCards = restrictedCards.concat(rightVal.filter(val => !leftVal.includes(val)))
+    }
+    console.log(restrictedCards)
 
-        // (function generateArrangements(arr = [], limit = maxRestrictionValues, restrictions = restrictionCubes) {
-        //     // console.log(arr)
-        //     if (restrictions.indexOf("<") !== -1) {
-        //         for (let i = 1; i < limit; i++) {
-        //             newArr = [i, "<", limit - i].concat(arr.slice(1, arr.length))
-        //             arrangements.push(newArr)
-        //             generateArrangements(newArr, i, deleteFirstArrItem(restrictions, "<"))
-        //         }
-        //     }
-        //     if (restrictions.indexOf("=") !== -1) {
-        //         for (let i = 1; i < limit; i++) {
-        //             newArr = [i, "=", limit - i].concat(arr.slice(1, arr.length))
-        //             arrangements.push(newArr)
-        //             generateArrangements(newArr, i, deleteFirstArrItem(restrictions, "="))
-        //         }
-        //     }
-        // })();
+    let solutionSet = calcSet(parsedSolutionArr).filter(val => !restrictedCards.includes(val))
+    console.log(solutionSet)
 
-        // function merge(arr, val1, val2) {
-            //     let newArr = arr.slice()
-            //     newArr[newArr.length - 1] = arr[arr.length - 1].slice()
-            //     newArr[newArr.length - 1].push(val1)
-            //     newArr[newArr.length - 1].push(val2)
-            //     return newArr;
-            // }
-            // function cycle(arr, values, operations) {
-            //     if (permutationsArr.length % 1000000 === 0 && permutationsArr.length > 0) {
-            //         console.log((permutationsArr.length/1000000) + " MILLION")
-            //     }
-            //     if (arr.length > 0) {
-            //         permutationsArr.push(arr)
-            //     }
-            //     if (values.length) {
-            //         let currentLength = arr[arr.length - 1].length;
-            //         for (let i of filterDuplicates(operations)) {
-            //             if (i === "<" || i === "=") {
-            //                 for (let j of values) {
-            //                     cycle(arr.concat(i).concat([[j]]),deleteFirstArrItem(values, j),deleteFirstArrItem(operations, i))
-            //                 }
-            //             } else if (currentLength <= 3) {
-            //                 for (let j of values) {
-            //                     cycle(merge(arr, i, j),deleteFirstArrItem(values, j),operations);
-            //                 }
-            //             }
-            //         }
-            //     }
-            // }
+    newAnswer.innerHTML = ' '
+    const answerHeader = document.createElement('div')
+    answerHeader.id = 'answer-header'
+
+    const backButton = document.createElement('div')
+    const newPuzzleButton = document.createElement('div')
+    backButton.classList.add('answer-button')
+    newPuzzleButton.classList.add('answer-button')
+    backButton.innerText = 'Back'
+    newPuzzleButton.innerText = 'Next'
+    newPuzzleButton.style.marginLeft = 'auto'
+    backButton.style.cssText = ''
+    answerHeader.append(backButton)
+    answerHeader.append(newPuzzleButton)
+
+    newAnswer.append(answerHeader)
+
+    const answerContent = document.createElement('div')
+    answerContent.id = 'answer-content'
+
+    const titleNode = document.createElement('h1')
+    const currSolution = document.createElement('div')
+    const solution1 = document.createElement('div')
+    titleNode.innerText = 'Your Solution'
+    currSolution.classList = 'answer-solution-container'
+    solution1.classList = 'answer-solution-subcontainer'
+    const restriction1 = document.createElement('div')
+    restriction1.style.cssText = 'display: flex; flex-direction: row;'
+    const set1 = document.createElement('div')
+    set1.style.cssText = 'display: flex; flex-direction: row;'
+    const bar = document.createElement('div')
+    bar.style.cssText = 'width: 100%; height: 2px; background-color: gray; margin: 5px'
+    for (let x of restrictionContainer.children) {
+        const newCube = x.cloneNode()
+        newCube.style.boxShadow = '2px 2px 5px rgb(0 0 0 / 20%)';
+        newCube.style.margin = '3px';
+        restriction1.append(newCube)
+    }
+    for (let x of solutionContainer.children) {
+        const newCube = x.cloneNode()
+        newCube.style.boxShadow = '2px 2px 5px rgb(0 0 0 / 20%)';
+        newCube.style.margin = '3px';
+        set1.append(newCube)
+    }
+    solution1.append(restriction1)
+    solution1.append(bar)
+    solution1.append(set1)
+    currSolution.append(solution1)
+    answerContent.append(titleNode)
+    answerContent.append(currSolution)
+
+    const solutionSet1 = document.createElement('div')
+    solutionSet1.classList.add('solution-set')
+
+    for (let card of cardsContainer.children) {
+        const newCard = card.cloneNode(true);
+        if (!solutionSet.includes(card.dataset.getCard)) newCard.classList.add('flip')
+        newCard.classList.add('card');
+        solutionSet1.append(newCard)
+    }
+    answerContent.append(solutionSet1)
+
+    const titleNode2 = document.createElement('h1')
+    titleNode2.innerText = 'Solution'
+    console.log(puzzleData)
+
+    const puzzleSolution = document.createElement('div')
+    
+    const puzzleSolution1 = document.createElement('div')
+    puzzleSolution1.classList.add('answer-solution-subcontainer')
+    puzzleSolution.append(puzzleSolution1)
+    const answewrRestriction1 = document.createElement('div')
+    answewrRestriction1.style.cssText = 'display: flex; flex-direction: row;'
+    const answerSet1 = document.createElement('div')
+    answerSet1.style.cssText = 'display: flex; flex-direction: row; line-height: 48px;'
+    for (let i = 0; i < 2; i++) {
+        let currIterable;
+        if (puzzleData.variations.includes('twoSolutions')) {
+            switch (i) {
+                case 0: currIterable = puzzleData.solution[0].restriction.join(""); break;
+                case 1: currIterable = puzzleData.solution[0].flag; break;
+            }
+        } else {
+            switch (i) {
+                case 0: currIterable = puzzleData.solution.restriction.join(""); break;
+                case 1: currIterable = puzzleData.solution.flag; break;
+            }
+        }
+        for (let j = 0; j < currIterable.length; j++) {
+            const solutionCube = document.createElement("div");
+            if (!(currIterable[j] === "(" || currIterable[j] === ")")) {
+                solutionCube.classList.add("cube", "solution-cube");
+            };
+            switch (currIterable[j]) {
+                case 'B': solutionCube.classList.add('blue'); break;
+                case 'R': solutionCube.classList.add('red'); break;
+                case 'G': solutionCube.classList.add('green'); break;
+                case 'Y': solutionCube.classList.add('yellow'); break;
+                case 'U': solutionCube.classList.add('union'); break;
+                case '∩': solutionCube.classList.add('intersect'); break;
+                case '-': solutionCube.classList.add('subtract'); break;
+                case "'": solutionCube.classList.add('not'); break;
+                case 'V': solutionCube.classList.add('universe'); break;
+                case 'Ʌ': solutionCube.classList.add('empty-set'); break;
+                case '<': solutionCube.classList.add('must-contain'); break;
+                case '=': solutionCube.classList.add('equals'); break;
+                case '(': solutionCube.classList.add('left-parenthesis', 'black'); break;
+                case ')': solutionCube.classList.add('right-parenthesis', 'black'); break;
+            }
+            solutionCube.style.boxShadow = '2px 2px 5px rgb(0 0 0 / 20%)';
+            if (i) {
+                answerSet1.append(solutionCube)
+            } else {
+                answewrRestriction1.append(solutionCube)
+            }
+        }
+    }
+    puzzleSolution1.append(answewrRestriction1, bar.cloneNode(), answerSet1)
+
+    const answerSolutionSet1 = document.createElement('div')
+    answerSolutionSet1.classList.add('solution-set')
+
+    for (let card of cardsContainer.children) {
+        const newCard = card.cloneNode(true);
+        if (puzzleData.variations.includes('twoSolutions')) {
+            if (!puzzleData.solution[0].cards.includes(card.dataset.getCard)) newCard.classList.add('flip')
+        } else {
+            if (!puzzleData.solution.cards.includes(card.dataset.getCard)) newCard.classList.add('flip')
+        };
+        newCard.classList.add('card');
+        answerSolutionSet1.append(newCard)
+    }
+    
+    answerContent.append(titleNode2 )
+    answerContent.append(puzzleSolution)
+    answerContent.append(answerSolutionSet1)
+
+    newAnswer.append(answerContent)
+
+    background.classList.toggle('shown')
+    newAnswer.classList.toggle('shown')
+}
