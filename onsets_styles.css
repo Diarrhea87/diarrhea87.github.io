@@ -1,6 +1,16 @@
 * {
     box-sizing: border-box;
 }
+
+a {
+    z-index: 5;
+    position: absolute;
+    top: 0px;
+    opacity: 0;
+}
+a:hover {
+    opacity: 1;
+}
 html {
     scroll-behavior: smooth;
 }
@@ -26,21 +36,6 @@ header h1 {
     font-size: 25px;
     margin: auto;
     align-self: center;
-}
-
-#cover {
-    position: fixed;
-    top: 0;
-    height: 100vh;
-    width: 100%;
-}
-
-.z-index1 {
-    z-index: 1;
-}
-
-.z-index2 {
-    z-index: 2
 }
 
 /* #puzzle-container {
@@ -70,7 +65,7 @@ header h1 {
 .cube:hover {filter: brightness(96%); transition: 0s}
 .cube:active {filter: brightness(92%)}
 
-.answercube {
+.inputcube {
     bottom: 2px;
     margin: 2px;
     align-self: flex-end;
@@ -211,7 +206,8 @@ header h1 {
     position: relative;
     display: flex;
     width: min(100%, 810px);
-    height: 450px;
+    height: 540px;
+    /* height: 450px; */
     max-width: 1000px;
     border-radius: 3px;
     margin: auto;
@@ -223,7 +219,7 @@ header h1 {
 
 #parent-restraint-container {
     width: 100%;
-    height: 72%;
+    height: 320px;
     margin: 5px 0;
     display: flex;
 }
@@ -272,33 +268,65 @@ header h1 {
     padding: 2px;
 }
 
-#answer-container {
+#input-container {
     display: flex;
     margin: 5px;
     flex: auto;
     background-color: rgb(80, 19, 38);  
     border-radius: 2px;
     box-shadow: 0 2px 5px rgb(0 0 0 / 10%);
+    padding-top: 10px;
 }
 
-#solution-view-container {
-    /* flex-grow: 1; */
+#input-container h3 {
+    font-size: 1.17em;
+    color: white;
+    position: relative;
+    bottom: 10px;
+}
+
+#blank-wild {
+    z-index: 2;
+    position: absolute;
+    justify-self: center;
+    bottom: 40px;
+    left: -100px;
+    transition: transform 0.2s;
+}
+#blank-wild:hover {
+    filter: none;
+    transform: scale(1.05);
+}
+
+.wild {
+    opacity: 0;
+}
+
+.wild:hover {
+    opacity: .7;
+}
+
+#left-input-container {
     display: flex;
-    margin-left: 15px;
-    width: 528px;
-    /* height: 100%; */ 
+    flex-direction: column;
+    width: 568px;
+}
+
+#restriction-view-container, #solution-view-container {
+    display: flex;
+    height: 90px;
+    padding: 0 15px;
     flex-wrap: wrap;
 }
 
-#solution-container {
+#restriction-container, #solution-container {
     border-radius: 5px;
     align-self: flex-end;
-    /* height: 103px; */
-    height: 54px;
+    height: 52px;
     width: 100%;
     cursor: text;
     position: relative;
-    bottom: 6px;
+    bottom: 10px;
     transition: ease 0.08s;
     display: flex;
     justify-content: center;
@@ -306,20 +334,18 @@ header h1 {
     flex-wrap: wrap;
 }
 
-.solution-cube {
-    margin: 2px;
-}
+.solution-cube {margin: 2px;}
 
-#solution-container:hover {
+#restriction-container:hover, #solution-container:hover {
     background-color: rgb(71, 17, 34);
     transition-duration: 0s;
 }
 
-#solution-container:active {
+#restriction-container:active, #solution-container:active {
     background-color: rgb(62, 15, 30);
 }
 
-#solution-bar {
+#restriction-bar, #solution-bar {
     position: relative;
     bottom: 25px;
     width: 100%;
@@ -330,19 +356,12 @@ header h1 {
     justify-content: center;
 }
 
-#solution-text {
-    position: relative;
-    bottom: 10px;
-}
-
 #equals-container {
-    position: relative;
     display: flex;
+    align-self: center;
     flex-wrap: wrap;
-    margin: 0 25px;
+    margin: 0 5px;
     flex: auto;
-    align-self: flex-end;
-    bottom: 40px;
     height: 17px;
     width: 38px;
     flex-grow: 0;
@@ -363,11 +382,9 @@ header h1 {
 
 #goal-view-container {
     display: flex;
-    margin-left: auto;
-    margin-right: 15px;
-    width: 144px;
-    height: 100%;
+    width: 174px;
     flex-wrap: wrap;
+    padding: 15px;
     justify-content: center;
 }
 
@@ -401,32 +418,49 @@ header h1 {
 
 #goal-bar {
     position: relative;
-    bottom: 25px;
+    bottom: 5px;
     width: 100%;
-    align-self: flex-end;
     background-color: white;
     height: 6px;
     display: flex;
     justify-content: center;
 }
 
-#goal-text {
-    position: relative;
-    bottom: 10px;
-}
-
-#answer-container h3 {
-    font-size: 1.17em;
-    color: white;
+#bottom-puzzle-container {
+    display: flex;
+    margin: 5px auto;
+    margin-bottom: 100px;
+    width: min(100%, 810px);
 }
 
 #resources-container {
     display: flex;
     flex-wrap: wrap;
     /* border: 1px solid black; */
-    width: min(100%, 810px);
-    margin: 5px auto;
-    margin-bottom: 100px;
+    
+}
+
+#submit-button {
+    z-index: 2;
+    margin: 5px;
+    margin: auto;
+    margin-right: 10px;
+    width: 120px;
+    height: 44px;
+    border-radius: 5px;
+    background-color:rgb(66, 173, 100);
+    bottom: -20px;
+    box-shadow: 3px 3px 4px rgb(0 0 0 / 20%);;
+    font-size: 1em;
+    color: white;
+    font-weight: bold;
+    line-height: 44px;
+    text-align: center;
+    transition: 0.1s;
+}
+
+#submit-button:hover {
+    background-color:rgb(64, 157, 94);
 }
 
 #cards-container {
@@ -581,7 +615,7 @@ td {
 }
 
 #correct-answer-view-container {
-    display: flex;
+    display: none;
     width: 100%;
     height: 100px;
     position: fixed;
@@ -591,7 +625,7 @@ td {
     box-shadow: 0 2px 10px rgb(0 0 0 / 30%);
     justify-content: center;
     transition: cubic-bezier(0.075, 0.82, 0.165, 1) 0.6s;
-    translate: 0 100px;
+    translate: 0;
 }
 #correct-answer-arrow {
     position: absolute;
@@ -614,38 +648,20 @@ td {
     background-color: whitesmoke;
     box-shadow: 0 2px 10px rgb(0 0 0 / 30%);
 }
-#correct-answer-view-container:hover {
-    translate: 0;
+#correct-answer-view-container.hidden {
+    translate: 0 100px;
 }
 
-/* #solution */
-
-/* #input-bar {
-    display: flex;
-    height: 4vw;
-    width: 35.2vw;
-    max-height: 60px;
-    max-width: 528px;
-    min-height: 50px;
-    min-width: 440px;
-    border: 2px solid lightgray;
-    border-radius: 8px;
-    margin: 5px;
-    box-shadow: 0 2px 5px rgb(0 0 0 / 10%);
-} */
-
 #keyboard-container {
+    z-index: 2;
     display: flex;
     position: fixed;
     width: 100%;
     bottom: 2px;
     background-color: whitesmoke;
-    /* margin-bottom: 2px; */
     justify-content: center;
     flex-wrap: wrap;
     transition: cubic-bezier(0.165, 0.84, 0.35, 0.87) 0.2s;
-    /* transition:cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s; */
-    /* transition: 0.15s; */
     translate: 0;
     padding-top: 10px;
     box-shadow: 0 2px 10px rgb(0 0 0 / 30%)
@@ -688,6 +704,119 @@ td {
 
 .keyboard-button:active {
     background-color: rgb(148, 163, 184)
+}
+
+#answer-background {
+    opacity: 0;
+    visibility: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100vw;
+    background-color: black;
+    z-index: 5;
+    top: 0;
+    cursor: pointer;
+    transition: 0.25s cubic-bezier(.4,0,.2,1);
+}
+
+#answer-background.shown {
+    visibility: visible;
+    opacity: 0.4;
+}
+
+@keyframes answer-background {
+    0%   {opacity: 0;}
+    100%   {opacity: 0.4;}
+}
+
+#new-answer {
+    z-index: 6;
+    background-color: whitesmoke;
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 86%;
+    width: 90%;
+    box-shadow: 0 0 5px rgb(0 0 0 / 40%);
+    border-radius: 10px 10px 0 0;
+    translate: 0 100%;
+    transition: translate 370ms cubic-bezier(0.15, 0.94, 0.41, 0.99) 0ms;
+    display: flex;
+    flex-direction: column;
+}
+
+#new-answer.shown {
+    transition: translate 550ms cubic-bezier(0.15, 0.94, 0.41, 0.99) 0ms;
+    translate: 0;
+}
+
+#answer-header {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    width: 100%;
+    height: 64px;
+    border-bottom: 1px solid gray;
+}
+
+.answer-button {
+    width: 100px;
+    height: 40px;
+    background-color:rgb(66, 173, 100);
+    text-align: center;
+    line-height: 40px;
+    font-size: 1.2em;
+    color: white;
+    /* font-weight: bold; */
+    border-radius: 5px;
+}
+
+#answer-content {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    overflow-y: scroll;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.answer-solution-container {
+    display: flex;
+}
+
+.answer-solution-subcontainer {
+    background-color: rgb(238, 234, 234);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0px 3px 5px rgb(0 0 0 / 20%);
+    padding: 10px;
+    border-radius: 8px;
+    transition: transform 0.2s;
+}
+.answer-solution-subcontainer:hover {
+    transform: scale(1.02);
+}
+
+.black.left-parenthesis::after, .black.right-parenthesis::after {
+    color: black;
+}
+
+.solution-set {
+    margin: 30px auto;
+    width: 80%;
+    display: flex;
+    flex-wrap: wrap;
+    /* height: 300px; */
+}
+
+.card.flip {
+    background-color: rgb(136, 31, 43);
+}
+.card.flip .blue, .card.flip .red, .card.flip .green, .card.flip .yellow {
+    display: none;
 }
 
 @media screen and (max-height: 450px) {
