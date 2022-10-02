@@ -3,134 +3,70 @@
         <head>
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-            <title>Diaper</title>
+            <title>Equations Practice</title>
             <link rel="stylesheet" type="text/css" href="styles.css">
-            <style>
-                * {
-                    box-sizing: border-box;
-                }
-                h1 {
-                    
-                    
-                }
-                body {
-                    /*background-color: rgb(189, 189, 189);*/
-                    font-family: Arial, Helvetica, sans-serif;
-                    margin: 0;
-                }
-                #hello-world {
-                    border-bottom: 1px solid grey;
-                    width: 100%;
-                    margin: 0;
-                    height: 50px;
-                    text-align: center;
-                    vertical-align: center;
-                    line-height: 50px;
-                }
-                footer {
-                    position: fixed;
-                    bottom: 0px;
-                    border-top: 1px solid grey; 
-                    width: 100%;    
-                    text-align: center;
-                    padding: 10px 0;
-                }
-                p {
-                    font-weight: 700;
-                    text-align: center;
-                    margin-bottom: 5px;
-                }
-                #centerdiv {
-                    margin: auto;
-                    border-radius: 10px;
-                    background-color: white;
-                    min-width: 100px;
-                    width: 10%;
-                    height: 50px;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    transition: background-color 1s, width 1s, height 1s, letter-spacing 1s, font-size 1s, color 1s;
-                    font-family: Verdana, Geneva, Tahoma, sans-serif;
-                    font-weight: bold;
-                    box-shadow: 0 10px 20px rgb(0, 0, 0, 0.4)
-                }
-
-                #centerdiv:hover {
-                    letter-spacing:  10px;
-                    background-color: dodgerblue;
-                    width: 50%;
-                    height: 100px;
-                    font-size: 20px;
-                    color: white;
-                }
-
-                .button {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    margin: auto;
-                }
-                
-                button:hover {
-                    background-color: lightblue;
-                }
-
-                button {
-                    height: 30px;
-                    background-color: white;
-                    border: 1px solid grey;
-                    border-radius: 10px;
-                    box-shadow:0 1px 10px rgb(0, 0, 0, 0.2)
-                }
-
-                .cat-img {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    margin-top: 30px;
-                }
-                /*comment*/
-            </style>
+            <script defer src="script.js"></script>
         </head>
         <body>
-            <h1 id="hello-world">Hello World</h1>
-            <p>It's a beautiful day!</p>
-            <footer class="footer">Footer</footer>
-            <div class="button"><button onclick="catImage()" style="margin:5px;">Cat</button></div>
-            <div class="button"><button onclick="catCounterReset()" style="margin:5px;">Reset</button></div>
-            <div id="result" style="text-align: center; margin: 5px;"></div>
-            <div id="centerdiv" onclick="clickCounter()">BUTTON</div>
-            <div class="cat-img"><img id="catscats" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cat03.jpg/1200px-Cat03.jpg" 
-            style="min-height: 100px; height:15vw; border-radius: 10px; box-shadow: 0 3px 10px rgb(0, 0, 0, 0.2)"></div>
-            <script>
-                if (localStorage.clickcount) {
-                    document.getElementById("result").innerHTML = "You have clicked the button " + localStorage.clickcount + " times.";
-                } else {
-                    document.getElementById("result").innerHTML = "You have clicked the button 0 times.";
-                }
-                function catImage() {
-                    var catscats = document.getElementById("catscats");
-                    console.log(catscats);
-                    catscats.src = "https://i.natgeofe.com/n/46b07b5e-1264-42e1-ae4b-8a021226e2d0/domestic-cat_thumb_square.jpg"
-                }
-                function catCounterReset() {
-                    var catscats = document.getElementById("catscats");
-                    console.log(catscats);
-                    catscats.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cat03.jpg/1200px-Cat03.jpg"
-                    localStorage.clickcount = 0
-                    document.getElementById("result").innerHTML = "You have clicked the button " + localStorage.clickcount + " times.";
-                }
-                function clickCounter() {
-                    if (localStorage.clickcount) {
-                        localStorage.clickcount = Number(localStorage.clickcount)+1;
-                    } else {
-                        localStorage.clickcount = 1;
-                    }
-                    document.getElementById("result").innerHTML = "You have clicked the button " + localStorage.clickcount + " times.";
-                }
-                //Web Workers
-            </script>
-            <!--Comment-->
-    </body>
+            <header>
+                <h1>
+                    EQUATIONS PRACTICE
+                </h1>
+            </header>
+            <div id="puzzle-container">
+                <div id="board-container">
+                <div id="parent-restraint-container">
+                    <div class="restraint-container"><h3>Forbidden</h3><div id="forbidden-container"></div></div>
+                    <div class="restraint-container"><h3>Permitted</h3></div>
+                    <div class="restraint-container"><h3>Required</h3></div>
+                </div>
+                <div id="answer-container">
+                    <div id="solution-container">
+                        <div id="solution-bar">
+                            <h3 id="solution-text">Solution</h3>
+                        </div>
+                    </div>
+                    <div id="equals-container">
+                        <div id="equals-bar1"></div>
+                        <div id="equals-bar2"></div>
+                    </div>
+                    <div id="goal-container">
+                        <div id="goal-bar"><h3 id="goal-text">Goal</h3></div>
+                    </div>
+                </div>
+            </div>
+            <div id="input-container">
+                <!--<div id="input-bar">
+
+                </div>-->
+                <div id="keyboard-container">
+                    <div class="keyboard-row">
+                        <button class="keyboard-button">0</button>
+                        <button class="keyboard-button">1</button>
+                        <button class="keyboard-button">2</button>
+                        <button class="keyboard-button">3</button>
+                        <button class="keyboard-button">4</button>
+                        <button class="keyboard-button">5</button>
+                        <button class="keyboard-button">6</button>
+                        <button class="keyboard-button">7</button>
+                        <button class="keyboard-button">8</button>
+                        <button class="keyboard-button">9</button>
+                    </div>
+                    <div class="keyboard-row">
+                        <button class="keyboard-button keyboard-large-button">Enter</button>
+                        <button class="keyboard-button">+</button>
+                        <button class="keyboard-button">-</button>
+                        <button class="keyboard-button">x</button>
+                        <button class="keyboard-button">÷</button>
+                        <button class="keyboard-button">^</button>
+                        <button class="keyboard-button">√</button>
+                        <button class="keyboard-button">(</button>
+                        <button class="keyboard-button">)</button>
+                        <button class="keyboard-button keyboard-large-button">Delete</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+            
+        </body>
     </html>
