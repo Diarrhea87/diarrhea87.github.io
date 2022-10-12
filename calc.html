@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jhed's Calculator</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="manifest" href="/images/site.webmanifest">
+    <script>
+        
+        function submitinput() {
+            let answersArr = []
+            let output = document.getElementById('answer')
+            console.log(output)
+            let num = document.getElementById('input').value
+            function generateDivisors(curIndex, curDivisor, arr)
+            {
+            
+                if (curIndex == arr.length) {
+                    answersArr.push(curDivisor);
+                    return;
+                }
+            
+                for (var i = 0; i <= arr[curIndex][0]; ++i) {
+                    generateDivisors(curIndex + 1, curDivisor, arr);
+                    curDivisor *= arr[curIndex][1];
+                }
+            }
+            function findDivisors(n)
+            {
+                arr = [];
+            
+                for (var i = 2; i * i <= n; ++i) {
+                    if (n % i == 0) {
+                        var count = 0;
+                        while (n % i == 0) {
+                            n /= i;
+                            count += 1;
+                        }
+                        arr.push([ count, i ]);
+                    }
+                }
+                if (n > 1) {
+                    arr.push([ 1, n ]);
+                }
+                var curIndex = 0, curDivisor = 1;
+            
+                generateDivisors(curIndex, curDivisor, arr);
+            }
+
+            findDivisors(num)
+            if (num === "5433") {
+                output.innerHTML = `IF YOU READ THIS YOU'RE GAY` 
+            } else if (num === "") {
+                output.innerHTML = `Please input a value` 
+            } else {
+                answersArr.sort((a, b) => a -b);
+                answersArr = answersArr.join(", ");
+                console.log(answersArr);
+                output.innerHTML = `The factors of ${num} are ${answersArr}.`
+            }
+            
+        }
+        
+        document.onkeypress = function (eventKeyName) {
+            eventKeyName = eventKeyName || window.event;
+            if(eventKeyName.keyCode==13){
+                submitinput();
+            }
+        };
+        // document.getElementById("submit").addEventListener("click", submitinput);
+    </script>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+        }
+        header {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* line-height: 50px; */
+            border-bottom: 1px solid grey;
+        }
+        h1 {
+            margin: auto;
+            
+        }
+        p {
+            font-weight: 700;
+            margin: auto;
+            margin-top: 50px;
+            text-align: center;
+            
+        }
+        input {
+            width: 300px;
+            margin: 10px auto;
+            height: 50px;
+            border-radius: 5px;
+            font-size: 30px;
+            border: 1px solid rgb(0 0 0 / 20%);
+            box-shadow: 0 3px 10px rgb(0 0 0 / 20%);
+            text-align: center;
+        }
+
+        
+
+        input:focus{
+            border: 1px solid rgb(0 0 0 / 60%);
+            outline: none;
+            background-color: whitesmoke;
+            transition: ease 0.25s;
+        }
+
+        #submit {
+            border: 0px solid black;
+            background-color: white;
+            font-weight: 600;
+            font-size: 20px;
+            line-height: 40px;
+            margin: 10px auto;
+            width: 200px;
+            height: 40px;
+            text-align: center;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgb(0 0 0 / 20%);
+        }
+
+        #submit:hover {
+            background-color: whitesmoke;
+        }
+
+        #answer-container {
+            max-width: 80%;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <header><h1>JHED'S CALCULATOR</h1></header>
+    <p>Input a number to find its number of factors</p>
+    <input id="input" maxlength="30" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+    <div id="submit" onclick="submitinput()">ENTER</div>
+    <div id="answer-container"><p id="answer"></p></div>
+</body>
+</html>

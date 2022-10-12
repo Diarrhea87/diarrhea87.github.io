@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onsets Practice</title>
+    <link rel="stylesheet" type="text/css" href="onsets_styles.css">
+    <script defer src="onsets_script.js"></script>
+</head>
+<body>
+    <header onclick="notify('Incorrect!', 'green', 'bounce')">
+        <h1>
+            ONSETS PRACTICE
+        </h1>
+    </header>
+    <a href="http://127.0.0.1:5500/" style="position: absolute;">Switch to equations practice</a>
+    <div id="puzzle-container">
+        <div id="cards-container">
+        </div>
+        <div id="map-view-container">
+            <div id="map-container" class="z-index2">
+                <table id="map">
+                    <tbody>
+                        <tr>
+                            <th></th>
+                            <th colspan="2" class="horizontal-table-heading">R</th>
+                            <th colspan="2" class="horizontal-table-heading">R'</th>
+                        </tr>
+                        <tr>
+                            <th rowspan="2" class="vertical-table-heading">B</th>
+                            <td>B<br>R</td>
+                            <td>B<br>R<br><br>Y</td>
+                            <td>B<br><br><br>Y</td>
+                            <td>B</td>
+                            <th class="vertical-table-heading">G'</th>
+                        </tr>
+                        <tr>
+                            <td>B<br>R<br>G</td>
+                            <td>B<br>R<br>G<br>Y</td>
+                            <td>B<br><br>G<br>Y</td>
+                            <td>B<br><br>G</td>
+                            <th rowspan="2" class="vertical-table-heading">G</th>
+                        </tr>
+                        <tr>
+                            <th rowspan="2" class="vertical-table-heading">B'</th>
+                            <td><br>R<br>G</td>
+                            <td><br>R<br>G<br>Y</td>
+                            <td><br><br>G<br>Y</td>
+                            <td><br><br>G</td>
+                        </tr>
+                        <tr>
+                            <td><br>R</td>
+                            <td><br>R<br><br>Y</td>
+                            <td><br><br><br>Y</td>
+                            <td></td>
+                            <th class="vertical-table-heading">G'</th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th class="horizontal-table-heading">Y'</th>
+                            <th colspan="2" class="horizontal-table-heading">Y</th>
+                            <th class="horizontal-table-heading">Y'</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="map-arrow-box">&gt</div>
+        </div>
+        <div id="variations-view-container">
+            <div id="variations-container">
+                <h3>Variations:</h3>
+                <ul>
+                </ul>
+            </div>
+            <div id="variations-arrow-box">&gt</div>
+        </div>
+        <div id="board-container">
+        <div id="parent-restraint-container">
+            <div class="restraint-container"><h3>Forbidden</h3><div id="forbidden-container"></div></div>
+            <div class="restraint-container"><h3>Permitted</h3><div id="permitted"></div></div>
+            <div class="restraint-container"><h3>Required</h3><div id="required-container">
+                <!-- <div class="cube restraint-cube red z-index2"></div>
+                <div class="cube restraint-cube blue z-index2"></div>
+                <div class="cube restraint-cube green z-index2"></div>
+                <div class="cube restraint-cube yellow z-index2"></div>
+                <div class="cube restraint-cube union z-index2"></div>
+                <div class="cube restraint-cube intersect z-index2"></div>
+                <div class="cube restraint-cube subtract z-index2"></div>
+                <div class="cube restraint-cube not z-index2"></div>
+                <div class="cube restraint-cube universe z-index2"></div>
+                <div class="cube restraint-cube empty-set z-index2"></div>
+                <div class="cube restraint-cube must-contain z-index2"></div>
+                <div class="cube restraint-cube equals z-index2"></div>
+                <div class="cube restraint-cube numeral1 z-index2"></div>
+                <div class="cube restraint-cube numeral2 z-index2"></div>
+                <div class="cube restraint-cube numeral3 z-index2"></div>
+                <div class="cube restraint-cube numeral4 z-index2"></div>
+                <div class="cube restraint-cube numeral5 z-index2"></div>
+                <div class="cube restraint-cube numeral6 z-index2"></div> -->
+            </div>
+            </div>
+        </div>
+        <div id="input-container">
+            <div id="blank-wild-container" class="card-content-front">
+                <div class="wild blue"></div>
+                <div class="wild red"></div>
+                <div class="wild green"></div>
+                <div class="wild yellow"></div>
+            </div>
+            <div id="left-input-container">
+                <div id="restriction-view-container">
+                    <div id="restriction-container"></div>
+                    <div id="restriction-bar">
+                        <h3 id="restriction-text">Restriction</h3>
+                    </div>
+                </div>
+                <div id="solution-view-container">
+                    <div id="solution-container"></div>
+                    <div id="solution-bar">
+                        <h3 id="solution-text">Solution</h3>
+                    </div>
+                </div>
+            </div>
+                <div id="equals-container">
+                    <div id="equals-bar1"></div>
+                    <div id="equals-bar2"></div>
+                </div>
+                <div id="right-input-container">
+                    <div id="solution-form-container">
+                        <div id="solution1-toggle" data-active="true">Set 1</div>
+                        <div id="solution2-toggle" data-active="false">Set 2</div>
+                        <div id="solution-form-toggle-div"></div>
+                    </div>
+                    <div id="goal-view-container">
+                        <div id="goal-container"></div>
+                        <div id="goal-bar"><h3 id="goal-text">Goal</h3></div>
+                    </div>
+                </div>
+        </div>
+    </div>
+    <div id="bottom-puzzle-container">
+        <div id="resources-container">
+            <!-- <div class="cube restraint-cube blue"></div>
+            <div class="cube restraint-cube green"></div>
+            <div class="cube restraint-cube yellow"></div>
+            <div class="cube restraint-cube union"></div> -->
+        </div>
+        <div id="submit-button">Submit</div>
+    </div>
+    <div id="correct-answer-view-container" class="hidden">
+        <div id="correct-answer-arrow">^</div>
+        <div id="correct-answer-container">
+            <div id="solution1" class="solution"></div>
+            <div id="solution2" class="solution"></div>
+        </div>
+    </div>
+    <div id="keyboard-container" class="hidden">
+        <div class="keyboard-row">
+            <button class="keyboard-button">0</button>
+            <button class="keyboard-button">1</button>
+            <button class="keyboard-button">2</button>
+            <button class="keyboard-button">3</button>
+            <button class="keyboard-button">4</button>
+            <button class="keyboard-button">5</button>
+            <button class="keyboard-button">6</button>
+            <button class="keyboard-button">7</button>
+            <button class="keyboard-button">8</button>
+            <button class="keyboard-button">9</button>
+        </div>
+        <div class="keyboard-row">
+            <button class="keyboard-button keyboard-large-button">Enter</button>
+            <button class="keyboard-button">+</button>
+            <button class="keyboard-button">-</button>
+            <button class="keyboard-button">x</button>
+            <button class="keyboard-button">÷</button>
+            <button class="keyboard-button">^</button>
+            <button class="keyboard-button">√</button>
+            <button class="keyboard-button">(</button>
+            <button class="keyboard-button">)</button>
+            <button class="keyboard-button keyboard-large-button">Delete</button>
+        </div>
+    </div>
+    </div>
+</body>
+</html>
