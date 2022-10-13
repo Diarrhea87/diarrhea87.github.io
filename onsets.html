@@ -9,7 +9,7 @@
     <script defer src="onsets_script.js"></script>
 </head>
 <body>
-    <header onclick="notify('Incorrect!', 'green', 'bounce')">
+    <header onclick="notify('Correct!', 'green', 'bounce', undefined, undefined, undefined, 2)">
         <h1>
             ONSETS PRACTICE
         </h1>
@@ -79,25 +79,8 @@
         <div id="parent-restraint-container">
             <div class="restraint-container"><h3>Forbidden</h3><div id="forbidden-container"></div></div>
             <div class="restraint-container"><h3>Permitted</h3><div id="permitted"></div></div>
-            <div class="restraint-container"><h3>Required</h3><div id="required-container">
-                <!-- <div class="cube restraint-cube red z-index2"></div>
-                <div class="cube restraint-cube blue z-index2"></div>
-                <div class="cube restraint-cube green z-index2"></div>
-                <div class="cube restraint-cube yellow z-index2"></div>
-                <div class="cube restraint-cube union z-index2"></div>
-                <div class="cube restraint-cube intersect z-index2"></div>
-                <div class="cube restraint-cube subtract z-index2"></div>
-                <div class="cube restraint-cube not z-index2"></div>
-                <div class="cube restraint-cube universe z-index2"></div>
-                <div class="cube restraint-cube empty-set z-index2"></div>
-                <div class="cube restraint-cube must-contain z-index2"></div>
-                <div class="cube restraint-cube equals z-index2"></div>
-                <div class="cube restraint-cube numeral1 z-index2"></div>
-                <div class="cube restraint-cube numeral2 z-index2"></div>
-                <div class="cube restraint-cube numeral3 z-index2"></div>
-                <div class="cube restraint-cube numeral4 z-index2"></div>
-                <div class="cube restraint-cube numeral5 z-index2"></div>
-                <div class="cube restraint-cube numeral6 z-index2"></div> -->
+            <div class="restraint-container"><h3>Required</h3>
+                <div id="required-container">
             </div>
             </div>
         </div>

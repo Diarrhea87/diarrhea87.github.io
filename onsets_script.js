@@ -1,5 +1,5 @@
 let setTimer = new Date()
-
+// DATABASES ARE PROBABLY FASTER
 // let newArr;
 // let map1 = new Map([["A", 2], ["B", 3], ["C", 4]])
 // let map2 = new Map([["A", 2], ["B", 3], ["C", 4]])
@@ -1537,7 +1537,7 @@ function newPuzzle() {
         //     ["U", "U", "-", "U"],
         //     ["<"]],
         // ['RG', 'BRY', 'RGY', 'B', 'BRG', 'Y', 'BG', '', 'BRGY', 'G', 'R', 'BY', 'RY'],
-        // ['twoSolutions', 'blankWild', 'double'],
+        // ['noNull', 'blankWild', 'double'],
         // 3,
         // undefined,
         // // {
@@ -2074,30 +2074,65 @@ function inputCube(cube) {
             }
         } else {
             flatArray.push(currCube)
-        }
-        // console.log(flatArray)
+        };
         input.append(solutionCube);
     }
 };
-
-function notify(message, color, animation, duration, height, width) {
-    const notification = document.createElement('div')
+// const testDiv = document.createElement('div')
+// testDiv.style.cssText = 'height: 50px; width: 50px; background-color: red; position: absolute; left: 40px; top: 50px'
+// const testDiv2 = document.createElement('div')
+// testDiv2.style.cssText = 'height: 50px; width: 50px; background-color: red; position: absolute; left: 100px; top: 50px'
+// testDiv.addEventListener('click', () => {notify('Incorrect!', 'green', 'bounce', undefined, undefined, undefined, 1)})
+// testDiv2.addEventListener('click', () => {notify('Incorrect!', 'green', 'bounce', undefined, undefined, undefined, 2)})
+// document.body.append(testDiv, testDiv2)
+const notification = document.createElement('div')
+notification.classList.add('notification')
+function notify(message, color, animation, duration = 1500, height, width, extraContent) {
+    notification.getAnimations().forEach(val => val.cancel())
     notification.innerText = message
-    notification.classList.add('notification')
-    notification.classList.add(color)
-    notification.style.animation = 'bounce 0.35s ease'
+    switch (color) {
+        case 'red': notification.style.backgroundColor = 'rgb(204, 65, 60)'; break;
+        case 'green': notification.style.backgroundColor = 'rgb(51, 186, 65)'; break;
+    }
     notification.style.height = height
     notification.style.width = width
     document.body.append(notification)
-    if (!duration) duration = 1500
-    setTimeout(function () {
-        notification.classList.add('fade-out');
-        setTimeout(function () {notification.remove()}, 180);
-    }, duration)
+    if (animation = 'bounce') {
+        notification.animate(
+            [
+            {top: 0, opacity: 0, easing: 'ease',},
+            {top: 72 + 'px', opacity: 1, offset: 0.4, easing: 'ease',},
+            {top: 68 + 'px', opacity: 1, offset: 0.8, easing: 'ease',},
+            {top: 70 + 'px', opacity: 1, easing: 'ease',}
+            ], {
+            fill: "forwards",
+            duration: 350,
+        });
+    }
+    // if (extraContent) {
+    //     console.log('d')
+    //     const newContent = document.createElement('div')
+    //     newContent.classList.add('extra-content')
+    //     newContent.innerHTML = extraContent.content
+    //     notification.append(newContent)
+    // }
+    if (duration === 'persistent') return;
+    notification.animate(
+        [
+        {top: 0, opacity: 1, easing: 'ease',},
+        {top: 72 + 'px', opacity: 1, offset: 0.4, easing: 'ease',}
+        ], {
+        fill: "forwards",
+        duration: 300,
+        direction: 'reverse',
+        delay: duration,
+    });
 }
+// notify('Incorrect!', 'red', 'bounce', 'persistent', undefined, '110px', {
+//     'content': '<a style="display: block; opacity: 1">See Why</a>'
+// })
 
 function changeRows(element, wrap, dontAnimateBoard) {
-    console.log("D")
     let elementHeight, parentHeight, boardHeight;
     if (activeSolution === 'solution1') {
         totalRows = inputValues.wrapValue.setNameArr1.row + inputValues.wrapValue.restrictionArr1.row
@@ -2107,11 +2142,6 @@ function changeRows(element, wrap, dontAnimateBoard) {
     elementHeight = 52 + 48 * wrap.row + "px"
     parentHeight = 90 + 48 * wrap.row + "px"
     boardHeight = 540 + 48 * totalRows + "px"
-    console.log("ELEMENT HEIGHT: " + elementHeight)
-    console.log("PARENT HEIGHT: " + parentHeight)
-    console.log("BOARD HEIGHT: " + boardHeight)
-    console.log("WRAP ROW: " + wrap.row)
-    console.log("TOTAL ROWS: " + totalRows)
     element.animate(
         [{height: elementHeight}], {
             fill: 'forwards',
@@ -2185,13 +2215,17 @@ function submitInput() {
         let universe = puzzleData.universe;
 
         if (!inputValues.flatArray.setNameArr1.length) {
-            notify('Input a Solution!', 'red', 'bounce', 1000, '', '160px'); return;
+            notify('Input a Solution!', 'red', 'bounce', 1000, '', '160px'); 
+            console.log('NO SOLUTION 1, RETURNING'); return;
         } else if (!inputValues.flatArray.restrictionArr1[0].length) {
-            notify('Input a Restriction!', 'red', 'bounce', 1000, '', '170px'); return;
+            notify('Input a Restriction!', 'red', 'bounce', 1000, '', '170px');
+            console.log('NO RESTRICTION 1, RETURNING'); return;
         } else if (twoSolutions && !inputValues.flatArray.setNameArr2.length) {
-            notify('Input a Solution!', 'red', 'bounce', 1000, '', '160px'); return;
+            notify('Input a Solution!', 'red', 'bounce', 1000, '', '160px');
+            console.log('NO SOLUTION 2, RETURNING'); return;
         } else if (twoSolutions && !inputValues.flatArray.restrictionArr2[0].length) {
-            notify('Input a Restriction!', 'red', 'bounce', 1000, '', '170px'); return;
+            notify('Input a Restriction!', 'red', 'bounce', 1000, '', '170px');
+            console.log('NO RESTRICTION 2, RETURNING'); return;
         }
         
         function translateBRGY(val) {
@@ -2230,8 +2264,8 @@ function submitInput() {
                 return setOperation([arr[0], arr[1], arr[2]]);
             } else if (arr.length > 3) {
                 return setOperation([calcSet(arr.slice(0, 3)), arr[3], ...arr.slice(4, arr.length)])
-            }
-        }
+            };
+        };
         
         function parseInput(arr) {
             let index = [0];
@@ -2248,8 +2282,8 @@ function submitInput() {
                     for (let i = 0; i < index.length - 2; i++) currPosition = currPosition[index[i]]
                     currPosition[index[index.length - 1]] = calcSet(currPosition[index[index.length - 1]])
                     index[index.length - 1]++
-                } else if (arr[i] === "'") { 
-                    let previousSetNot = universe.filter(val => !calcSet(currPosition[index[index.length - 1] - 1]).includes(val))
+                } else if (arr[i] === "'") {
+                    let previousSetNot = universe.filter(val => !translateBRGY(currPosition[index[index.length - 1] - 1]).includes(val))
                     currPosition[index[index.length - 1] - 1] = previousSetNot;
                 } else {
                     currPosition[index[index.length - 1]] = arr[i];
@@ -2267,7 +2301,6 @@ function submitInput() {
         let doubleSet = []
         if (doubleIndex !== -1) {
             universe = ["BRGY","BRG","BRY","BR","BGY","BG","BY","B","RGY","RG","RY","R","GY","G","Y",""];
-            console.log(puzzleData.variations[doubleIndex].double.split(""))    
             doubleSet = calcSet(parseInput(puzzleData.variations[doubleIndex].double.split("")))
             universe = puzzleData.universe
         }
@@ -2420,6 +2453,11 @@ function submitInput() {
             })
             answerToggleContainer.append(answerLeftToggle, answerRightToggle, answerToggleDiv)
             answerContent.append(answerToggleContainer)
+        } else {
+            inputValues.divNodes.restrictionArr1 = []
+            inputValues.divNodes.setNameArr1 = []
+            for (let node of restrictionContainer.children) {inputValues.divNodes.restrictionArr1.push(node.cloneNode())}
+            for (let node of solutionContainer.children) {inputValues.divNodes.setNameArr1.push(node.cloneNode())}
         }
 
         // INPUT SOLUTION
@@ -2646,8 +2684,29 @@ function submitInput() {
     }
     console.groupEnd()
 }
-// currInput = 'restriction1'
-// inputCube('red')
+currInput = 'restriction1'
+inputCube('red')
+inputCube('red')
+inputCube('red')
+inputCube('red')
+inputCube('red')
+inputCube('red')
+inputCube('red')
+inputCube('red')
+inputCube('red')
+inputCube('red')
+inputCube('red')
+inputCube('red')
+inputCube('red')
+inputCube('red')
+inputCube('red')
+inputCube('red')
+inputCube('red')
+inputCube('red')
+inputCube('red')
+inputCube('red')
+inputCube('red')
+inputCube('red')
 // inputCube('not')
 // inputCube('must-contain')
 // inputCube('green')

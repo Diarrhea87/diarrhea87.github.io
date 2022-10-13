@@ -268,11 +268,10 @@ header h1 {
 
 #required-container {
     align-content: flex-start;
-    margin: auto;
     display: flex;
-    flex: auto;
+    margin: 0 auto;
     flex-wrap: wrap;
-    justify-content:flex-start;
+    justify-content: flex-start;
     padding: 2px;
 }
 
@@ -1087,6 +1086,10 @@ td {
     font-size: 1.07em;
     box-shadow: 2px 2px 4px rgb(0 0 0 / 20%);
     transition: 0.1s;
+    opacity: 0;
+}
+.notification .extra-content {
+    flex-grow: 0;
 }
 .notification.green{background-color: rgb(51, 186, 65)}
 .notification.red{background-color: rgb(204, 65, 60)}
