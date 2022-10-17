@@ -9,13 +9,33 @@
     <script defer src="onsets_script.js"></script>
 </head>
 <body>
-    <header onclick="notify('Correct!', 'green', 'bounce', undefined, undefined, undefined, 2)">
-        <h1>
+    <header>
+        <h1 onclick="notify('Correct!', 'green', 'bounce', undefined, undefined, undefined)">
             ONSETS PRACTICE
         </h1>
+        <svg id="settings-ico" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2.34791"
+            d="m 21.019503,10.033625 c 2.061465,0.500105 2.061465,3.432646 0,3.932752 a 2.0238998,2.0238998 0 0 0 -1.251438,3.020587 c 1.103519,1.811414 -0.969688,3.885794 -2.782274,2.782275 a 2.0238998,2.0238998 0 0 0 -3.019416,1.250264 c -0.500105,2.061465 -3.432646,2.061465 -3.932752,0 A 2.0238998,2.0238998 0 0 0 7.0130359,19.768066 C 5.2016221,20.871584 3.1272422,18.798378 4.2307606,16.985791 A 2.0238998,2.0238998 0 0 0 2.9804977,13.966377 c -2.06146654,-0.500106 -2.06146654,-3.432647 0,-3.932752 A 2.0238998,2.0238998 0 0 0 4.2319346,7.0130359 C 3.1284161,5.2016222 5.2016221,3.1272423 7.0142099,4.2307607 A 2.0238998,2.0238998 0 0 0 10.033623,2.9804978 c 0.500106,-2.06146641 3.432647,-2.06146641 3.932752,0 a 2.0238998,2.0238998 0 0 0 3.020589,1.2514369 c 1.811413,-1.1035184 3.885794,0.9696875 2.782275,2.7822753 -0.713765,1.1692598 -0.08217,2.6954023 1.250264,3.019415 z"
+            id="path127" />
+            <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2.34791"
+            d="m 15.521867,11.99822 a 3.5218678,3.5218678 0 1 1 -7.0437347,0 3.5218678,3.5218678 0 0 1 7.0437347,0 z"
+            id="path129" />
+        </svg>
+        <div id="settings-container">
+            <h4>Settings</h4>
+            <ul id="settings-nodes-container">
+                <li class="setting-category">Variations</li>
+                <li class="settings-toggle">Challenge Mode</li>
+            </ul>
+        </div>
     </header>
-    <a href="http://127.0.0.1:5500/" style="position: absolute;">Switch to equations practice</a>
-    <a href="http://127.0.0.1:5500/" style="position: absolute;">Switch to equations practice</a>
+    <a href="http://127.0.0.1:5500/" id="equations-link">Switch to equations practice</a>
     <div id="puzzle-container">
         <div id="cards-container">
         </div>
@@ -78,11 +98,14 @@
         </div>
         <div id="board-container">
         <div id="parent-restraint-container">
-            <div class="restraint-container"><h3>Forbidden</h3><div id="forbidden-container"></div></div>
-            <div class="restraint-container"><h3>Permitted</h3><div id="permitted"></div></div>
-            <div class="restraint-container"><h3>Required</h3>
-                <div id="required-container">
+            <div class="restraint-container"><h3>Forbidden</h3>
+                <div id="forbidden-container"></div>
             </div>
+            <div class="restraint-container"><h3>Permitted</h3>
+                <div id="permitted-container"></div>
+            </div>
+            <div class="restraint-container"><h3>Required</h3>
+                <div id="required-container"></div>
             </div>
         </div>
         <div id="input-container">
@@ -125,19 +148,8 @@
     </div>
     <div id="bottom-puzzle-container">
         <div id="resources-container">
-            <!-- <div class="cube restraint-cube blue"></div>
-            <div class="cube restraint-cube green"></div>
-            <div class="cube restraint-cube yellow"></div>
-            <div class="cube restraint-cube union"></div> -->
         </div>
         <div id="submit-button">Submit</div>
-    </div>
-    <div id="correct-answer-view-container" class="hidden">
-        <div id="correct-answer-arrow">^</div>
-        <div id="correct-answer-container">
-            <div id="solution1" class="solution"></div>
-            <div id="solution2" class="solution"></div>
-        </div>
     </div>
     <div id="keyboard-container" class="hidden">
         <div class="keyboard-row">
