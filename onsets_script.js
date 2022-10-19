@@ -1,4 +1,5 @@
 let setTimer = new Date()
+
 // DATABASES ARE PROBABLY FASTER
 // let newArr;
 // let map1 = new Map([["A", 2], ["B", 3], ["C", 4]])
@@ -21,11 +22,17 @@ let setTimer = new Date()
 // }
 // console.log(newArr)
 // console.log(b)
+
+function getVariation(variation) {
+    console.log()
+    return puzzleData.variations[puzzleData.variations.findIndex(val => Object.keys(val)[0] === variation)][variation]
+};
+
 function test() {
     let stopTimer = new Date(); console.log((stopTimer.getTime() - setTimer.getTime())/1000 + " SECONDS");
 };
 
-function generateRandomNumber(min, max) {
+function getRandomNumber(min, max) {
     return Math.floor(Math.random() * (max + 1 - min)) + min;
 };
 
@@ -49,7 +56,6 @@ function randomSort(input) {
     }
     return arr;
 };
-test()
 
 function calcScore(inputArr, type = 1) {
     let score = [0, 0, 0, 0, 0, false, false, false]
@@ -97,7 +103,7 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
     // GENERAL FUNCTIONS:
 
     function randomArrayValue (arr) {
-        return arr[generateRandomNumber(0, arr.length - 1)]
+        return arr[getRandomNumber(0, arr.length - 1)]
     };
 
     function containsVariation(input) {    // DOES ARRAY CONTAIN INPUT VARIATION?
@@ -221,30 +227,30 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
                 if (arr[2] === "V") {
                     answer = [universe, []]
                     if (arr[1] === "U") {
-                        switch(generateRandomNumber(1, 4)) {
+                        switch(getRandomNumber(1, 4)) {
                             case 1: flag = ["VUV"]; break;
                             case 2: flag = ["VUɅ"]; break;
                             case 3: flag = ["ɅUV"]; break;
                             case 4: flag = ["V∩V"]; break;
                         };
-                        switch (generateRandomNumber(1, 4)) {
+                        switch (getRandomNumber(1, 4)) {
                             case 1: flag.push("V∩Ʌ"); break;
                             case 2: flag.push("Ʌ∩V"); break;
                             case 3: flag.push("Ʌ∩Ʌ"); break;
                             case 4: flag.push("ɅUɅ"); break;
                         };
                     } else if (symmetricDifference) {    // OPERATION IS "-"
-                        switch (generateRandomNumber(1, 2)) {
+                        switch (getRandomNumber(1, 2)) {
                             case 1: flag = [("Ʌ-V")]; break;
                             case 2: flag = [("V-Ʌ")]; break;
                         };
-                        switch (generateRandomNumber(1, 2)) {
+                        switch (getRandomNumber(1, 2)) {
                             case 1: flag.push("V-V"); break;
                             case 2: flag.push("Ʌ-Ʌ"); break;
                         };
                     } else {    // OPERATION IS "-"
                         flag = ["V-Ʌ"];
-                        switch (generateRandomNumber(1, 3)) {
+                        switch (getRandomNumber(1, 3)) {
                             case 1: flag.push("V-V"); break;
                             case 2: flag.push("Ʌ-V"); break;
                             case 3: flag.push("Ʌ-Ʌ"); break;
@@ -397,7 +403,7 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
         // COLORS:
         const colors = [];
         for (let i = 0; i < 8; i++) {
-            let roll = generateRandomNumber(1, 6)
+            let roll = getRandomNumber(1, 6)
             switch (roll) {
                 case 1: colors.push("R"); break;
                 case 2: colors.push("R"); break;
@@ -413,7 +419,7 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
         // NUMBERS:
         const numbers = [];
         for (let i = 0; i < 3; i++) {
-            let roll = generateRandomNumber(1, 6)
+            let roll = getRandomNumber(1, 6)
             switch (roll) {
                 case 1: numbers.push(1); break;
                 case 2: numbers.push(1); break;
@@ -429,7 +435,7 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
         // OPERATIONS:
         const operations = [];
         for (let i = 0; i < 4; i++) {
-            let roll = generateRandomNumber(1, 6)
+            let roll = getRandomNumber(1, 6)
             switch (roll) {
                 case 1: operations.push("-"); break;
                 case 2: operations.push("'"); break;
@@ -445,7 +451,7 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
         // RESTRICTIONS:
         const restrictions = [];
         for (let i = 0; i < 3; i++) {
-            let roll = generateRandomNumber(1, 6)
+            let roll = getRandomNumber(1, 6)
             switch (roll) {
                 case 1: restrictions.push("Ʌ"); break;
                 case 2: restrictions.push("V"); break;
@@ -465,7 +471,7 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
     let universeArr;
 
     (function generateUniverse() {
-        universeArr = randomSort(["BRGY","BRG","BRY","BR","BGY","BG","BY","B","RGY","RG","RY","R","GY","G","Y",""]).slice(0, generateRandomNumber(10, 14));        
+        universeArr = randomSort(["BRGY","BRG","BRY","BR","BGY","BG","BY","B","RGY","RG","RY","R","GY","G","Y",""]).slice(0, getRandomNumber(10, 14));        
     })();
 
     let blue, red, green, yellow;
@@ -517,31 +523,31 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
                 case "double": 
                     let set = [];
                     let valArr = ["B", "R", "G", "Y"]
-                    switch (generateRandomNumber(1, 4)) {
+                    switch (getRandomNumber(1, 4)) {
                         case 1: set.push(valArr[0]); valArr.splice(0, 1); break;
                         case 2: set.push(valArr[1]); valArr.splice(1, 1); break;
                         case 3: set.push(valArr[2]); valArr.splice(2, 1); break;
                         case 4: set.push(valArr[3]); valArr.splice(3, 1); break;
                     };
-                    if (generateRandomNumber(1, 4) !== 1) {
-                        switch (generateRandomNumber(1, 3)) {
+                    if (getRandomNumber(1, 4) !== 1) {
+                        switch (getRandomNumber(1, 3)) {
                             case 1: set.push("U"); break;
                             case 2: set.push("∩"); break;
                             case 3: set.push("-"); break;
                         };
-                        set.push(valArr[generateRandomNumber(1, 2)])
+                        set.push(valArr[getRandomNumber(1, 2)])
                     };
                     let operationArr = set.slice();
                     if (set.length === 1) operationArr[0] = translateBRGY(operationArr[0]);
-                    if (generateRandomNumber(0, 1)) {
-                        if (!generateRandomNumber(0, 2) && set.length === 3) {
+                    if (getRandomNumber(0, 1)) {
+                        if (!getRandomNumber(0, 2) && set.length === 3) {
                             double = universeArr.filter(val => !setOperation(set).includes(val));
                             set[0] = "(".concat(set[0])
                             set[2] = set[2].concat(")'")
                             if (double.length === 0 || double.length === universeArr.length) return variationInput("double");
                             return set.join("");
                         } else {
-                            let index = (generateRandomNumber(0, 1) * (set.length - 1));
+                            let index = (getRandomNumber(0, 1) * (set.length - 1));
                             operationArr[index] = universeArr.filter(val => !translateBRGY(operationArr[index]).includes(val));
                             set[index] = set[index].concat("'");
                         };
@@ -549,20 +555,20 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
                     (set.length === 1) ? double = operationArr[0] : double = setOperation(operationArr);
                     if (double.length === 0 || double.length === universeArr.length) return variationInput("double")
                     return set.join("");
-                case "requiredcard": 
-                    if (universeArr.includes("") && generateRandomNumber(1, 4) === 1) {
+                case "requiredcard":
+                    if (universeArr.includes("") && getRandomNumber(1, 4) === 1) {
                         return ""
                     } else {
                         return randomArrayValue(universeArr);
                     };
-                case "forbiddencard": return universeArr[generateRandomNumber(0, universeArr.length - 1)];
+                case "forbiddencard": return universeArr[getRandomNumber(0, universeArr.length - 1)];
             }
         }
         let i = 0;
         let variationLength = setVariationsLength ?? 6
         while (variationsArr.length < variationLength) {
             i++
-            let roll = generateRandomNumber(1, 11);
+            let roll = getRandomNumber(1, 11);
             if (i === 1) roll = 6;
             switch (roll) {
                 case 1:
@@ -676,21 +682,21 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
         while (goalArr.length === 0) {
             i++
             let num1, num2, num3
-            switch (generateRandomNumber(1, 7)) {
+            switch (getRandomNumber(1, 7)) {
                 case 1:     // ADD 1 CUBE
-                    goalArr.push(numerals[generateRandomNumber(0, 2)]); goalShape = 1; break;
+                    goalArr.push(numerals[getRandomNumber(0, 2)]); goalShape = 1; break;
                 case 2:     // ADD 2 CUBES
                     altNumerals = [...numerals];
-                    index = generateRandomNumber(0, 2);
+                    index = getRandomNumber(0, 2);
                     num1 = numerals[index];
                     altNumerals = altNumerals.slice(0, index).concat(altNumerals.slice(index + 1));
-                    num2 = altNumerals[generateRandomNumber(0, 1)];
-                    if (generateRandomNumber(1, 4) === 1) {     // MAKE SMALLER NUMBER NEGATIVE (25%)
+                    num2 = altNumerals[getRandomNumber(0, 1)];
+                    if (getRandomNumber(1, 4) === 1) {     // MAKE SMALLER NUMBER NEGATIVE (25%)
                         num1 < num2 ? num1 *= -1 : num2 *= -1
                     };
                     goalArr = [num1, "+", num2]; goalShape = 2; break;
                 case 3:     // ADD 3 CUBES
-                    if (numerals[0] + numerals[1] + numerals[2] > universeArrLength || generateRandomNumber(1, 4) === 1) {
+                    if (numerals[0] + numerals[1] + numerals[2] > universeArrLength || getRandomNumber(1, 4) === 1) {
                         numerals[0] *= -1;
                     } else if (numerals[2] > numerals[0] + numerals[1] && Math.random() >= 0.5) {
                         numerals[0] *= -1;
@@ -701,10 +707,10 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
                     goalArr = [altNumerals[0], "+", altNumerals[1], "+", altNumerals[2]]; goalShape = 3; break;
                 case 4:     // MULTIPLY 2 CUBES
                     altNumerals = [...numerals];
-                    index = generateRandomNumber(0, 2);
+                    index = getRandomNumber(0, 2);
                     num1 = numerals[index];
                     altNumerals = altNumerals.slice(0, index).concat(altNumerals.slice(index + 1));
-                    index = generateRandomNumber(0, 1);
+                    index = getRandomNumber(0, 1);
                     num2 = altNumerals[index];
                     num3 = altNumerals[1 - index];
                     if (num1 * num2 > universeArrLength) {
@@ -723,10 +729,10 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
                     }; goalShape = 5; break;
                 case 6:     // A x (B + C) or (A x B) + (A x C)
                     altNumerals = [...numerals];
-                    index = generateRandomNumber(0, 2);
+                    index = getRandomNumber(0, 2);
                     num1 = numerals[index];
                     altNumerals = altNumerals.slice(0, index).concat(altNumerals.slice(index + 1));
-                    index = generateRandomNumber(0, 1);
+                    index = getRandomNumber(0, 1);
                     num2 = altNumerals[index];
                     num3 = altNumerals[1 - index];
                     altNumerals.sort((a, b) => a - b)
@@ -770,10 +776,10 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
                     }; goalShape = 6; break;
                 case 7:     // MULTIPLY 2 CUBES THEN ADD 1 CUBE
                     altNumerals = [...numerals];
-                    index = generateRandomNumber(0, 2);
+                    index = getRandomNumber(0, 2);
                     num1 = numerals[index];
                     altNumerals = altNumerals.slice(0, index).concat(altNumerals.slice(index + 1));
-                    index = generateRandomNumber(0, 1);
+                    index = getRandomNumber(0, 1);
                     num2 = altNumerals[index];
                     num3 = altNumerals[1 - index];
                     if (num1 * num2 - num3 <= universeArrLength) {
@@ -900,7 +906,7 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
         forbiddenArr = [];
         modifiedCubesArr = cubesArr.slice();
 
-        (totalValues.length > 8) ? forbiddenArrLength = generateRandomNumber(3, 4) : forbiddenArrLength = generateRandomNumber(1, 2);
+        (totalValues.length > 8) ? forbiddenArrLength = getRandomNumber(3, 4) : forbiddenArrLength = getRandomNumber(1, 2);
         // (totalValues.length > 8) ? forbiddenArrLength = generateRandomNumber(4, 4) : forbiddenArrLength = generateRandomNumber(2, 3);
         
         if (totalValues.length - forbiddenArrLength >= 7 && restrictionCubes.length >= 3) {
@@ -931,7 +937,7 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
         console.log(modifiedCubesArr);
 
         valuesArr = modifiedCubesArr[0].concat(modifiedCubesArr[3].filter(val => val === "V" || val === "Ʌ"));
-        valuesArr2 = modifiedCubesArr[0];
+        valuesArr2 = modifiedCubesArr[0].slice();
         for (let x of modifiedCubesArr[3]) if (x === "V" || x === "Ʌ") valuesArr2.push("V");
         console.log("VAL", valuesArr2);
         console.groupEnd()
@@ -1110,7 +1116,7 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
                         if (origcount % 5000000 === 0 && origcount > 0) console.log((origcount/1000000) + " MILLION");
                         if (newUniverse.length < minRestrictedUniverse) continue;
                         if (noNull && newUniverse.length === universeArr.length) continue;
-                        if (requiredCard && !newUniverse.includes(requiredCard)) continue;
+                        if (requiredCard !== undefined && !newUniverse.includes(requiredCard)) continue;
                         let mapKey = newUniverse.join(",");
                         if (restrictionsMap.has(mapKey)) {
                             let newArr = restrictionsMap.get(mapKey);
@@ -1124,7 +1130,7 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
                     for (let restriction of map) {
                         let newUniverse = universe.filter(val => restriction[0].indexOf(val) < 0);
                         if (newUniverse.length < minRestrictedUniverse) continue;
-                        if (requiredCard && !newUniverse.includes(requiredCard)) continue;
+                        if (requiredCard !== undefined && !newUniverse.includes(requiredCard)) continue;
                         let keyParam;
                         if (index === 1) {
                             keyParam = restriction[2];
@@ -1268,8 +1274,8 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
                         let permCards = permutationValues[0][i].filter(val => restriction[0].includes(val));
                         let permFlag = permutationValues[1][i];
                         let breakLoop2;
-                        if (requiredCard && !permCards.includes(requiredCard)) continue; // BWILD
-                        if (forbiddenCard && permCards.includes(forbiddenCard)) continue;
+                        if (requiredCard !== undefined && !permCards.includes(requiredCard)) continue; // BWILD
+                        if (forbiddenCard !== undefined && permCards.includes(forbiddenCard)) continue;
 
                         let solutionEval = permCards.length;
                         let backup = false;
@@ -1284,6 +1290,7 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
                                         case -2:
                                             if (permCards.includes("") || !double) continue;
                                             avaiableCards = permCards.filter(val => double.includes(val));
+                                            if (forbiddenCard !== undefined) avaiableCards.filter(val => val !== forbiddenCard)
                                             blankCard = randomArrayValue(avaiableCards);
                                             if (blankCard) skip = true; break;
                                         case -1: 
@@ -1299,6 +1306,7 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
                                             } else if (double) {
                                                 avaiableCards = avaiableCards.filter(val => !double.includes(val))
                                             };
+                                            if (forbiddenCard !== undefined) avaiableCards.filter(val => val !== forbiddenCard)
                                             blankCard = randomArrayValue(avaiableCards);
                                             if (blankCard) skip = true; break;
                                         case 1:
@@ -1310,11 +1318,13 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
                                                     avaiableCards = universeArr.filter(val => !(permCards.includes(val)));
                                                 };
                                             };
+                                            if (forbiddenCard !== undefined) avaiableCards.filter(val => val !== forbiddenCard)
                                             blankCard = randomArrayValue(avaiableCards);
                                             if (blankCard) skip = true; break;
                                         case 2:
                                             if (!permCards.includes("")) continue;
                                             avaiableCards = universeArr.filter(val => !(permCards.includes(val)));
+                                            if (forbiddenCard !== undefined) avaiableCards.filter(val => val !== forbiddenCard)
                                             blankCard = randomArrayValue(avaiableCards);
                                             if (blankCard) skip = true; break;
                                     };
@@ -1443,7 +1453,7 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
                 function newGoal(val) {
                     let numbers = []
                     for (let i = 0; i < 3; i++) {
-                        let roll = generateRandomNumber(1, 6)
+                        let roll = getRandomNumber(1, 6)
                         switch (roll) {
                             case 1: numbers.push(1); break;
                             case 2: numbers.push(1); break;
@@ -1455,7 +1465,7 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
                     };
                     let a = numbers[0], b = numbers[1], c = numbers[2]
                     // GOAL SHAPE 1
-                    for (let val of numbers) if (val === val) return [[val], 1]
+                    for (let num of numbers) if (num === val) return [[num], 1]
                     // GOAL SHAPE 2
                     if ((a + b) === val) return [[a, "+", b], 2]
                     if ((b + c) === val) return [[b, "+", c], 2]
@@ -1493,6 +1503,19 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
             console.log("SOL", solution);
         };
         let stopTimer = new Date(); console.log(" > DONE GENERATING SOLUTIONS: " + (stopTimer.getTime() - setTimer.getTime())/1000 + " SECONDS");
+        
+        // MOVING CUBES FROM FORBBIDEN BACK TO RESOURCES
+        let count = getRandomNumber(0, forbiddenArr.length)
+        for (let i = 0; i < count; i++) {
+            let toPush = randomArrayValue(forbiddenArr);
+            if (toPush === "V" || toPush === "Ʌ") {
+                modifiedCubesArr[3].push(toPush)
+            } else {
+                modifiedCubesArr[0].push(toPush)
+            };
+            forbiddenArr = deleteFirstArrItem(forbiddenArr, toPush);
+        }        
+        
         let mapArr = [["[    ]", "[    ]", "[    ]", "[    ]"], ["[    ]", "[    ]", "[    ]", "[    ]"], ["[    ]", "[    ]", "[    ]", "[    ]"], ["[    ]", "[    ]", "[    ]", "[    ]"]];
         for (let i = 0; i < universeArr.length; i++) {
             switch (universeArr[i]) {
@@ -1525,7 +1548,7 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
     class PuzzleData {
         constructor(cubesArr, modifiedCubesArr, universeArr, variationsArr, goalArr, goalShape, goalValues, forbiddenArr, solution) {
             this.cubes = cubesArr;
-            this.modfiedCubes = modifiedCubesArr;
+            this.modifiedCubes = modifiedCubesArr;
             this.universe = universeArr;
             this.variations = variationsArr;
             this.goal = goalArr;
@@ -1592,7 +1615,10 @@ function newPuzzle(queueData) {
     goalContainer.innerHTML = ""
     goalContainer.parentElement.classList.remove('three-rows')
 
-    // 
+    for (let x of mapArr) {
+        x.classList.remove('strike-through')
+    }
+
     puzzleData = queueData ?? generatePuzzle(
         // false,
         // [   ["R", "B", "G"],
@@ -1603,15 +1629,20 @@ function newPuzzle(queueData) {
         // ['requiredCard', 'blankWild', 'double'],
         // 3,
         // undefined,
-        // // {
-        // //     'goalArr': [5, "*", 1, "*", 1],
-        // //     'goalValues': [5],
-        // //     'goalShape': 2
-        // // },
+        // {
+        //     'goalArr': [5, "*", 1, "*", 1],
+        //     'goalValues': [5],
+        //     'goalShape': 2
+        // },
         // {
         //     'forbiddenArrLength': 0
         // }
     );
+
+    blankWild = puzzleData.variations.includes('blankWild')
+    twoSolutions = puzzleData.variations.includes('twoSolutions')
+    blankWildContainer.style.display = (blankWild) ? '' : 'none'
+    solutionFormContainter.style.display = (twoSolutions) ? '' : 'none'
     
     console.log(puzzleData);
     console.log(puzzleData.forbidden)
@@ -1718,7 +1749,7 @@ function newPuzzle(queueData) {
     }
     console.log("HSTD", highStandard);
     let requiredArr = []
-    let resourcesArr = puzzleData.modfiedCubes[0].concat(puzzleData.modfiedCubes[2]).concat(puzzleData.modfiedCubes[3])
+    let resourcesArr = puzzleData.modifiedCubes[0].concat(puzzleData.modifiedCubes[2]).concat(puzzleData.modifiedCubes[3])
     console.log(resourcesArr)
 
     requiredContainer.dataset.values = ""
@@ -1783,7 +1814,12 @@ function newPuzzle(queueData) {
         resourcesContainer.append(newResourcesCube);
     }
     console.log(filterDuplicates(puzzleData.universe))
-    const mapArr = map.querySelectorAll("td")
+
+    for (let x of mapArr) {
+        x.addEventListener('click', function() {
+            this.classList.toggle('strike-through')
+        })
+    }
 
     for (let card of filterDuplicates(puzzleData.universe)) {
         switch (card) {
@@ -1863,7 +1899,7 @@ function newPuzzle(queueData) {
     //     ["U", "U", "-", "U"],
     //     ["<"]],
     // ['RG', 'BRY', 'RGY', 'B', 'BRG', 'Y', 'BG', '', 'BRGY', 'G', 'R', 'BY', 'RY'],
-    // ['requiredCard', 'blankWild', 'double'],
+    // ['forbiddenCard', 'blankWild', 'double'],
     // 3,
     // undefined,
     // {
@@ -1899,6 +1935,7 @@ const variationsContainer = document.querySelector('#variations-container')
 const map = document.querySelector('#map')
 const blankWildContainer = document.querySelector('#blank-wild-container')
 const submitButton = document.querySelector('#submit-button');
+const mapArr = map.querySelectorAll("td")
 // TWO SOLUTIONS TOGGLE
 const solutionFormContainter = document.querySelector('#solution-form-container')
 const solution1Toggle = document.querySelector('#solution1-toggle')
@@ -1940,17 +1977,14 @@ let activeSolution = 'solution1';
 let keyboardActive = false;
 let currInput;
 
+let blankWild
+let twoSolutions
+
 let puzzleData;
 let queuedPuzzleData
 newPuzzle();
 let stopTimer = new Date(); console.log((stopTimer.getTime() - setTimer.getTime())/1000 + " SECONDS");
 console.log(' > DONE')
-
-let blankWild = puzzleData.variations.includes('blankWild')
-let twoSolutions = (puzzleData.variations.includes('twoSolutions'))
-
-if (!blankWild) blankWildContainer.style.display = 'none';
-if (!twoSolutions) solutionFormContainter.style.display = 'none';
 
 keyboardContainer.addEventListener('click', function(e) {e.stopPropagation()})
 blankWildContainer.addEventListener('click', (e) => {
@@ -2286,10 +2320,12 @@ function checkInputWidth(input, wrap, cubeWidth) {
     return true;
 }
 
-document.addEventListener('click', function hideKeyboard() {
+document.addEventListener('click', hideKeyboard);
+
+function hideKeyboard() {
     currInput = undefined;
     keyboard.classList.add("hidden")
-});
+}
 
 function showKeyboard(e) {
     e.stopPropagation();
@@ -2313,8 +2349,7 @@ function showKeyboard(e) {
 
 function submitInput() {
     try {
-        let universe = puzzleData.universe;
-        
+        let universe = puzzleData.universe
         let setNameArr1 = [...inputValues.flatArray.setNameArr1].join("");
         let setNameArr2 = [...inputValues.flatArray.setNameArr2].join("");
         let restrictionArr1 = [...inputValues.flatArray.restrictionArr1].join("");
@@ -2351,7 +2386,7 @@ function submitInput() {
             let rightParenthesis = (input.match(/\)/g) || []).length
             if (leftParenthesis !== rightParenthesis) {
                 console.log(i)
-                notify('Invalid Input! Check Parenthesis!', 'red', 'bounce', 1600, '', '270px')
+                notify('Invalid Input, Check Parenthesis!', 'red', 'bounce', 1600, '', '270px')
                 console.log('Mistmatched Parenthesis'); return;
             };
         };
@@ -2424,8 +2459,8 @@ function submitInput() {
         };
         
         // PARSING INPUTS
-        let solutionSet1;
-        let solutionSet2;
+        let solutionSet1 = [];
+        let solutionSet2 = [];
 
         let doubleIndex = puzzleData.variations.findIndex(val => Object.keys(val)[0] === 'double');
         let doubleSet = []
@@ -2434,20 +2469,23 @@ function submitInput() {
             doubleSet = parseInput(puzzleData.variations[doubleIndex].double.split(""))
             universe = puzzleData.universe
         }
+
+        console.log(universe)
         console.log(doubleSet)
 
+        let nullRestriction = false;
         for (let i = 0; i <= (twoSolutions); i++) {
             if (blankWild) {
-                universe = deleteFirstArrItem(puzzleData.universe, "")
+                while (universe.includes("")) universe = deleteFirstArrItem(universe, "")
                 let newCard = ''
                 let currBlankCard = i ? inputValues.blankWild.solution2 : inputValues.blankWild.solution1;
                 for (let j = 0; j < currBlankCard.length; j++) {
                     if (currBlankCard[j]) {
                         switch (j) {
-                            case 0: newCard+= "B"; break;
-                            case 1: newCard+= "R"; break;
-                            case 2: newCard+= "G"; break;
-                            case 3: newCard+= "Y"; break;
+                            case 0: newCard += "B"; break;
+                            case 1: newCard += "R"; break;
+                            case 2: newCard += "G"; break;
+                            case 3: newCard += "Y"; break;
                         }
                     }
                 }
@@ -2488,6 +2526,7 @@ function submitInput() {
                 if (operation === "=") restrictedCards = restrictedCards.concat(rightVal.filter(val => !leftVal.includes(val)))
             }
             console.log(restrictedCards)
+            if (!restrictedCards.length) nullRestriction = true;
             
             if (i) {
                 solutionSet2 = parsedSetName.filter(val => !restrictedCards.includes(val))
@@ -2497,7 +2536,6 @@ function submitInput() {
         }
         console.log(solutionSet1)
         console.log(solutionSet2)
-        
         // DISPLAYING ANSWER
         newAnswer.innerHTML = ''
 
@@ -2533,6 +2571,22 @@ function submitInput() {
         const resultParagraph = document.createElement('p');
 
         (function checkInput() {
+
+            resultTitle.innerText = 'Incorrect:'
+
+            if (!puzzleData.goalValues.includes(solutionSet1.length)) {
+                resultParagraph.innerText = `Solution does not evaluate to goal.`
+                return;
+            } else if (!puzzleData.goalValues.includes(solutionSet2.length) && twoSolutions) {
+                resultParagraph.innerText = `Solution does not evaluate to goal.`
+                return;
+            };
+
+            if (nullRestriction && puzzleData.variations.includes('noNull')) {
+                resultParagraph.innerText = `NUll Restriction.`
+                return;
+            }
+
             function altCalcScore(inputArr) {
                 let score = [0, 0, 0, 0, 0, 0, 0, 0]
                 for (let x of inputArr) {
@@ -2555,7 +2609,6 @@ function submitInput() {
             let requiredScore = altCalcScore(requiredContainer.dataset.values)
             let resourcesScore = altCalcScore(requiredContainer.dataset.values.concat(resourcesContainer.dataset.values))
             for (let i = 1; i <= (twoSolutions ? 4 : 2); i++) {
-                resultTitle.innerText = 'Incorrect:'
                 let input
                 switch (i) {
                     case 1: input = restrictionArr1; break;
@@ -2575,12 +2628,12 @@ function submitInput() {
                     if (curr < min) {
                         console.log(i)
                         // resultParagraph.innerText = `Required cubes missing from ${i % 2 == 0 ? 'Set Name' : 'Restriction'}`
-                        resultParagraph.innerText = `Required cubes missing from Solution`
+                        resultParagraph.innerText = `Required cubes missing from Solution.`
                         return;
                     };
     
                     if (curr > max) {
-                        if (j > 5 && max !== 0) continue;
+                        if (j >= 5 && max !== 0) continue;
                         resultTitle.innerText = 'Incorrect:'
                         let extraCube;
                         switch (j) {
@@ -2592,44 +2645,52 @@ function submitInput() {
                                 let arr = []
                                 if (input.includes("V")) arr.push('"Universe"')
                                 if (input.includes("Ʌ")) arr.push('"Empty-Set"')
-                                extraCube = arr[generateRandomNumber(0, arr.length - 1)];
+                                extraCube = arr[getRandomNumber(0, arr.length - 1)];
                                 break;
                             case 5:
                                 let arr2 = []
                                 if (input.includes("U")) arr2.push('"Or"')
                                 if (input.includes("∩")) arr2.push('"And"')
-                                extraCube = arr2[generateRandomNumber(0, arr.length - 1)];
+                                extraCube = arr2[getRandomNumber(0, arr2.length - 1)];
                                 break;
                             case 6: extraCube = '"Minus"'
                             case 7: extraCube = '"Not"'
                         }
                         if (max === 0) {
-                            resultParagraph.innerText = `Resources does not contain a ${extraCube} cube`
+                            resultParagraph.innerText = `Resources does not contain a ${extraCube} cube.`
                             return;
                         } else {
-                            resultParagraph.innerText = `${i % 2 == 0 ? 'Set Name' : 'Restriction'} has too many ${extraCube} cubes`
+                            resultParagraph.innerText = `${i % 2 == 0 ? 'Set Name' : 'Restriction'} has too many ${extraCube} cubes.`
                             return;
                         };
                     };
                 };
             };
 
-            if (!puzzleData.goalValues.includes(solutionSet1.length)) {
-                resultParagraph.innerText = `Solution does not evaluate to goal`
-                return;
-            } else if (!puzzleData.goalValues.includes(solutionSet2.length) && twoSolutions) {
-                resultParagraph.innerText = `Solution does not evaluate to goal`
+        if (solutionSet1 === solutionSet2) {
+            resultParagraph.innerText = `Both solutions cannot contain the same cards.`
+            return;
+        }
+
+        if (puzzleData.variations.includes('requiredCard')) {
+            if (!solutionSet1.includes(getVariation('requiredCard'))) {
+                resultParagraph.innerText = `Solution does not contain required card.`
                 return;
             };
-
-            if (solutionSet1 === solutionSet2) {
-                resultParagraph.innerText = `Both solutions cannot contain the same cards`
+            if (twoSolutions && !solutionSet2.includes(getVariation('requiredCard'))) {
+                resultParagraph.innerText = `Solution does not contain required card.`
                 return;
-            }
-
-            
+            };
+        };
+        if (puzzleData.variations.includes('forbiddenCard')) {
+            if (solutionSet1.includes(getVariation('forbiddenCard')) || solutionSet2.includes(getVariation('forbiddenCard'))) {
+                resultParagraph.innerText = `Solution contains forbidden card.`
+                return;
+            };
+        };
 
             resultTitle.innerText = 'Correct'
+            inputResult.style.backgroundColor = 'rgba(92, 255, 80, 0.518)';
         })();
 
         inputResult.append(resultTitle)
@@ -2853,6 +2914,10 @@ function submitInput() {
                         currIterable = puzzleData.solution.restriction.join("");
                     };
                 }
+
+                console.log(currIterable)
+
+
                 for (let k = 0; k < currIterable.length; k++) {
                     const solutionCube = document.createElement("div");
                     if (!(currIterable[k] === "(" || currIterable[k] === ")")) {
@@ -2932,6 +2997,15 @@ function submitInput() {
     console.groupEnd()
 }
 
+const mapArrowBox = document.querySelector('#map-arrow-box')
+const variationsArrowBox = document.querySelector('#variations-arrow-box')
+mapArrowBox.addEventListener('click', function() {
+    this.parentElement.classList.toggle('shown')
+})
+variationsArrowBox.addEventListener('click', function() {
+    this.parentElement.classList.toggle('shown')
+})
+
 const settingsContainer = document.querySelector('#settings-container')
 const menuBackground = document.createElement('div')
 const header = document.querySelector('header')
@@ -2946,6 +3020,7 @@ document.body.append(menuBackground)
 
 settingsIcon.addEventListener('click', (e) => {
     e.stopPropagation()
+    hideKeyboard()
     settingsContainer.classList.toggle('shown')
     menuBackground.classList.toggle('shown')
     header.classList.toggle('dark')
