@@ -669,18 +669,13 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
 
         goalArr = [];
         goalValues = [];
-        let numerals = cubesArr[1].sort((a, b) => a - b)
-        let altNumerals;
-        let index;
+        let numerals = cubesArr[1].sort((a, b) => a - b), altNumerals, index;
         let case3Alt = 0;
-
-        let i = 0;
-
         let universeArrLength = universeArr.length
+
         if (containsVariation("forbiddenCard") || containsVariation("noNull")) universeArrLength -= 1
 
         while (goalArr.length === 0) {
-            i++
             let num1, num2, num3
             switch (getRandomNumber(1, 7)) {
                 case 1:     // ADD 1 CUBE
@@ -736,22 +731,17 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
                     num2 = altNumerals[index];
                     num3 = altNumerals[1 - index];
                     altNumerals.sort((a, b) => a - b)
-
                     if (num1 * (altNumerals[1] - altNumerals[0]) <= universeArrLength) {
-
                         if (num1 * (altNumerals[1] + altNumerals[0]) <= universeArrLength && Math.random() >= 0.5) {
                             goalArr = [num1, "*", altNumerals[1], "+", altNumerals[0]];
                         } else {
                             goalArr = [num1, "*", altNumerals[1], "+", -altNumerals[0]];
                         };
-
                     } else {
-
                         altNumerals.push(num1);
                         index = altNumerals.indexOf(num2);
                         altNumerals = altNumerals.slice(0, index).concat(altNumerals.slice(index + 1));
                         altNumerals.sort((a, b) => a - b)
-
                         if (num2 * (altNumerals[1] - altNumerals[0]) <= universeArrLength) {
                             if (num2 * (altNumerals[1] + altNumerals[0]) <= universeArrLength && Math.random() >= 0.5) {
                                 goalArr = [num2, "*", altNumerals[1], "+", altNumerals[0]];
@@ -759,7 +749,6 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
                                 goalArr = [num2, "*", altNumerals[1], "+", -altNumerals[0]];
                             }
                         } else {
-
                             altNumerals.push(num3);
                             index = altNumerals.indexOf(num3);
                             altNumerals = altNumerals.slice(0, index).concat(altNumerals.slice(index + 1));
@@ -770,9 +759,7 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
                             } else if (num3 * (altNumerals[1] - altNumerals[0]) <= universeArrLength) {
                                 goalArr = [num3, "*", altNumerals[1], "+", -altNumerals[0]];
                             };
-                            
                         };
-                        
                     }; goalShape = 6; break;
                 case 7:     // MULTIPLY 2 CUBES THEN ADD 1 CUBE
                     altNumerals = [...numerals];
@@ -992,7 +979,6 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
             function setCycle(arr, values) {    // CREATE SET PERMUTATIONS
                 if (arr.length <= 5) {
                     totalSetsMap.set(arr.join(""), advancedCalcSet(arr, universeArr, 1));
-                    // totalSetsMap.set(arr.join(""), calcSet(arr, 1));
                     if (union) {
                         for (let x of filterDuplicates(values)) {
                             setCycle(arr.concat("U").concat(x), deleteFirstArrItem(values, x));
@@ -1082,9 +1068,7 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
 
             function evaluatePermutation(arr, universe = universeArr, index = 1, val1, key = []) {
                 let map = [];
-                if (index === 1) {
-                    val1 = totalSetsMap.get(arr[index - 1][0]);
-                };
+                if (index === 1) val1 = totalSetsMap.get(arr[index - 1][0]);
                 let val2 = totalSetsMap.get(arr[index + 1][0]);
                 if (arr[index] === "<") {
                     for (let i = 0, l1 = val1[0].length; i < l1; i++) {
