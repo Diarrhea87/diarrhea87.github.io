@@ -509,7 +509,7 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
             };
         };
 
-
+        
         function variationInput(input) {
             switch(input) {
                 case "requiredcube":
@@ -1328,7 +1328,7 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
                         findPermCount++;
                         if (!solutionRestriction && !noRestrictions) continue;
                         let relevantCurrentSolutions = backup ? backupSolution[solutionEval][1][arr.length] : currentSolutions[arr.length];
-                        if (twoSolutions && relevantCurrentSolutions) {
+                        if (twoSolutions && relevantCurrentSolutions.length) {
                             let primaryCurrSol
                             let secondaryCurrSol = false;
                             let usePrimary = false;
@@ -1362,6 +1362,7 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
                                     backupIndex.length = arr.length;
                                     breakLoop2 = true;
                                 } else {
+                                    console.log(solutionEval)
                                     solutionsArr.push([currSol, new Solution(solutionRestriction, permFlag, permCards, blankCard)]);
                                     solutionLengths.push(arr.length);
                                     breakLoop1 = true;
@@ -1377,6 +1378,7 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
                                 backupIndex.index = solutionEval;
                                 backupIndex.length = arr.length;
                             } else {
+                                console.log(solutionEval)
                                 solutionsArr.push(new Solution(solutionRestriction, permFlag, permCards, blankCard));
                                 solutionLengths.push(arr.length);
                                 breakLoop1 = true;
@@ -2338,6 +2340,7 @@ function submitInput() {
         let setNameArr2 = [...inputValues.flatArray.setNameArr2].join("");
         let restrictionArr1 = [...inputValues.flatArray.restrictionArr1].join("");
         let restrictionArr2 = [...inputValues.flatArray.restrictionArr2].join("");
+        let calcSymmetricDifference = true;
 
         if (!setNameArr1.length) {
             notify('Input a Solution!', 'red', 'bounce', 1000, '', '160px'); 
@@ -2397,7 +2400,7 @@ function submitInput() {
                 case "∩":
                 return val1.filter(val => val2.includes(val));
                 case "-":
-                if (puzzleData.variations.includes('symmetricDifference')) {
+                if (puzzleData.variations.includes('symmetricDifference') && calcSymmetricDifference) {
                     return val1.filter(val => !val2.includes(val)).concat(val2.filter(val => !val1.includes(val)))
                 } else {
                     return val1.filter(val => !val2.includes(val));
@@ -2416,7 +2419,6 @@ function submitInput() {
         };
         
         function parseInput(arr) {
-            console.log(arr)
             let index = [0];
             let returnArr = [];
             for (let i = 0; i < arr.length; i++) {
@@ -2450,8 +2452,14 @@ function submitInput() {
         let doubleSet = []
         if (doubleIndex !== -1) {
             universe = ["BRGY","BRG","BRY","BR","BGY","BG","BY","B","RGY","RG","RY","R","GY","G","Y",""];
+            let doubleIndex = puzzleData.variations.findIndex(val => Object.keys(val)[0] === 'double')
+            let symmetricDifferenceIndex = puzzleData.variations.indexOf('symmetricDifference')
+            console.log(doubleIndex)
+            console.log(symmetricDifferenceIndex)
+            if (doubleIndex < symmetricDifferenceIndex) calcSymmetricDifference = false;
             doubleSet = parseInput(puzzleData.variations[doubleIndex].double.split(""))
             universe = puzzleData.universe
+            if (doubleIndex < symmetricDifferenceIndex) calcSymmetricDifference = true;
         }
 
         console.log(universe)
@@ -2691,7 +2699,6 @@ function submitInput() {
 
         // TOGGLE (2 SOLUTIONS)
         
-        let answerToggleContainer2;
         if (twoSolutions) {
             const answerToggleContainer = document.createElement('div')
             answerToggleContainer.id = 'answer-toggle-container-1'

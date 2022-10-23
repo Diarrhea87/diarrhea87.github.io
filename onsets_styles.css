@@ -217,15 +217,11 @@ header h1 {
 }
 
 .union::after {
-    content: "∪";
-    position: relative;
-    bottom: 2px;
+    content: url(/icons/union.svg);
 }
 
 .intersect::after {
-    content: "∩";
-    position: relative;
-    bottom: 4px;
+    content: url(/icons/intersect.svg);
 }
 
 .subtract::after {
