@@ -1606,23 +1606,23 @@ function newPuzzle(queueData) {
     }
 
     puzzleData = queueData ?? generatePuzzle(
-        false,
-        [   ["R", "B", "G"],
-            [1, 3, 5],
-            ["U", "U", "-", "U"],
-            ["<"]],
-        ['RG', 'BRY', 'RGY', 'B', 'BRG', 'Y', 'BG', '', 'BRGY', 'G', 'R', 'BY', 'RY'],
-        ['requiredCard', 'blankWild', 'double'],
-        3,
-        undefined,
-        {
-            'goalArr': [5, "*", 1, "*", 1],
-            'goalValues': [5],
-            'goalShape': 2
-        },
-        {
-            'forbiddenArrLength': 0
-        }
+        // false,
+        // [   ["R", "B", "G"],
+        //     [1, 3, 5],
+        //     ["U", "U", "-", "U"],
+        //     ["<"]],
+        // ['RG', 'BRY', 'RGY', 'B', 'BRG', 'Y', 'BG', '', 'BRGY', 'G', 'R', 'BY', 'RY'],
+        // ['requiredCard', 'blankWild', 'double'],
+        // 3,
+        // undefined,
+        // {
+        //     'goalArr': [5, "*", 1, "*", 1],
+        //     'goalValues': [5],
+        //     'goalShape': 2
+        // },
+        // {
+        //     'forbiddenArrLength': 0
+        // }
     );
 
     blankWild = puzzleData.variations.includes('blankWild')

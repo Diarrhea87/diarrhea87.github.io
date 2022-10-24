@@ -216,19 +216,6 @@ header h1 {
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
-.testdiv {
-    color: rgb(227, 39, 36);
-    font-weight: 600;
-    font-size: 40px;
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-}
-.testdiv::after{
-    content: "∩";
-    position: relative;
-    bottom: 4px;
-}
-
-
 .union::after {
     content: url(/icons/union.svg);
 }
