@@ -210,8 +210,8 @@ header h1 {
 }
 
 .union, .intersect {
-    color: rgb(227, 39, 36);
-    font-weight: 600;
+    /* color: rgb(227, 39, 36); */
+    /* font-weight: 600; */
     font-size: 40px;
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
