@@ -918,7 +918,7 @@ td {
 }
 
 .keyboard-button {width: 76px;}
-.keyboard-button.delete {
+.keyboard-button.backspace {
     /* content: "Delete"; */
     color: rgb(28, 116, 227);
     font-family: Arial;
