@@ -1584,6 +1584,7 @@ function newPuzzle(queueData) {
     };
     restrictionContainer.innerHTML = ""
     solutionContainer.innerHTML = ""
+    solutionFormToggleDiv.classList.remove('move')
     solution1Toggle.dataset.active = 'true'
     solution2Toggle.dataset.active = 'false'
     activeSolution = 'solution1'
@@ -1907,11 +1908,11 @@ function newPuzzle(queueData) {
 
         queuePuzzleWorker.onmessage = (e) => {
             queuedPuzzleData = e.data
-            queuePuzzleWorker.terminate;
+            queuePuzzleWorker.terminate();
         }
         console.groupEnd()
 
-        mainPuzzleWorker.terminate;
+        mainPuzzleWorker.terminate();
     }
     };
 
@@ -2224,7 +2225,7 @@ function notify(message, color, animation, duration = 1500, height, width, extra
     notification.style.height = height
     notification.style.width = width
     document.body.append(notification)
-    if (animation = 'bounce') {
+    if (animation === 'bounce') {
         notification.animate(
             [
             {top: 0, opacity: 0, easing: 'ease',},
@@ -2259,12 +2260,10 @@ function notify(message, color, animation, duration = 1500, height, width, extra
         delay: duration,
     });
 }
-// 110px
 // notify('Incorrect!', 'red', 'bounce', 'persistent', undefined, '170px', {
 //     'type': 'div',
 //     'content': 'See Why',
 //     'event' : {
-
 //     }
 // })
 
@@ -3022,6 +3021,12 @@ menuBackground.addEventListener('click', () => {
     settingsContainer.classList.remove('shown')
     menuBackground.classList.remove('shown')
     header.classList.remove('dark')
+    if (settingsNodesContainer.classList.contains('page-2')) {
+        setTimeout(() => {
+            settingsNodesContainer.classList.remove('page-2')
+            settingsHeaderText.innerText = 'Settings'
+        }, 150)
+    }
 })
 header.addEventListener('click', () => menuBackground.click())
 document.body.append(menuBackground)
@@ -3032,9 +3037,44 @@ settingsIcon.addEventListener('click', (e) => {
     settingsContainer.classList.toggle('shown')
     menuBackground.classList.toggle('shown')
     header.classList.toggle('dark')
+    if (!settingsContainer.classList.contains('shown') && settingsNodesContainer.classList.contains('page-2')) {
+        setTimeout(() => {
+            settingsNodesContainer.classList.remove('page-2')
+            settingsHeaderText.innerText = 'Settings'
+        }, 150)
+    }
+});
+settingsContainer.addEventListener('click', (e) => e.stopPropagation())
+let headerText = 'Settings'
+const settingsNodesContainer = document.querySelector('#settings-nodes-container')
+const settingsCardView = document.querySelector('#card-view')
+const settingsHeader = document.querySelector('#settings-header')
+const settingsHeaderText = document.querySelector('#settings-header h4')
+const settingsNavButton = document.querySelector('#settings-nav-button')
+settingsCardView.addEventListener('click', () => {
+    settingsNodesContainer.classList.add('page-2')
+    settingsHeaderText.classList.add('fade')
+    settingsNavButton.classList.add('fade')
+    headerText = 'Card View'
 })
 
-settingsContainer.addEventListener('click', (e) => e.stopPropagation())
+settingsNavButton.addEventListener('click', () => {
+    if (headerText === 'Settings') {
+        menuBackground.click()
+        return;
+    }
+    settingsNodesContainer.classList.remove('page-2')
+    settingsHeaderText.classList.add('fade')
+    settingsNavButton.classList.add('fade')
+    headerText = 'Settings'
+})
+settingsNavButton.addEventListener('transitionend', () => {
+    settingsNavButton.classList.remove('fade')
+})
+settingsHeaderText.addEventListener('transitionend', () => {
+    settingsHeaderText.innerText = headerText;
+    settingsHeaderText.classList.remove('fade')
+})
 
 // currInput = 'restriction1'
 // inputCube('red')

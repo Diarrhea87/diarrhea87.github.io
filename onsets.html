@@ -28,11 +28,33 @@
             id="path129" />
         </svg>
         <div id="settings-container">
-            <h4>Settings</h4>
-            <ul id="settings-nodes-container">
-                <li class="setting-category">Variations</li>
-                <li class="settings-toggle">Challenge Mode</li>
-            </ul>
+            <div id="settings-header">
+                <div id="settings-nav-button"></div>
+                <h4>Settings</h4>
+            </div>
+            <div id="settings-overflow-container">
+                <div id="settings-nodes-container">
+                    <ul id="settings-page-1">
+                        <li id="card-view" class="settings-category">Card View</li>
+                        <li class="settings-category">Variations</li>
+                        <li class="settings-toggle">Challenge Mode</li>
+                    </ul>
+                    <ul id="settings-page-2">
+                        <div data-get-card="BRGY" class="card double">
+                            <div class="card-content">
+                                <div class="card-content-front">
+                                    <div class="blue"></div>
+                                    <div class="red"></div>
+                                    <div class="green"></div>
+                                    <div class="yellow"></div>
+                                </div>
+                                <div class="card-border"></div>
+                                <div class="card-content-back"></div>
+                            </div>
+                        </div>
+                    </ul>
+                </div>
+            </div>
         </div>
     </header>
     <a href="http://127.0.0.1:5500/" id="equations-link">Switch to equations practice</a>
