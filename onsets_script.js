@@ -1603,7 +1603,32 @@ function newPuzzle(queueData) {
     goalContainer.parentElement.classList.remove('three-rows')
 
     for (let x of mapArr) x.classList.remove('strike-through')
+
+    // GEN NEW PUZZLE
+    // STARTING NEW PUZZLE WITH EXPANDED ROWS MAKES ROWS REMAIN EXPANDED
     const mainPuzzleWorker = new Worker('onsets_worker.js');
+    paramsArr = 
+
+    [undefined]
+
+    // [false,
+    //     [   ["R", "B", "G"],
+    //         [1, 3, 5],
+    //         ["U", "U", "-", "U"],
+    //         ["<"]],
+    //     ['RG', 'BRY', 'RGY', 'B', 'BRG', 'Y', 'BG', '', 'BRGY', 'G', 'R', 'BY', 'RY'],
+    //     ['symmetricDifference', 'blankWild', 'forbiddenCard'],
+    //     3,
+    //     {
+    //         'goalArr': [5, "*", 1, "*", 1],
+    //         'goalValues': [5],
+    //         'goalShape': 5
+    //     },
+    //     {
+    //         'forbiddenArrLength': 0
+    // }];
+
+    // END PARAMS ARRAY
 
     if (queuedPuzzleData) {
         mainPuzzleWorker.postMessage([
@@ -1611,27 +1636,8 @@ function newPuzzle(queueData) {
             queuedPuzzleData
         ])
     } else {
-        mainPuzzleWorker.postMessage(
-            [undefined]
-        //     [false,
-        // [   ["R", "B", "G"],
-        //     [1, 3, 5],
-        //     ["U", "U", "-", "U"],
-        //     ["<"]],
-        // ['RG', 'BRY', 'RGY', 'B', 'BRG', 'Y', 'BG', '', 'BRGY', 'G', 'R', 'BY', 'RY'],
-        // ['symmetricDifference', 'blankWild', 'double'],
-        // 3,
-        // undefined,
-        // {
-        //     'goalArr': [5, "*", 1, "*", 1],
-        //     'goalValues': [5],
-        //     'goalShape': 2
-        // },
-        // {
-        //     'forbiddenArrLength': 0
-        // }]
-        )
-    }
+        mainPuzzleWorker.postMessage(paramsArr)
+    };
 
     mainPuzzleWorker.onmessage = (e) => {
         puzzleData = e.data
@@ -1890,21 +1896,7 @@ function newPuzzle(queueData) {
         console.log(variationsDisplay)
         
         const queuePuzzleWorker = new Worker('onsets_worker.js');
-        queuePuzzleWorker.postMessage(
-            [undefined]
-        //     [false,
-        // [   ["R", "B", "G"],
-        //     [1, 3, 5],
-        //     ["U", "U", "-", "U"],
-        //     ["<"]],
-        // ['RG', 'BRY', 'RGY', 'B', 'BRG', 'Y', 'BG', '', 'BRGY', 'G', 'R', 'BY', 'RY'],
-        // ['forbiddenCard', 'blankWild', 'double'],
-        // 3,
-        // undefined,
-        // {
-        //     'forbiddenArrLength': 0
-        // }]
-        )
+        queuePuzzleWorker.postMessage(paramsArr)
 
         queuePuzzleWorker.onmessage = (e) => {
             queuedPuzzleData = e.data
@@ -1913,14 +1905,14 @@ function newPuzzle(queueData) {
         console.groupEnd()
 
         mainPuzzleWorker.terminate();
-    }
     };
+};
 
 function addColorChild(card, color) {
     const newColor = document.createElement('div')
     newColor.classList.add(color)
     card.append(newColor)
-}
+};
 // HEADING 
 const settingsIcon = document.querySelector('#settings-ico')
 // CUBE CONTAINERS

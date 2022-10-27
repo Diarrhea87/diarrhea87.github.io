@@ -462,7 +462,7 @@ onmessage = (e) => {
     
         console.log(universeArr)
         // GENERATE VARIATIONS:
-        let variationsArr;
+        let variationsArr, variationsMap = new Map();
         let requiredCube, wild, noNull, double, forbiddenCard, requiredCard, blankWild, symmetricDifference, twoSolutions;
         (function generateVariations() {
             console.log(setVariations)
@@ -484,8 +484,16 @@ onmessage = (e) => {
                         case "symmetricDifference": variationsArr.push("symmetricDifference"); symmetricDifference = true; break;
                         case "twoSolutions": variationsArr.push("twoSolutions"); twoSolutions = true; break;
                     };
+                    let newVal = variationsArr[variationsArr.length - 1]
+                    if (typeof newVal === 'string') {
+                        variationsMap.set(newVal, 'true')
+                    } else {
+                        console.log(Object.keys(newVal)[0])
+                        variationsMap.set(Object.keys(newVal)[0], Object.values(newVal)[0])
+                    };
                 };
             };
+            console.log(variationsArr)
     
             function variationInput(input) {
                 switch(input) {
@@ -495,6 +503,7 @@ onmessage = (e) => {
                         return randomArrayValue(nonNumeral);
                     case "wild":
                         let wildCubeRegex = /[\d<=]/
+                        if (variationsMap.get("symmetricDifference")) wildCubeRegex = /[\d<=-]/
                         let wildCube = cubesArr.flat().filter(val => !wildCubeRegex.test(val))
                         return randomArrayValue(wildCube);
                     case "double": 
@@ -538,7 +547,11 @@ onmessage = (e) => {
                         } else {
                             return randomArrayValue(universeArr);
                         };
-                    case "forbiddencard": return universeArr[getRandomNumber(0, universeArr.length - 1)];
+                    case "forbiddencard":
+                        let availableUniverse = universeArr 
+                        if (variationsMap.get("blankWild")) availableUniverse = universeArr.filter(val => val !== "")
+                        console.log("AVAIL", availableUniverse)
+                        return availableUniverse[getRandomNumber(0, universeArr.length - 1)];
                 }
             }
             let i = 0;
@@ -546,7 +559,7 @@ onmessage = (e) => {
             while (variationsArr.length < variationLength) {
                 i++
                 let roll = getRandomNumber(1, 11);
-                if (i === 1) roll = 6;
+                // if (i === 1) roll = 9;
                 switch (roll) {
                     case 1:
                         if (!containsVariation("requiredCube")) {
@@ -574,20 +587,22 @@ onmessage = (e) => {
                             variationsArr.push({"double": variationInput("double")});
                         }; break;
                     case 7:
-                        if (!(containsVariation("requiredCard") || containsVariation("forbiddenCard"))) {
+                        if (!containsVariation("requiredCard") || !containsVariation("forbiddenCard")) {
                             variationsArr.push({"requiredCard": variationInput("requiredcard")});
                         }; break;
                     case 8:
-                        if (!(containsVariation("requiredCard") || containsVariation("forbiddenCard"))) {
+                        if (!containsVariation("requiredCard") || !containsVariation("forbiddenCard")) {
                             variationsArr.push({"forbiddenCard": variationInput("forbiddencard")});
                         }; break;
                     case 9: 
-                        if (!variationsArr.includes("blankWild")) {
+                        if (!variationsArr.includes("blankWild") && universeArr.includes("")) {
+                            if (variationsMap.get("forbiddenCard") === "") break;
                             variationsArr.push("blankWild");
                             blankWild = true;
                         }; break;
                     case 10:
                         if (!variationsArr.includes("symmetricDifference")) {
+                            if (variationsMap.get("wild") === "-") break;
                             variationsArr.push("symmetricDifference");
                             symmetricDifference = true;
                         }; break;
@@ -599,8 +614,20 @@ onmessage = (e) => {
                     default:
                         variationsArr.push(undefined)
                 };
+
+                let newVal = variationsArr[variationsArr.length - 1]
+                if (typeof newVal === 'string') {
+                    variationsMap.set(newVal, 'true')
+                } else {
+                    console.log(Object.keys(newVal)[0])
+                    variationsMap.set(Object.keys(newVal)[0], Object.values(newVal)[0])
+                }
+
                 if (i > 100) break;
             }
+            console.log(variationsMap)
+            console.log(variationsMap.get("blankWild"))
+
             for (let i = 0; i < variationsArr.length; i++) {
                 switch (Object.keys(variationsArr[i])[0]) {
                     case "requiredCube": requiredCube = variationsArr[i].requiredCube; break;
@@ -630,7 +657,6 @@ onmessage = (e) => {
         let goalShape;
     
         function generateGoal() {
-    
             console.group("GENERATING GOAL:")
             if (setGoal) {
                 goalArr = setGoal.goalArr;
@@ -1505,6 +1531,14 @@ onmessage = (e) => {
             console.groupEnd()
         };
         generateSolutions()
+        console.log(solution)
+        // solution = {
+        //     "restriction": ["R", "<", "B"],
+        //     "cards": ["BG", "BRG", ""],
+        //     "flag": "RUB",
+        //     "blankCard": "BRY"
+        // }
+
         if (returnNewPuzzle) return generatePuzzle(randomize, setCubes, setUniverse, setVariations, setVariationsLength, setGoal, setForbidden);
         class PuzzleData {
             constructor(cubesArr, modifiedCubesArr, universeArr, variationsArr, goalArr, goalShape, goalValues, forbiddenArr, solution) {
