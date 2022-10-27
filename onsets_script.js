@@ -1610,7 +1610,6 @@ function newPuzzle(queueData) {
     paramsArr = 
 
     [undefined]
-
     // [false,
     //     [   ["R", "B", "G"],
     //         [1, 3, 5],

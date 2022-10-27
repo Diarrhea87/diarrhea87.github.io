@@ -421,6 +421,10 @@ onmessage = (e) => {
                     case 4: operations.push("U"); break;
                     case 5: operations.push("∩"); break;
                     case 6: operations.push("∩"); break;
+                    // case 3: operations.push("-"); break;
+                    // case 4: operations.push("-"); break;
+                    // case 5: operations.push("-"); break;
+                    // case 6: operations.push("-"); break;
                     default: operations.push(null);
                 };
             };
@@ -559,7 +563,7 @@ onmessage = (e) => {
             while (variationsArr.length < variationLength) {
                 i++
                 let roll = getRandomNumber(1, 11);
-                // if (i === 1) roll = 9;
+                // if (i === 1) roll = 10;
                 switch (roll) {
                     case 1:
                         if (!containsVariation("requiredCube")) {
@@ -587,11 +591,11 @@ onmessage = (e) => {
                             variationsArr.push({"double": variationInput("double")});
                         }; break;
                     case 7:
-                        if (!containsVariation("requiredCard") || !containsVariation("forbiddenCard")) {
+                        if (!containsVariation("requiredCard") && !containsVariation("forbiddenCard")) {
                             variationsArr.push({"requiredCard": variationInput("requiredcard")});
                         }; break;
                     case 8:
-                        if (!containsVariation("requiredCard") || !containsVariation("forbiddenCard")) {
+                        if (!containsVariation("requiredCard") && !containsVariation("forbiddenCard")) {
                             variationsArr.push({"forbiddenCard": variationInput("forbiddencard")});
                         }; break;
                     case 9: 
