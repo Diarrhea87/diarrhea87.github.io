@@ -1,5 +1,11 @@
 let setTimer = new Date()
 
+// const terminateWorkers = new Worker('terminate_workers.js');
+// terminateWorkers.postMessage(new Date())
+// setInterval(() => {
+//     terminateWorkers.terminate()
+// }, 100)
+
 // DATABASES ARE PROBABLY FASTER
 // let newArr;
 // let map1 = new Map([["A", 2], ["B", 3], ["C", 4]])
@@ -1551,8 +1557,51 @@ function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, 
     return new PuzzleData(cubesArr, modifiedCubesArr, universeArr, variationsArr, goalArr, goalShape, goalValues, forbiddenArr, solution)
 };
 
+let puzzleParamaters = 
+{
+    'randomize': 
+        false,
+    'setCubes': 
+        [   
+            ["R", "B", "G"],
+            [1, 3, 5],
+            ["U", "U", "-", "U"],
+            ["<"]
+        ],
+    'setUniverse':
+        ['RG', 'BRY', 'RGY', 'B', 'BRG', 'Y', 'BG', '', 'BRGY', 'G', 'R', 'BY', 'RY'],
+    'setVariations':
+        ['symmetricDifference', 'blankWild', 'forbiddenCard'],
+    'setVariationsLength': 
+        3,
+    'setGoal':
+        {
+            'goalArr': [5, "*", 1, "*", 1],
+            'goalValues': [5],
+            'goalShape': 5
+        },
+    'setForbidden':
+        {
+            'forbiddenArrLength': 0
+        },
+    'forceSymmetricDifference': false,
+}
+
+puzzleParamaters = {
+    'randomize': undefined,
+    'setCubes': undefined,
+    'setUniverse': undefined,
+    'setVariations': undefined,
+    'setVariationsLength': undefined,
+    'setGoal': undefined,
+    'setForbidden': undefined,
+    'forceSymmetricDifference': undefined,
+}
+
+// const terminateWorkers = new Worker('terminate_workers.js');
+
 // NEW PUZZLE
-function newPuzzle(queueData) {
+function newPuzzle() {
     console.group("NEW PUZZLE")
 
     // RESETTING CONTAINERS
@@ -1606,28 +1655,11 @@ function newPuzzle(queueData) {
 
     // GEN NEW PUZZLE
     // STARTING NEW PUZZLE WITH EXPANDED ROWS MAKES ROWS REMAIN EXPANDED
+
+    params = Object.values(puzzleParamaters)
+    console.log(params)
+
     const mainPuzzleWorker = new Worker('onsets_worker.js');
-    paramsArr = 
-
-    [undefined]
-    // [false,
-    //     [   ["R", "B", "G"],
-    //         [1, 3, 5],
-    //         ["U", "U", "-", "U"],
-    //         ["<"]],
-    //     ['RG', 'BRY', 'RGY', 'B', 'BRG', 'Y', 'BG', '', 'BRGY', 'G', 'R', 'BY', 'RY'],
-    //     ['symmetricDifference', 'blankWild', 'forbiddenCard'],
-    //     3,
-    //     {
-    //         'goalArr': [5, "*", 1, "*", 1],
-    //         'goalValues': [5],
-    //         'goalShape': 5
-    //     },
-    //     {
-    //         'forbiddenArrLength': 0
-    // }];
-
-    // END PARAMS ARRAY
 
     if (queuedPuzzleData) {
         mainPuzzleWorker.postMessage([
@@ -1635,7 +1667,7 @@ function newPuzzle(queueData) {
             queuedPuzzleData
         ])
     } else {
-        mainPuzzleWorker.postMessage(paramsArr)
+        mainPuzzleWorker.postMessage(params)
     };
 
     mainPuzzleWorker.onmessage = (e) => {
@@ -1895,7 +1927,7 @@ function newPuzzle(queueData) {
         console.log(variationsDisplay)
         
         const queuePuzzleWorker = new Worker('onsets_worker.js');
-        queuePuzzleWorker.postMessage(paramsArr)
+        queuePuzzleWorker.postMessage(params)
 
         queuePuzzleWorker.onmessage = (e) => {
             queuedPuzzleData = e.data
@@ -1904,7 +1936,20 @@ function newPuzzle(queueData) {
         console.groupEnd()
 
         mainPuzzleWorker.terminate();
+
+        // terminateWorkers.onmessage = (e) => {
+        //     console.log("TERMINATE QUEUE WORKER")
+        //     queuePuzzleWorker.terminate();
+        //     console.groupEnd()
+        // }
     };
+    // terminateWorkers.onmessage = (e) => {
+    //     mainPuzzleWorker.terminate();
+    //     console.groupEnd()
+    //     console.groupEnd()
+    //     console.groupEnd()
+    //     console.log("TERMINATE MAIN WORKER")
+    // }
 };
 
 function addColorChild(card, color) {
@@ -2207,7 +2252,6 @@ notification.classList.add('notification')
 
 function notify(message, color, animation, duration = 1500, height, width, extraContent) {
     notification.getAnimations().forEach(val => val.cancel())
-    // notificationText.innerText = message
     notification.innerText = message
     switch (color) {
         case 'red': notification.style.backgroundColor = 'rgb(204, 65, 60)'; break;
@@ -2695,9 +2739,6 @@ function submitInput() {
         inputResult.append(resultParagraph)
         answerContent.append(inputResult)
 
-
-
-
         // TITLE
         const titleNode = document.createElement('h2')
         titleNode.innerText = 'Your Solution'
@@ -3066,6 +3107,24 @@ settingsHeaderText.addEventListener('transitionend', () => {
     settingsHeaderText.innerText = headerText;
     settingsHeaderText.classList.remove('fade')
 })
+
+const settingsToggles = document.querySelectorAll('.settings-toggle .toggle')
+for (let toggle of settingsToggles) toggle.addEventListener('click', toggleSetting)
+
+function toggleSetting(e) {
+    // console.log(this)
+    // console.log(e)
+    this.classList.toggle('active')
+    switch (this.dataset.type) {
+        case 'symmetric-difference':
+            puzzleParamaters.forceSymmetricDifference = !puzzleParamaters.forceSymmetricDifference
+            // terminateWorkers.postMessage("TERMINATE")
+            console.log(puzzleParamaters)
+            queuedPuzzleData = undefined;
+            newPuzzle()
+        break;
+    }
+}
 
 // currInput = 'restriction1'
 // inputCube('red')

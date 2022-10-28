@@ -73,7 +73,7 @@ onmessage = (e) => {
         return score;
     };
     
-    function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, setVariationsLength, setGoal, setForbidden) {
+    function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, setVariationsLength, setGoal, setForbidden, forceSymmetricDifference) {
         let returnNewPuzzle;
     
         console.log(randomize, setCubes, setUniverse, setVariations, setGoal, setForbidden)
@@ -414,6 +414,7 @@ onmessage = (e) => {
             const operations = [];
             for (let i = 0; i < 4; i++) {
                 let roll = getRandomNumber(1, 6)
+                if (forceSymmetricDifference) roll = Math.trunc(getRandomNumber(1, 6) / 6) + 1
                 switch (roll) {
                     case 1: operations.push("-"); break;
                     case 2: operations.push("'"); break;
@@ -421,11 +422,6 @@ onmessage = (e) => {
                     case 4: operations.push("U"); break;
                     case 5: operations.push("∩"); break;
                     case 6: operations.push("∩"); break;
-                    // case 3: operations.push("-"); break;
-                    // case 4: operations.push("-"); break;
-                    // case 5: operations.push("-"); break;
-                    // case 6: operations.push("-"); break;
-                    default: operations.push(null);
                 };
             };
             cubesArr.push(operations);
@@ -469,6 +465,11 @@ onmessage = (e) => {
         let variationsArr, variationsMap = new Map();
         let requiredCube, wild, noNull, double, forbiddenCard, requiredCard, blankWild, symmetricDifference, twoSolutions;
         (function generateVariations() {
+            if (forceSymmetricDifference) {
+                if (!setVariations) setVariations = []
+                setVariations.unshift('symmetricDifference')
+            }
+            for (let x of cubesArr) console.log(x)
             console.log(setVariations)
             variationsArr = [];
             if (setVariations) {
@@ -620,6 +621,7 @@ onmessage = (e) => {
                 };
 
                 let newVal = variationsArr[variationsArr.length - 1]
+                if (newVal === undefined) continue;
                 if (typeof newVal === 'string') {
                     variationsMap.set(newVal, 'true')
                 } else {
@@ -1543,7 +1545,7 @@ onmessage = (e) => {
         //     "blankCard": "BRY"
         // }
 
-        if (returnNewPuzzle) return generatePuzzle(randomize, setCubes, setUniverse, setVariations, setVariationsLength, setGoal, setForbidden);
+        if (returnNewPuzzle) return generatePuzzle(randomize, setCubes, setUniverse, setVariations, setVariationsLength, setGoal, setForbidden, forceSymmetricDifference);
         class PuzzleData {
             constructor(cubesArr, modifiedCubesArr, universeArr, variationsArr, goalArr, goalShape, goalValues, forbiddenArr, solution) {
                 this.cubes = cubesArr;
