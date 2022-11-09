@@ -475,8 +475,10 @@ onmessage = (e) => {
             if (setVariations) {
                 for (let x of setVariations) {
                     switch (x) {
-                        case "requiredCube": variationsArr.push({"requiredCube": variationInput("requiredcube")}); break;
-                        case "wild": variationsArr.push({"wild": variationInput("wild")}); break;
+                        // case "requiredCube": variationsArr.push({"requiredCube": variationInput("requiredcube")}); break;
+                        case "requiredCube": variationsArr.push({"requiredCube": "R"}); break;
+                        // case "wild": variationsArr.push({"wild": variationInput("wild")}); break;
+                        case "wild": variationsArr.push({"wild": "R"}); break;
                         case "twoOp": variationsArr.push("twoOp"); break;
                         case "noNull": variationsArr.push("noNull"); noNull = true; break;
                         case "absValue": variationsArr.push("absValue"); break;
@@ -894,7 +896,6 @@ onmessage = (e) => {
         mustContain = (restrictionCubes.includes('<'))
     
         function generateForbidden() {
-    
             
             let totalValues = cubesArr[0].slice();
             for (let x of cubesArr[3]) if (x === "V" || x === "Ʌ") totalValues.push("V");
@@ -1547,11 +1548,12 @@ onmessage = (e) => {
 
         if (returnNewPuzzle) return generatePuzzle(randomize, setCubes, setUniverse, setVariations, setVariationsLength, setGoal, setForbidden, forceSymmetricDifference);
         class PuzzleData {
-            constructor(cubesArr, modifiedCubesArr, universeArr, variationsArr, goalArr, goalShape, goalValues, forbiddenArr, solution) {
+            constructor(cubesArr, modifiedCubesArr, universeArr, variationsArr, variationsMap, goalArr, goalShape, goalValues, forbiddenArr, solution) {
                 this.cubes = cubesArr;
                 this.modifiedCubes = modifiedCubesArr;
                 this.universe = universeArr;
                 this.variations = variationsArr;
+                this.variationsMap = variationsMap
                 this.goal = goalArr;
                 this.goalShape = goalShape;
                 this.goalValues = goalValues;
@@ -1563,7 +1565,7 @@ onmessage = (e) => {
                 return this.cubes[3].filter(val => val === '<' || val === '=');
             };
         };
-        return new PuzzleData(cubesArr, modifiedCubesArr, universeArr, variationsArr, goalArr, goalShape, goalValues, forbiddenArr, solution)
+        return new PuzzleData(cubesArr, modifiedCubesArr, universeArr, variationsArr, variationsMap, goalArr, goalShape, goalValues, forbiddenArr, solution)
     };
 
     let queueData = generatePuzzle(...e.data)

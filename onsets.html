@@ -35,8 +35,8 @@
             <div id="settings-overflow-container">
                 <div id="settings-nodes-container">
                     <ul id="settings-page-1">
-                        <li id="card-view" class="settings-category">Card View</li>
-                        <li class="settings-category">Variations</li>
+                        <li id="card-view-button" class="settings-category">Card View</li>
+                        <li id="variations-button" class="settings-category">Variations</li>
                         <!-- <li class="settings-toggle">Challenge Mode</li> -->
                         <li class="settings-toggle">
                             <p>Force Symmetric Difference</p>
@@ -45,7 +45,7 @@
                             </div>
                         </li>
                     </ul>
-                    <ul id="settings-page-2">
+                    <ul id="settings-card-view" class="settings-page-2">
                         <div data-get-card="BRGY" class="card double">
                             <div class="card-content">
                                 <div class="card-content-front">
@@ -57,6 +57,48 @@
                                 <div class="card-border"></div>
                                 <div class="card-content-back"></div>
                             </div>
+                        </div>
+                    </ul>
+                    <div id="settings-variations" class="settings-page-2">
+                        <div class="scroll-container">
+                            <ul>
+                                <li class="settings-counter">
+                                    <label for="variation-count">Number of Variations:</label>
+                                    <input id="variation-count" maxlength="1" value="6">
+                                    <div class="arrow-container-up"><div class="counter-arrow-up"></div></div>
+                                    <div class="arrow-container-down"><div class="counter-arrow-down"></div></div>
+                                </li>
+                            </ul>
+                            <div class="settings-label">Choose variations to always appear:</div>
+                            <ul>
+                                <li data-variation="required-cube" class="settings-checkbox">Required Cube</li>
+                                <li data-variation="wild-cube" class="settings-checkbox">Wild Cube</li>
+                                <li data-variation="two-operations" class="settings-checkbox">Two Operations</li>
+                                <li data-variation="shift-permitted" class="settings-checkbox">Shift from Permitted</li>
+                                <li data-variation="no-null" class="settings-checkbox">No Null Restrictions</li>
+                                <li data-variation="absolute-value" class="settings-checkbox">Absolute Value</li>
+                                <li data-variation="double-set" class="settings-checkbox">Double Set</li>
+                                <li data-variation="required-card" class="settings-checkbox">Required Card</li>
+                                <li data-variation="forbidden-card" class="settings-checkbox">Forbidden Card</li>
+                                <li data-variation="blank-wild" class="settings-checkbox">Blank Card Wild</li>
+                                <li data-variation="symmetric-difference" class="settings-checkbox">Symmetric Difference</li>
+                                <li data-variation="two-solutions" class="settings-checkbox">Two Solutions</li>
+                            </ul>
+                            <div class="settings-label">Choose variations to never appear:</div>
+                            <ul>
+                                <li data-variation="required-cube" class="settings-checkbox">Required Cube</li>
+                                <li data-variation="wild-cube" class="settings-checkbox">Wild Cube</li>
+                                <li data-variation="two-operations" class="settings-checkbox">Two Operations</li>
+                                <li data-variation="shift-permitted" class="settings-checkbox">Shift from Permitted</li>
+                                <li data-variation="no-null" class="settings-checkbox">No Null Restrictions</li>
+                                <li data-variation="absolute-value" class="settings-checkbox">Absolute Value</li>
+                                <li data-variation="double-set" class="settings-checkbox">Double Set</li>
+                                <li data-variation="required-card" class="settings-checkbox">Required Card</li>
+                                <li data-variation="forbidden-card" class="settings-checkbox">Forbidden Card</li>
+                                <li data-variation="blank-wild" class="settings-checkbox">Blank Card Wild</li>
+                                <li data-variation="symmetric-difference" class="settings-checkbox">Symmetric Difference</li>
+                                <li data-variation="two-solutions" class="settings-checkbox">Two Solutions</li>
+                            </ul>
                         </div>
                     </ul>
                 </div>
@@ -172,6 +214,20 @@
                         <div id="goal-bar"><h3 id="goal-text">Goal</h3></div>
                     </div>
                 </div>
+        </div>
+    </div>
+    <div id="wild-picker-container">
+        <div id="wild-picker-content">
+            <div class="cube blue keyboard-cube"></div>
+            <div class="cube red keyboard-cube"></div>
+            <div class="cube green keyboard-cube"></div>
+            <div class="cube yellow keyboard-cube"></div>
+            <div class="cube universe keyboard-cube"></div>
+            <div class="cube union keyboard-cube"></div>
+            <div class="cube intersect keyboard-cube"></div>
+            <div class="cube subtract keyboard-cube"></div>
+            <div class="cube not keyboard-cube"></div>
+            <div class="cube empty-set keyboard-cube"></div>
         </div>
     </div>
     <div id="bottom-puzzle-container">

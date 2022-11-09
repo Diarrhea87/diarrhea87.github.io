@@ -27,7 +27,7 @@ header {
     width: 100%;
     border-bottom: 1px solid gray;
     height: 50px;
-    z-index: 5;
+    z-index: 6;
     background-color: whitesmoke;
     box-shadow: 0 0 10px rgb(0 0 0 / 10%);
     transition: 0.25s cubic-bezier(.4,0,.2,1);
@@ -134,7 +134,7 @@ header h1 {
     position: relative;
     display: flex;
     flex: auto;
-    transition: translate 220ms ease
+    transition: translate 220ms ease;
 }
 #settings-nodes-container.page-2 {
     translate: -100%;
@@ -143,14 +143,21 @@ header h1 {
     margin: 0;
     padding: 0;
     list-style: none;
+}
+#settings-nodes-container > ul, #settings-nodes-container > div {
     width: 100%;
     height: 100%;
     position: absolute;
 }
-#settings-page-2 {
+.settings-page-2 {
+    display: none;
     translate: 100%;
+    border-radius: 8px;
 }
-#settings-page-2 > div {
+.settings-page-2.active {
+    display: block;
+}
+.settings-page-2 > div.card.double {
     translate: 0% 50%;
     margin: auto;
     height: 116px;
@@ -205,7 +212,7 @@ header h1 {
     left: 2px;
     border-radius: 100%;
     background: linear-gradient(180deg, whitesmoke, #ededed);
-    border: 1px solid rgba(0,0,0,0.15);
+    border: 1px solid rgba(0,0,0,0.1);
     box-shadow: rgb(0 0 0 / 75%) 0 0 1px;
     /* transition: left 200ms cubic-bezier(0.77, 0, 0.175, 1) */
     transition: left 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
@@ -213,6 +220,76 @@ header h1 {
 }
 .toggle.active {background-color: rgb(90, 227, 97);}
 .toggle.active .toggle-switch {left: 22px;}
+#settings-nodes-container .settings-checkbox:first-of-type {
+    border-top: 1px solid #dadada;
+    margin-top: 2px;
+}
+#settings-nodes-container .settings-label {
+    margin-top: 16px;
+    font-size: 13px;
+    background-color: transparent;
+    color: #808080;
+    border: none;
+    padding: 6px 8px;
+    /* text-align: center; */
+}
+#settings-nodes-container .settings-checkbox {
+    border-top: none;
+    margin: 0 0;
+    height: 46px;
+    line-height: 46px;
+    cursor: pointer;
+}
+.scroll-container {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px; overflow-y: scroll;
+    padding: 10px 0 20px 0 !important;
+}
+#settings-variations {
+    overflow: hidden;
+}
+#settings-nodes-container .settings-counter {
+    position: relative;
+    height: 62px;
+    line-height: 62px;
+}
+.settings-counter input {
+    width: 30px;
+    height: 28px;
+    background-color: whitesmoke;
+    border-radius: 5px;
+    border: 1px solid rgb(200, 200, 200);
+    margin-left: auto;
+    margin-right: 10px;
+    text-align: center;
+    font-size: 16px;
+}
+.settings-counter input:focus {
+    outline: none;
+    border: 1px solid rgb(200, 200, 200);
+    /* box-shadow: 0 1px 2px rgb(0 0 0 / 15%); */
+}
+.arrow-container-up, .arrow-container-down {
+    position: absolute;
+    right: 10px;
+    width: 30px;
+    height: 17px;
+    cursor: pointer;
+}
+.arrow-container-up {top: 0;}
+.arrow-container-down {bottom: 0;}
+
+.counter-arrow-up, .counter-arrow-down {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    right: 9px;
+}
+.counter-arrow-up {top: 7px; border-bottom: 5px solid rgb(180, 180, 180);}
+.counter-arrow-down {bottom: 7px; border-top: 5px solid rgb(180, 180, 180);}
 
 .cube {
     height: 44px;
@@ -228,13 +305,13 @@ header h1 {
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: 900ms;
+    transition: 50ms;
 }
 
-.cube:hover {filter: brightness(98%); transition: 0s}
+.cube:hover {filter: brightness(98%); transition: filter 0s}
 .cube:active {filter: brightness(96%)}
 
-.cube.red::after {
+.cube.red:not(#puzzle-container .wild-cube)::after {
     display: block;
     content: "";
     border-radius: 100%;
@@ -243,7 +320,7 @@ header h1 {
     background-color: rgb(196, 41, 38);
 }
 
-.cube.blue::after {
+.cube.blue:not(#puzzle-container .wild-cube)::after {
     display: block;
     content: "";
     border-radius: 100%;
@@ -252,7 +329,7 @@ header h1 {
     background-color: rgb(28, 116, 227)
 }   
 
-.cube.green::after {
+.cube.green:not(#puzzle-container .wild-cube)::after {
     display: block;
     content: "";
     border-radius: 100%;
@@ -261,7 +338,7 @@ header h1 {
     background-color: rgb(34, 136, 87)
 }
 
-.cube.yellow::after {
+.cube.yellow:not(#puzzle-container .wild-cube)::after {
     display: block;
     content: "";
     border-radius: 100%;
@@ -270,7 +347,7 @@ header h1 {
     background-color: rgb(230, 206, 53)
 }
 
-#new-answer .cube {
+#new-answer .cube:not(.wild-cube) {
     box-shadow: 2px 2px 5px rgb(0 0 0 / 20%);
 }
 
@@ -282,26 +359,27 @@ header h1 {
 }
 
 .keyboard-cube, .keyboard-button {
+    cursor: pointer;
     box-shadow: 2px 2px 3px rgb(0 0 0 / 15%);
     margin: 3px !important;
 }
 
-.union, .intersect {
+.union:not(#puzzle-container .wild-cube), .intersect:not(#puzzle-container .wild-cube) {
     /* color: rgb(227, 39, 36); */
     /* font-weight: 600; */
     font-size: 40px;
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
-.union::after {
+.union:not(#puzzle-container .wild-cube)::after {
     content: url(/icons/union.svg);
 }
 
-.intersect::after {
+.intersect:not(#puzzle-container .wild-cube)::after {
     content: url(/icons/intersect.svg);
 }
 
-.subtract::after {
+.subtract:not(#puzzle-container .wild-cube)::after {
     content: "–";
     color: rgb(227, 39, 36);
     font-size: 45px;
@@ -310,7 +388,7 @@ header h1 {
     bottom: 2px;
 }
 
-.not::after {
+.not:not(#puzzle-container .wild-cube)::after {
     content: "'";
     color: rgb(227, 39, 36);
     font-size: 45px;
@@ -319,18 +397,18 @@ header h1 {
     top: 5px;
 }
 
-.universe::after, .empty-set::after, .must-contain::after, .equals::after {
+.universe:not(#puzzle-container .wild-cube)::after, .empty-set:not(#puzzle-container .wild-cube)::after, .must-contain::after, .equals::after {
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
-.universe::after {
+.universe:not(#puzzle-container .wild-cube)::after {
     content: "V";
     color: rgb(28, 116, 227);
     font-size: 38px;
     font-weight: 100;
 }
 
-.empty-set::after {
+.empty-set:not(#puzzle-container .wild-cube)::after {
     content: "Ʌ";
     color: rgb(28, 116, 227);
     font-size: 38px;
@@ -466,7 +544,9 @@ header h1 {
     filter: none;
     transform: scale(1.03);
 }
-
+#blank-wild-container div {
+    cursor: pointer;
+}
 .wild {
     opacity: 0;
 }
@@ -504,7 +584,10 @@ header h1 {
     padding: 2px 0;
 }
 
-.solution-cube {margin: 2px; box-shadow: 2px 2px 3px rgb(0 0 0 / 20%);}
+.solution-cube {
+    margin: 2px;
+    box-shadow: 2px 2px 3px rgb(0 0 0 / 20%);
+}
 
 #restriction-container:hover, #solution-container:hover {
     background-color: rgb(71, 17, 34);
@@ -806,7 +889,7 @@ header h1 {
 .card-content-front .green {top: 60px; background-color: rgb(34, 136, 87)}
 .card-content-front .yellow {top: 86px; background-color: rgb(230, 206, 53)}
 
-.card.blank-wild .card-border, .card.blank-wild:not(.double) .card-content-front {
+.card.blank-wild .card-border, .card.blank-wild:not(.double) .card-content-front, .wild-cube {
     --purple: rgba(245, 68, 233, 0.256);
     /* --purple: transparent; */
     --dark-blue: rgba(45, 119, 248, 0.307);
@@ -821,6 +904,34 @@ header h1 {
     -2px 2px 6px var(--light-blue),
     -2px -2px 6px var(--blue);
     animation: shadow 3500ms linear infinite, border-shine 8s linear infinite;
+}
+.restraint-cube.wild-cube {
+    --purple: rgba(246, 123, 238, 0.566);
+    --dark-blue: rgba(122, 170, 251, 0.607);
+    --light-blue: rgba(129, 177, 251, 0.671);
+    box-shadow: 
+    2px -2px 6px var(--dark-blue),
+    2px 2px 6px var(--purple),
+    -2px 2px 6px var(--light-blue),
+    -2px -2px 6px var(--blue);
+    animation: shadow 3500ms linear infinite
+}
+#puzzle-container .wild-cube {
+    cursor: pointer
+}
+
+#input-container .wild-cube {
+    border: 1.5px solid rgb(195, 69, 220);
+    animation: wild-border 4500ms ease infinite;
+}
+
+@keyframes wild-border {
+    50% {
+        border-color: rgba(45, 119, 248);
+    }
+    66% {
+        border-color: rgb(45, 100, 182);
+    }
 }
 
 @keyframes shadow {
@@ -935,9 +1046,6 @@ td {
 #variations-view-container.shown {
     translate: 0
 }
-/* #variations-view-container:hover {
-    translate: 0;
-} */
 #variations-container {
     text-align: center;
     z-index: 3;
@@ -967,7 +1075,13 @@ td {
     box-shadow: 0 2px 10px rgb(0 0 0 / 30%);
     z-index: 2;
     cursor: pointer;
-    transition: 0.1s
+    transition: background-color 0.08s ease;
+}
+#map-view-container, #variations-view-container {
+    transition: translate cubic-bezier(0.075, 0.82, 0.165, 1) 0.6s, filter 0.25s cubic-bezier(.4,0,.2,1);
+}
+#variations-view-container.dark, #map-view-container.dark {
+    filter: brightness(92%)
 }
 
 #variations-arrow-box:hover, #map-arrow-box:hover {
@@ -975,7 +1089,7 @@ td {
 }
 
 #keyboard-container {
-    z-index: 2;
+    z-index: 5;
     display: flex;
     position: fixed;
     width: 100%;
@@ -983,10 +1097,13 @@ td {
     background-color: rgb(239, 239, 239);
     justify-content: center;
     flex-wrap: wrap;
-    transition: cubic-bezier(0.165, 0.84, 0.35, 0.87) 0.2s;
+    transition: translate cubic-bezier(0.165, 0.84, 0.35, 0.87) 0.2s, filter 0.25s cubic-bezier(.4,0,.2,1);
     translate: 0;
     padding: 8px 0 4px;
-    box-shadow: 0 2px 10px rgb(0 0 0 / 30%)
+    box-shadow: 0 2px 10px rgb(0 0 0 / 30%);
+}
+#keyboard-container.dark {
+    filter: brightness(95%)
 }
 
 #keyboard-container.hidden {
@@ -1013,7 +1130,7 @@ td {
     bottom: 2px;
 }
 
-#answer-background, #menu-background {
+#answer-background, #menu-background, #wild-background {
     opacity: 0;
     visibility: hidden;
     position: fixed;
@@ -1024,21 +1141,21 @@ td {
     /* cursor: pointer; */
     transition: 0.25s cubic-bezier(.4,0,.2,1);
 }
-#answer-background {
-    z-index: 5;
-}
-#menu-background {
-    z-index: 4
-}
-
+#answer-background {z-index: 6;}
+#menu-background {z-index: 4}
+#wild-background {z-index: 4}
 #answer-background.shown{
     visibility: visible;
     opacity: 0.4;
 }
-
 #menu-background.shown {
     visibility: visible;
     opacity: 0.2;
+}
+#wild-background.shown {
+    /* cursor: pointer; */
+    visibility: visible;
+    opacity: 0.15;
 }
 
 @keyframes answer-background {
@@ -1187,6 +1304,62 @@ td {
 #new-answer .card:hover.flip .card-content{transform: rotateX(0)}
 #new-answer .card:active {filter: brightness(96%) !important}
 #new-answer .card.flip:active {filter: brightness(98%) !important}
+
+#wild-picker-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 262px;
+    height: 112px;
+    padding: 6px;
+    background-color: whitesmoke;
+    position: absolute;
+    box-shadow: 0 2px 3px rgb(0 0 0 / 35%);
+    border-radius: 8px;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.22s ease;
+    transition-property: opacity, visibility;
+    /* transition: visibility 0.22s ease; */
+    z-index: 5;
+}
+#wild-picker-container.shown {
+    opacity: 1;
+    visibility: visible;
+}
+#wild-picker-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    background-color: whitesmoke;
+    border-radius: 8px;
+    z-index: 1;
+}
+#wild-picker-content div {
+    cursor: pointer;
+}
+#wild-picker-container::after {
+    background-color: whitesmoke;
+    content: "";
+    display: block;
+    transform: rotate(45deg);
+    position: absolute; 
+    bottom: -2px;
+    /* box-shadow: 0 2px 3px rgb(0 0 0 / 35%); */
+    width: 15px;
+    height: 15px;
+}
+.wild-cube.active {
+    z-index: 5;
+}
+/* #wild-picker-hover-content {
+    width: 44px;
+    height: 52px;
+    position: absolute;
+    bottom: -52px;
+} */
 
 .notification {
     border-radius: 8px;
