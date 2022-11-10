@@ -1,4 +1,5 @@
 onmessage = (e) => {
+    
     console.log(e)
 
     if (e.data[0] === 'return') {
@@ -74,6 +75,7 @@ onmessage = (e) => {
     };
     
     function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, setVariationsLength, setGoal, setForbidden, forceSymmetricDifference) {
+        
         let returnNewPuzzle;
     
         console.log(randomize, setCubes, setUniverse, setVariations, setGoal, setForbidden)
@@ -193,7 +195,7 @@ onmessage = (e) => {
         };
     
         function advancedCalcSet(arr, universe, init = 0, leftVal = arr[0], rightVal = arr[2]) {
-            if (arr.length === 3) {
+            if (arr.length === 3) { 
                 let answer = [setOperation(arr)];
                 let flag = [leftVal + arr[1] + rightVal];
                 if (arr[1] === "U") {    // U/∩ INTERCHANGABLE
@@ -261,8 +263,8 @@ onmessage = (e) => {
                 } else if (arr[2] === "V") {
                     if (arr[1] === "-") {
                         if (symmetricDifference) {
-                            answer.push(translateBRGY(arr[2]))
-                            flag.push(`Ʌ-${arr[2]}`)
+                            answer.push(translateBRGY(arr[0]))
+                            flag.push(`${arr[0]}-Ʌ`)
                             return [answer,flag]
                         }
                         answer.push(translateBRGY(arr[0]));
@@ -312,7 +314,6 @@ onmessage = (e) => {
                 return [answer, flag]
     
             } else if (arr.length > 3) {
-    
                 let iterationCount = (arr.length - 1) / 2;
                 let permutations = [];
                 let flag = [];
@@ -461,30 +462,32 @@ onmessage = (e) => {
         if (setUniverse) {universeArr = setUniverse}
     
         console.log(universeArr)
+        
         // GENERATE VARIATIONS:
         let variationsArr, variationsMap = new Map();
         let requiredCube, wild, noNull, double, forbiddenCard, requiredCard, blankWild, symmetricDifference, twoSolutions;
         (function generateVariations() {
-            if (forceSymmetricDifference) {
-                if (!setVariations) setVariations = []
-                setVariations.unshift('symmetricDifference')
-            }
+            // if (forceSymmetricDifference) {
+            //     if (!setVariations) setVariations = []
+            //     setVariations.unshift('symmetricDifference')
+            // }
             for (let x of cubesArr) console.log(x)
             console.log(setVariations)
             variationsArr = [];
             if (setVariations) {
                 for (let x of setVariations) {
                     switch (x) {
-                        // case "requiredCube": variationsArr.push({"requiredCube": variationInput("requiredcube")}); break;
-                        case "requiredCube": variationsArr.push({"requiredCube": "R"}); break;
-                        // case "wild": variationsArr.push({"wild": variationInput("wild")}); break;
-                        case "wild": variationsArr.push({"wild": "R"}); break;
+                        case "requiredCube": variationsArr.push({"requiredCube": variationInput("requiredcube")}); break;
+                        // case "requiredCube": variationsArr.push({"requiredCube": "R"}); break;
+                        case "wild": variationsArr.push({"wild": variationInput("wild")}); break;
+                        // case "wild": variationsArr.push({"wild": "R"}); break;
                         case "twoOp": variationsArr.push("twoOp"); break;
+                        case "shiftPermitted": variationsArr.push('shiftPermitted'); break;
                         case "noNull": variationsArr.push("noNull"); noNull = true; break;
                         case "absValue": variationsArr.push("absValue"); break;
-                        // case "double": variationsArr.push({"double": variationInput("double")}); break;
-                        case "double": variationsArr.push({"double": "R∩B"})
-                        double = ["BRGY", "BRY", "BR", "BRG"]; break;
+                        case "double": variationsArr.push({"double": variationInput("double")}); break;
+                        // case "double": variationsArr.push({"double": "R∩B"})
+                        // double = ["BRGY", "BRY", "BR", "BRG"]; break;
                         case "requiredCard": variationsArr.push({"requiredCard": variationInput("requiredcard")}); break;
                         case "forbiddenCard": variationsArr.push({"forbiddenCard": variationInput("forbiddencard")}); break;
                         case "blankWild": variationsArr.push("blankWild"); blankWild = true; break;
@@ -894,7 +897,8 @@ onmessage = (e) => {
         not = (operationsArr2.includes("'"));
         equals = (restrictionCubes.includes('='))    
         mustContain = (restrictionCubes.includes('<'))
-    
+        
+
         function generateForbidden() {
             
             let totalValues = cubesArr[0].slice();
@@ -1167,6 +1171,7 @@ onmessage = (e) => {
                 };
                 if (randomize) valesArr2 = randomSort(valuesArr2)
                 for (let x of filterDuplicates(valuesArr2)) {
+                    console.log(valuesArr2)
                     cycleString([[x]], deleteFirstArrItem(valuesArr2, x), restrictionsOperationArr);
                 };
     
@@ -1250,10 +1255,10 @@ onmessage = (e) => {
                 for (let x of restrictionsMap) {
                     x[0] = x[0].split(",");
                 };
-            };
-    
+            };  
             // console.log(restrictionsMap)
             function setCycle(arr, values) {    // CREATE SET PERMUTATIONS
+                // console.log(arr)
                 permutationsCount++;
                 if (permutationsCount >= 100000/restrictionsMap.length && solutionLengths.length <= 2) return;
                 if (arr.length >= 11 && !solutionLengths.includes(arr.length - 2)) return;
@@ -1387,6 +1392,8 @@ onmessage = (e) => {
                                     backupIndex.index = solutionEval;
                                     backupIndex.length = arr.length;
                                 } else {
+                                    console.log(arr)
+                                    console.log(permFlag)
                                     solutionsArr.push(new Solution(solutionRestriction, permFlag, permCards, blankCard));
                                     solutionLengths.push(arr.length);
                                     breakLoop1 = true;

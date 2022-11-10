@@ -103,10 +103,10 @@ let puzzleParamaters =
         false,
     'setCubes': 
         [   
-            ["R", "B", "G"],
+            ["R", "G", "G", "V", "Y", "B"],
             [1, 3, 5],
-            ["∩", "∩", "-", "∩"],
-            ["<"]
+            ["'", "-", "-", "-"],
+            ["<", "="]
         ],
     'setUniverse':
         ['RG', 'BRY', 'RGY', 'B', 'BRG', 'Y', 'BG', '', 'BRGY', 'G', 'R', 'BY', 'RY'],
@@ -116,25 +116,25 @@ let puzzleParamaters =
         4,
     'setGoal':
         {
-            'goalArr': [5, "*", 1, "*", 1],
-            'goalValues': [5],
+            'goalArr': [5, "*", 1, "*", 2],
+            'goalValues': [10],
             'goalShape': 5
         },
     'setForbidden':
         {
             'forbiddenArrLength': 0
         },
-    'forceSymmetricDifference': false,
+    'forceSymmetricDifference': true,
 }
 
 puzzleParamaters = {
     'randomize': undefined,
     'setCubes': undefined,
     'setUniverse': undefined,
-    'setVariations': undefined,
+    'setVariations': [],
     // 'setVariations':
     //     ['symmetricDifference', 'blankWild', 'wild', 'twoSolutions'],
-    'setVariationsLength': undefined,
+    'setVariationsLength': 6,
     'setGoal': undefined,
     'setForbidden': undefined,
     'forceSymmetricDifference': undefined,
@@ -487,19 +487,19 @@ function newPuzzle() {
                 switch (currVariation) {
                     case "twoOp": variationToPush = "Two Op."; break;
                     case "noNull": variationToPush = "No Null"; break;
-                    case "absValue": variationToPush = "Abs. Val."; break;
+                    case "absValue": variationToPush = "Absolute Value"; break;
                     case "blankWild": variationToPush = "Blank Wild"; break;
-                    case "symmetricDifference": variationToPush = "Sym. Diff."; break;
-                    case "twoSolutions": variationToPush = "Two Sol."; break;
+                    case "symmetricDifference": variationToPush = "Symmetric Difference"; break;
+                    case "twoSolutions": variationToPush = "Two Solutions"; break;
                 }
             } else {
                 console.log(currVariation)
                 switch (Object.keys(currVariation)[0]) {
-                    case "requiredCube": variationToPush = "Req. Cube " + currVariation.requiredCube; break;
+                    case "requiredCube": variationToPush = "Required Cube " + currVariation.requiredCube; break;
                     case "wild": variationToPush = "Wild " + currVariation.wild; break;
                     case "double": variationToPush = "Double " + currVariation.double; break;
-                    case "requiredCard": variationToPush = 'Req. Card "' + currVariation.requiredCard + '"'; break;
-                    case "forbiddenCard": variationToPush = 'Forb. Card "' + currVariation.forbiddenCard + '"'; break;
+                    case "requiredCard": variationToPush = 'Required Card "' + currVariation.requiredCard + '"'; break;
+                    case "forbiddenCard": variationToPush = 'Forbidden Card "' + currVariation.forbiddenCard + '"'; break;
                 }
             }
             variationsDisplay.children[i].innerText = variationToPush;
@@ -1650,7 +1650,7 @@ mapArrowBox.addEventListener('click', function() {
 variationsArrowBox.addEventListener('click', function() {
     this.parentElement.classList.toggle('shown')
 })
-
+let genNewPuzzle = false;
 const settingsContainer = document.querySelector('#settings-container')
 const menuBackground = document.createElement('div')
 const header = document.querySelector('header')
@@ -1671,6 +1671,12 @@ menuBackground.addEventListener('click', (e) => {
     }
     variationsArrowBox.parentElement.classList.remove('dark') // REMOVE
     mapArrowBox.parentElement.classList.remove('dark') // REMOVE
+
+    if (genNewPuzzle) {
+        queuedPuzzleData = undefined;
+        newPuzzle()
+        genNewPuzzle = false
+    }
 })
 header.addEventListener('click', () => menuBackground.click())
 document.body.append(menuBackground)
@@ -1693,6 +1699,12 @@ settingsIcon.addEventListener('click', (e) => {
     }
     variationsArrowBox.parentElement.classList.toggle('dark') // REMOVE
     mapArrowBox.parentElement.classList.toggle('dark') // REMOVE
+
+    if (genNewPuzzle && !settingsContainer.classList.contains('shown')) {
+        queuedPuzzleData = undefined;
+        newPuzzle()
+        genNewPuzzle = false
+    }
 });
 settingsContainer.addEventListener('click', (e) => e.stopPropagation())
 let headerText = 'Settings'
@@ -1730,7 +1742,7 @@ function switchPage(activePage, title) {
 
 const settingsCardViewButton = document.querySelector('#card-view-button')
 const settingsCardViewPage = document.querySelector('#settings-card-view')
-settingsCardViewButton.addEventListener('click', () => {switchPage(settingsCardViewPage, 'Card View')})
+settingsCardViewButton.addEventListener('click', () => {switchPage(settingsCardViewPage, 'Card View (Testing)')})
 
 const settingsVariationsViewButton = document.querySelector('#variations-button')
 const settingsVariationsPage = document.querySelector('#settings-variations')
@@ -1738,22 +1750,85 @@ settingsVariationsViewButton.addEventListener('click', () => {switchPage(setting
 
 
 
-const settingsToggles = document.querySelectorAll('.settings-toggle .toggle')
+const settingsToggles = document.querySelectorAll('.settings-toggle .toggle, .settings-checkbox')
 for (let toggle of settingsToggles) toggle.addEventListener('click', toggleSetting)
 
 function toggleSetting(e) {
     // console.log(this)
     // console.log(e)
-    this.classList.toggle('active')
+    genNewPuzzle = true;
     switch (this.dataset.type) {
-        case 'symmetric-difference':
+        case 'force-symmetric-difference':
+            this.classList.toggle('active')
             puzzleParamaters.forceSymmetricDifference = !puzzleParamaters.forceSymmetricDifference
-            // terminateWorkers.postMessage("TERMINATE")
+            if (symmetricDifferenceCheck.classList.contains('active')) {
+                if (!this.classList.contains('active')) {
+                    symmetricDifferenceCheck.classList.remove('active')
+                    puzzleParamaters.setVariations = deleteFirstArrItem(puzzleParamaters.setVariations, 'symmetricDifference')
+                };
+                console.log(puzzleParamaters)
+                return;
+            }
+            if (this.classList.contains('active')) {
+                if (puzzleParamaters.setVariations.length === 6) variationCount.value = parseFloat(variationCount.value) + 1
+                symmetricDifferenceCheck.classList.add('active')
+                puzzleParamaters.setVariations.push('symmetricDifference')
+            }
             console.log(puzzleParamaters)
-            queuedPuzzleData = undefined;
-            newPuzzle()
         break;
+        case 'required-cube': forceVariation(this, 'requiredCube'); break;
+        case 'wild-cube': forceVariation(this, 'wild'); break;
+        case 'two-operations': forceVariation(this, 'twoOp'); break;
+        // case 'shift-permitted': forceVariation(this, 'shiftPermitted'); break;
+        case 'no-null': forceVariation(this, 'noNull'); break;
+        case 'absolute-value': forceVariation(this, 'absValue'); break;
+        case 'double-set': forceVariation(this, 'double'); break;
+        case 'required-card': forceVariation(this, 'requiredCard'); break;
+        case 'forbidden-card': forceVariation(this, 'forbiddenCard'); break;
+        case 'blank-wild': forceVariation(this, 'blankWild'); break;
+        case 'symmetric-difference': forceVariation(this, 'symmetricDifference'); break;
+        case 'two-solutions': forceVariation(this, 'twoSolutions'); break;
     }
+}
+
+function forceVariation(element, variation) {
+    if (element.parentElement.dataset.type === 'force-variations') {
+        if (!element.classList.contains('active') && puzzleParamaters.setVariations.length >= variationCount.value) return;
+        if (!element.classList.contains('active')) {
+            if (variation === 'requiredCard' && forbiddenCheck.classList.contains('active')) forceVariation(forbiddenCheck, 'forbiddenCard')
+            if (variation === 'forbiddenCard' && requiredCheck.classList.contains('active')) forceVariation(requiredCheck, 'requiredCard')
+            puzzleParamaters.setVariations.push(variation)
+        } else {
+            if (element === symmetricDifferenceCheck && puzzleParamaters.forceSymmetricDifference) {
+                forceSymmetricDifference.classList.remove('active')
+                puzzleParamaters.forceSymmetricDifference = !puzzleParamaters.forceSymmetricDifference
+            }
+            puzzleParamaters.setVariations = deleteFirstArrItem(puzzleParamaters.setVariations, variation)
+        }
+    }
+    console.log(puzzleParamaters)
+    element.classList.toggle('active')
+}
+
+const variationCount = document.querySelector('#variation-count')
+const settingsUpArrow = document.querySelector('#settings-nodes-container .arrow-container-up')
+const settingsDownArrow = document.querySelector('#settings-nodes-container .arrow-container-down')
+
+const forceSymmetricDifference = document.querySelector('#force-symmetric-difference')
+const requiredCheck = document.querySelectorAll(".settings-checkbox")[6]
+const forbiddenCheck = document.querySelectorAll(".settings-checkbox")[7]
+const symmetricDifferenceCheck = document.querySelectorAll(".settings-checkbox")[9]
+
+settingsUpArrow.addEventListener('click', () => {incrementVariationCount(1)})
+settingsDownArrow.addEventListener('click', () => {incrementVariationCount(-1)})
+
+function incrementVariationCount(increment) {
+    genNewPuzzle = true;
+    let newVal = parseFloat(variationCount.value) + increment
+    let activeCount = document.querySelectorAll('.settings-checkbox.active').length
+    if (newVal > 6 || newVal < activeCount) return;
+    variationCount.value = newVal
+    puzzleParamaters.setVariationsLength = newVal
 }
 
 // const testDiv = document.createElement('div')
