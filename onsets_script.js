@@ -1020,7 +1020,7 @@ function submitInput() {
             } else if (arr.length == 3) {
                 return setOperation([arr[0], arr[1], arr[2]]);
             } else if (arr.length > 3) {
-                return setOperation([calcSet(arr.slice(0, 3)), arr[3], ...arr.slice(4, arr.length)])
+                return calcSet([setOperation(arr.slice(0, 3)), arr[3], ...arr.slice(4, arr.length)])
             };
         };
         
@@ -1246,8 +1246,8 @@ function submitInput() {
                 let requiredValues = requiredContainer.dataset.values
                 let resourcesValues = requiredContainer.dataset.values.concat(resourcesContainer.dataset.values)
                 if (puzzleData.variationsMap.get('wild')) {
-                    requiredValues = requiredValues.replaceAll(puzzleData.variationsMap.get('wild'), currWild)
-                    resourcesValues = resourcesValues.replaceAll(puzzleData.variationsMap.get('wild'), currWild)
+                    requiredValues = requiredValues.replaceAll(puzzleData.variationsMap.get('wild'), translateName(currWild))
+                    resourcesValues = resourcesValues.replaceAll(puzzleData.variationsMap.get('wild'), translateName(currWild))
                 }
                 let requiredScore = altCalcScore(requiredValues)
                 let resourcesScore = altCalcScore(resourcesValues)
@@ -1260,8 +1260,9 @@ function submitInput() {
                 };
         
                 if (puzzleData.variationsMap.get('wild')) {
-                    input = input.replaceAll(puzzleData.variationsMap.get('wild'), currWild)
+                    input = input.replaceAll(puzzleData.variationsMap.get('wild'), translateName(currWild))
                 }
+                console.log(input)
                 let inputScore = altCalcScore(input)
                 console.log(inputScore)
                 console.log(requiredScore)
