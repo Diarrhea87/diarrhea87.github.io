@@ -199,7 +199,7 @@ function newPuzzle() {
 
     // GEN NEW PUZZLE
 
-    params = Object.values(puzzleParamaters)
+    let params = Object.values(puzzleParamaters)
     console.log(params)
 
     const mainPuzzleWorker = new Worker('onsets_worker.js');
@@ -228,7 +228,8 @@ function newPuzzle() {
                 if (key.classList[1] === translateName(puzzleData.variationsMap.get('wild'))) key.classList.add('wild-cube')
             }
         }
-        
+
+        // FORBIDDEN
         console.log(puzzleData);
         console.log(puzzleData.forbidden)
         for (let forbiddenCube of puzzleData.forbidden) {
@@ -244,7 +245,6 @@ function newPuzzle() {
             };
             forbiddenContainer.append(newForbiddenCube);
         };
-        let solutionScores = []
 
         // GOAL
         function goalAddCube(cube, row) {
@@ -310,6 +310,7 @@ function newPuzzle() {
         }
 
         // REQUIRED
+        let solutionScores = []
         if (puzzleData.variations.includes("twoSolutions")) {
             console.log(puzzleData.solution)
             for (let currSolution of puzzleData.solution) {

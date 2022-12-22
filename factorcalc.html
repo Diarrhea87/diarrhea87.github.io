@@ -80,9 +80,12 @@
 
                 console.log(math(inputArr))
                 let num = math(inputArr)
-                
+                console.log(num)
+                console.log("MOD: ", num % 55n)
+                // console.log(num % 11n)
 
-                    findDivisors(num)
+
+                findDivisors(num)
                 if (num === undefined) {
                     output.innerHTML = `Please input a value` 
                     output2.innerHTML = ''
@@ -138,8 +141,6 @@
                 generateDivisors(curIndex, curDivisor, arr);
             }
 
-            
-            
         }
         
         document.onkeypress = function (eventKeyName) {

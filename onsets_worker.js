@@ -10,69 +10,10 @@ onmessage = (e) => {
     console.groupCollapsed("GENERATE PUZZLE")
 
     let setTimer = new Date()
-    
-    function getRandomNumber(min, max) {
-        return Math.floor(Math.random() * (max + 1 - min)) + min;
-    };
-    
-    function deleteFirstArrItem(array, item) {
-        if (!array.includes(item)) return array;
-        let index = array.indexOf(item);
-        return array.slice(0, index).concat(array.slice(index + 1));
-    };
-    
-    function filterDuplicates(arr) {
-        return [...new Set(arr)]
-    };
-    
-    function randomSort(input) {
-        let arr = [...input]
-        for (let i = arr.length -1; i > 0; i--) {
-          let j = Math.floor(Math.random() * i);
-          let k = arr[i];
-          arr[i] = arr[j];
-          arr[j] = k;
-        }
-        return arr;
-    };
-    
-    function calcScore(inputArr, type = 1) {
-        let score = [0, 0, 0, 0, 0, false, false, false]
-        if (type === 2) {
-            for (let i = 0, l = inputArr.length; i < l; i += 2) {
-                for (let j = 0, l = inputArr[i].length; j < l; j++) {
-                    switch (inputArr[i].charAt(j)) {
-                        case "B": score[0]++; break;
-                        case "R": score[1]++; break;
-                        case "G": score[2]++; break;
-                        case "Y": score[3]++; break;
-                        case "V": score[4]++; break;
-                        case "Ʌ": score[4]++; break;
-                        case "U": score[5] = true; break;
-                        case "∩": score[5] = true; break;
-                        case "-": score[6] = true; break;
-                        case "'": score[7] = true; break;
-                    };
-                }
-            };
-            return score;
-        }
-        for (let x of inputArr) {
-            switch (x) {
-                case "B": score[0]++; break;
-                case "R": score[1]++; break;
-                case "G": score[2]++; break;
-                case "Y": score[3]++; break;
-                case "V": score[4]++; break;
-                case "Ʌ": score[4]++; break;
-                case "U": score[5] = true; break;
-                case "∩": score[5] = true; break;
-                case "-": score[6] = true; break;
-                case "'": score[7] = true; break;
-            };
-        };
-        return score;
-    };
+    function logTime(message) {
+        let stopTimer = new Date();
+        console.log(message + (stopTimer.getTime() - setTimer.getTime())/1000 + " SECONDS")
+    }
     
     function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, setVariationsLength, setGoal, setForbidden, forceSymmetricDifference) {
         
@@ -81,6 +22,69 @@ onmessage = (e) => {
         console.log(randomize, setCubes, setUniverse, setVariations, setGoal, setForbidden)
     
         // GENERAL FUNCTIONS:
+
+        function getRandomNumber(min, max) {
+            return Math.floor(Math.random() * (max + 1 - min)) + min;
+        };
+        
+        function deleteFirstArrItem(array, item) {
+            if (!array.includes(item)) return array;
+            let index = array.indexOf(item);
+            return array.slice(0, index).concat(array.slice(index + 1));
+        };
+        
+        function filterDuplicates(arr) {
+            return [...new Set(arr)]
+        };
+        
+        function randomSort(input) {
+            let arr = [...input]
+            for (let i = arr.length -1; i > 0; i--) {
+              let j = Math.floor(Math.random() * i);
+              let k = arr[i];
+              arr[i] = arr[j];
+              arr[j] = k;
+            }
+            return arr;
+        };
+        
+        function calcScore(inputArr, type = 1) {
+            let score = [0, 0, 0, 0, 0, false, false, false]
+            if (type === 2) {
+                for (let i = 0, l = inputArr.length; i < l; i += 2) {
+                    for (let j = 0, l = inputArr[i].length; j < l; j++) {
+                        switch (inputArr[i].charAt(j)) {
+                            case "B": score[0]++; break;
+                            case "R": score[1]++; break;
+                            case "G": score[2]++; break;
+                            case "Y": score[3]++; break;
+                            case "V": score[4]++; break;
+                            case "Ʌ": score[4]++; break;
+                            case "U": score[5] = true; break;
+                            case "∩": score[5] = true; break;
+                            case "-": score[6] = true; break;
+                            case "'": score[7] = true; break;
+                        };
+                    }
+                };
+                return score;
+            }
+            for (let x of inputArr) {
+                switch (x) {
+                    case "B": score[0]++; break;
+                    case "R": score[1]++; break;
+                    case "G": score[2]++; break;
+                    case "Y": score[3]++; break;
+                    case "V": score[4]++; break;
+                    case "Ʌ": score[4]++; break;
+                    case "U": score[5] = true; break;
+                    case "∩": score[5] = true; break;
+                    case "-": score[6] = true; break;
+                    case "'": score[7] = true; break;
+                };
+            };
+            return score;
+        };
     
         function randomArrayValue (arr) {
             return arr[getRandomNumber(0, arr.length - 1)]
@@ -1515,7 +1519,7 @@ onmessage = (e) => {
                     modifiedCubesArr[0].push(toPush)
                 };
                 forbiddenArr = deleteFirstArrItem(forbiddenArr, toPush);
-            }        
+            }
             
             let mapArr = [["[    ]", "[    ]", "[    ]", "[    ]"], ["[    ]", "[    ]", "[    ]", "[    ]"], ["[    ]", "[    ]", "[    ]", "[    ]"], ["[    ]", "[    ]", "[    ]", "[    ]"]];
             for (let i = 0; i < universeArr.length; i++) {

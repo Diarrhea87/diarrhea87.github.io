@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>Equations Practice</title>
+    <link rel="stylesheet" type="text/css" href="eq_styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.3.3/math.js"></script>
+    <script defer src="eq_script.js"></script>
+</head>
+<body>
+    <header>
+        <h1>
+            EQUATIONS PRACTICE
+        </h1>
+    </header>
+    <div id="puzzle-container">
+        <div id="variations-view-container">
+            <div id="variations-container">
+                <h3>Variations:</h3>
+                <ul>
+                </ul>
+            </div>
+            <div id="variations-arrow-box">&gt</div>
+        </div>
+        <div id="board-container">
+        <div id="parent-restraint-container">
+            <div class="restraint-container"><h3>Forbidden</h3>
+                <div id="forbidden-container"></div>
+            </div>
+            <div class="restraint-container"><h3>Permitted</h3>
+                <div id="permitted-container"></div>
+            </div>
+            <div class="restraint-container"><h3>Required</h3>
+                <div id="required-container"></div>
+            </div>
+        </div>
+        <div id="input-container">
+            <div id="solution-view-container">
+                <div id="solution-container"></div>
+                <!-- <div id="solution-hover-container"></div> -->
+                <div id="solution-bar">
+                    <h3 id="solution-text">Solution</h3>
+                </div>
+            </div>
+            <div id="equals-container">
+                <div id="equals-bar1"></div>
+                <div id="equals-bar2"></div>
+            </div>
+            <div id="goal-view-container">
+                <div id="goal-container"></div>
+                <div id="goal-bar"><h3 id="goal-text">Goal</h3></div>
+            </div>
+        </div>
+    </div>
+    <div id="bottom-puzzle-container">
+        <div id="resources-container">
+        </div>
+        <div id="submit-button">Submit</div>
+    </div>
+        <!--<div id="input-bar">
+
+        </div>-->
+        <div id="keyboard-container">
+            <div class="keyboard-row">
+                <div class="keyboard-button zero">0</div>
+                <div class="keyboard-button one">1</div>
+                <div class="keyboard-button two">2</div>
+                <div class="keyboard-button three">3</div>
+                <div class="keyboard-button four">4</div>
+                <div class="keyboard-button five">5</div>
+                <div class="keyboard-button six">6</div>
+                <div class="keyboard-button seven">7</div>
+                <div class="keyboard-button eight">8</div>
+                <div class="keyboard-button nine">9</div>
+            </div>
+            <div class="keyboard-row">
+                <div class="keyboard-button add">+</div>
+                <div class="keyboard-button subtract">-</div>
+                <div class="keyboard-button multiply">x</div>
+                <div class="keyboard-button divide">÷</div>
+                <div class="keyboard-button exponent">^</div>
+                <div class="keyboard-button square-root">√</div>
+                <div class="keyboard-button left-parenthesis">(</div>
+                <div class="keyboard-button right-parenthesis">)</div>
+                <div class="keyboard-button backspace keyboard-large-button">Delete</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
