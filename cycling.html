@@ -21,7 +21,8 @@
         }
         header {
             position: relative;
-            height: 54px;
+            /* height: 54px; */
+            height: min(13vw, 54px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -33,16 +34,19 @@
         header.dark {
             background-color: rgb(227, 227, 227);
         }
-        h1 {
+        header h1 {
             position: relative;
             top: 2px;
-            font-size: 1.95em;
+            font-size: 6.7vw;
+            font-size: min(6.5vw, 1.95em);
             margin: auto;
         }
         #settings-ico {
             position: absolute;
-            height: 34px;
-            width: 34px;
+            /* height: 34px; */
+            /* width: 34px; */
+            height: min(34px, 6.7vw);
+            width: min(34px, 6.7vw);
             right: 10px;
             cursor: pointer;
             border-radius: 100%;
@@ -66,6 +70,7 @@
             transition: 0.2s ease;
             display: flex;
             flex-direction: column;
+            z-index: 5;
         }
         #settings-container.shown {
             visibility: visible;
@@ -290,6 +295,7 @@
             text-align: center;
         }
         .answer-toggle-container {
+            z-index: 1;
             display: flex;
             position: relative;
             justify-content: space-between;
@@ -399,15 +405,13 @@
 
         function submitinput(e) {
             e.stopPropagation()
-            // console.log(e.target.dataset.select)
-            // console.log(this)
+            
             if (submitButton.classList.contains('expand')) {
                 if (!e.target.dataset.select) return;
                 let newVal;
                 if (e.target.dataset.select !== 'choose') {
                     newVal = e.target.dataset.select
                 } else {
-                    // return;
                     newVal = modInput.value
                 }
                 if (!newVal) return;
@@ -453,10 +457,11 @@
 
             let inputVal = input.value;
             let mod = parseFloat(modVal.innerText)
-
-            if (!inputVal.length) throw 'Input a value'
-
+            
             try {
+
+                if (!inputVal.length) throw 'Input a value'
+
                 inputArr = []
                 for (let i = 0; i < inputVal.length; i++) {
                     function pushNumber(index) {
@@ -590,8 +595,7 @@
                     if (currVal === valuesArr[valuesArr.length - 1] && valuesArr.length > 2) {
                         cycle = "CONTINUOUS"
                         if (currVal === 0) break;
-                    };
-                    if (valuesArr.includes(currVal)) {
+                    } else if (valuesArr.includes(currVal)) {
                         cycle = true;
                         if (currVal !== 1) valuesArr.shift()
                     };
@@ -623,7 +627,7 @@
                     finalAnswer.innerText = `${inputArr[0]}^${inputArr[2]} ≡ ${newAnswer}`
                     cycling.append(finalAnswer)
                 }
-                if (cycleType === 'normal') answer.innerText = finalAnswer.innerText
+                if (cycleType === 'normal') answer.innerText = finalAnswer.innerText ? finalAnswer.innerText : finalReduction.innerText
 
                 // SQUARING
 
@@ -726,7 +730,6 @@
             } catch (error) {
                 console.log(error)
                 const answer = document.querySelector('#answer')
-                // answer.innerText = `Invalid expression`
                 answer.innerText = error
                 setTimeout(() => {answer.classList.add('show')}, 1)
             };
