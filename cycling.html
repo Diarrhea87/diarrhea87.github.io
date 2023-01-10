@@ -5,8 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cycling Calculator</title>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="cycletable.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -105,9 +104,10 @@
             flex: auto;
             width: 100%;
             height: 100%;
+            flex-direction: column;
         }
         #settings-nodes-container > div {
-            margin: 8px 0;
+            margin-top: 8px;
             background-color: white;
             width: 100%;
             height: 48px;
@@ -148,6 +148,10 @@
             cursor: pointer;
             transition: background-color 120ms ease;
         }
+        .settings-button:hover {
+            background-color: rgb(246, 246, 246) !important;
+            cursor: pointer;
+        }
         #menu-background{
             opacity: 0;
             visibility: hidden;
@@ -163,11 +167,26 @@
             visibility: visible;
             opacity: 0.1;
         }
+        #main {
+            visibility: hidden;
+            opacity: 0;
+            height: calc(100vh - min(13vw, 54px));
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+        }
+        #main.active {
+            visibility: visible;
+            opacity: 1;
+        }
         p {
             font-weight: 700;
-            margin: auto;
+            margin: 0 auto
         }
-        #directions {margin-top: 30px;}
+        #directions {
+            text-align: center;
+            margin: 30px 0 0 0;
+        }
         #input-div {
             height: 50px;
             width: 300px;
@@ -343,6 +362,89 @@
             opacity: 1;
             translate: 0;
         }
+        #tablediv-container {
+            text-align: center;
+        }
+        #table {
+            width: 100%;
+            height: calc(100vh - min(13vw, 54px));
+            background-color: white;
+            position: absolute;
+            top: min(13vw, 54px);
+            z-index: 2;
+            opacity: 0;
+            transition: 350ms ease;
+            visibility: hidden;
+        }
+        #table.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        #tablediv {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .table-container {
+            margin: 14px 40px;
+        }
+        .table-container h3 {
+            text-align: center;
+            margin: 5px 0;
+        }
+        table {
+            border-collapse: collapse;
+        }
+        .horizontal-header {
+            border-left: 1px solid black;
+            border-right: 1px solid black;
+            height: 30px;
+            width: 30px;
+        }
+        .horizontal-header:first-child {
+            border: none;
+        }
+        .vertical-header {
+            border-top: 1px solid black;
+            border-bottom: 1px solid black;
+            height: 30px;
+            width: 30px;
+        }
+        .table-data {
+            border: 1px solid black;
+            text-align: center;
+        }
+        .col0 {
+            background-color: rgb(132, 255, 255);
+        }
+        .col1 {
+            background-color: rgb(130, 253, 228);
+            /* background-color: rgb(132, 255, 255); */
+        }
+        .col2 {
+            background-color: rgb(119, 255, 137);
+        }
+        .col3 {
+            background-color: rgb(129, 255, 70);
+        }
+        .col4 {
+            background-color: rgb(193, 255, 70);
+        }
+        .col5 {
+            background-color: rgb(249, 255, 61);
+        }
+        .col6 {
+            background-color: rgb(255, 227, 70);
+        }
+        .col7 {
+            background-color: rgb(255, 216, 73);
+        }
+        .col8 {
+            background-color: rgb(255, 173, 73);
+        }
+        .col9 {
+            background-color: rgb(255, 112, 73);
+        }
     </style>
 </head>
 <body>
@@ -375,27 +477,34 @@
                         <div class="toggle-switch"></div>
                     </div>
                 </div>
+                <div class="settings-button">
+                    <p>Cycle Lengths Table</p>
+                </div>
             </div>
     </header>
-    <p id="directions">Input an expression to find its modulo</p>
-    <div id="input-div">
-        <div id="mod">
-            <p>11</p>
+    <section id="main" class="active">
+        <p id="directions">Input an expression to find its modulo</p>
+        <div id="input-div">
+            <div id="mod">
+                <p>11</p>
+            </div>
+            <input id="input" maxlength="8">
         </div>
-        <input id="input" maxlength="8">
-    </div>
-    <div id="submit">
-        <p style="position: absolute;">ENTER</p>
-        <div class="mod-picker-button" data-select="6">6</div>
-        <div class="mod-picker-button" data-select="7">7</div>
-        <div class="mod-picker-button" data-select="8">8</div>
-        <div class="mod-picker-button" data-select="9">9</div>
-        <div class="mod-picker-button" data-select="10">10</div>
-        <div class="mod-picker-button" data-select="11">11</div>
-        <div class="mod-picker-button" data-select="choose"><input id="mod-input" maxlength="3"></div>
-    </div>
-    <div id="answer-container" style="margin-bottom: 20px"></div>
+        <div id="submit">
+            <p style="position: absolute;">ENTER</p>
+            <div class="mod-picker-button" data-select="6">6</div>
+            <div class="mod-picker-button" data-select="7">7</div>
+            <div class="mod-picker-button" data-select="8">8</div>
+            <div class="mod-picker-button" data-select="9">9</div>
+            <div class="mod-picker-button" data-select="10">10</div>
+            <div class="mod-picker-button" data-select="11">11</div>
+            <div class="mod-picker-button" data-select="choose"><input id="mod-input" maxlength="3"></div>
+        </div>
+        <div id="answer-container" style="margin-bottom: 20px"></div>
+    </section>
+    <section id="table">
 
+    </section>
     <script>
         
         const input = document.querySelector('#input')
@@ -885,11 +994,18 @@
         document.body.append(menuBackground)
 
         settingsIcon.addEventListener('click', (e) => {
-        e.stopPropagation()
-        settingsContainer.classList.toggle('shown')
-        menuBackground.classList.toggle('shown')
-        header.classList.toggle('dark')
-    });
+            e.stopPropagation()
+            if (table.classList.contains('active')) {
+                table.classList.toggle('active')
+                setTimeout(function(){
+                    table.innerHTML = ''
+                }, 350)
+            } else {
+                settingsContainer.classList.toggle('shown')
+                menuBackground.classList.toggle('shown')
+                header.classList.toggle('dark')
+            }
+        });
     settingsContainer.addEventListener('click', (e) => e.stopPropagation())
 
     let fadeDelay = 1
@@ -902,6 +1018,169 @@
             fadeDelay = 1
         }
     })
+
+    let tableArr = [
+        [
+            [1,2,1,1,2,1,1,2,1,1,2],
+            [1,3,2,1,2,2,2,2,1,3,2],
+            [1,6,3,3,6,2,3,2,1,1,6],
+            [1,4,2,3,2,3,2,2,1,4,2],
+            [1,4,4,2,2,1,4,4,2,1,2],
+            [1,7,3,3,6,2,6,2,1,3,6],
+            [1,6,6,3,6,2,1,2,3,6,6],
+            [1,5,4,3,4,4,2,3,2,5,4],
+            [1,18,4,9,18,3,9,6,3,3,18],
+            [1,5,4,2,2,3,4,4,2,3,2],
+            [1,10,5,5,10,10,10,10,5,2,2]
+        ],
+        [ // K = 7
+            [1,3,6,3,6,2,1,1,3,6,3],
+            [1,3,6,3,6,2,1,1,3,6,3],
+            [1,6,6,3,6,2,1,2,3,6,6],
+            [1,4,6,3,6,3,2,1,3,7,6],
+            [1,12,12,6,6,2,4,4,6,6,3],
+            [1,6,6,3,6,2,1,2,3,6,6],
+            [1,21,42,21,42,14,2,7,21,42,21],
+            [1,5,6,4,6,4,2,1,3,8,6],
+            [1,6,7,3,6,3,3,2,3,6,6],
+            [1,12,12,6,6,2,4,4,6,6,3],
+            [1,30,30,15,30,10,10,10,15,6,3]
+        ],
+        [ // K = 8
+            [1,3,2,2,2,3,2,1,1,3,2],
+            [1,4,4,2,4,4,2,2,2,4,4],
+            [1,4,2,3,2,3,2,2,1,4,2],
+            [1,5,8,3,8,5,4,2,4,5,8],
+            [1,6,4,3,2,4,4,4,2,3,2],
+            [1,5,4,3,4,4,2,3,2,5,4],
+            [1,5,6,4,6,4,2,1,3,8,6],
+            [1,6,16,3,16,6,8,2,8,6,16],
+            [1,8,3,4,6,3,6,2,1,4,6],
+            [1,7,4,3,4,5,4,5,2,4,4],
+            [1,12,10,6,10,12,10,10,5,4,2]
+        ],
+        [ // K = 9
+            [1,6,2,3,6,2,3,2,1,1,6],
+            [1,6,3,3,6,2,3,2,1,1,6],
+            [1,18,3,9,18,3,9,6,2,3,18],
+            [1,7,3,3,6,2,6,2,1,3,6],
+            [1,12,5,6,6,3,12,4,2,1,6],
+            [1,18,4,9,18,3,9,6,3,3,18],
+            [1,6,7,3,6,3,3,2,3,6,6],
+            [1,8,3,4,6,3,6,2,1,4,6],
+            [1,54,4,27,54,4,27,18,2,9,54],
+            [1,12,5,6,6,3,12,4,2,1,6],
+            [1,30,6,15,30,11,30,10,5,2,6]
+        ],
+        [ // K = 10
+            [1,4,4,2,1,1,4,4,2,1,1],
+            [1,5,4,2,1,3,4,4,2,2,2],
+            [1,4,4,2,2,1,4,4,2,1,2],
+            [1,6,4,3,2,4,4,4,2,3,2],
+            [1,20,20,10,3,5,4,20,10,2,5],
+            [1,5,4,2,2,3,4,4,2,3,2],
+            [1,12,12,6,6,2,4,4,6,6,3],
+            [1,7,4,3,4,5,4,5,2,4,4],
+            [1,12,5,6,6,3,12,4,2,1,6],
+            [1,21,20,10,3,6,4,20,10,2,10],
+            [1,20,20,10,5,10,20,20,10,2,1]
+        ],
+        [ // K = 11
+            [1,10,5,5,5,10,10,10,5,2,1],
+            [1,10,5,5,5,10,10,10,5,2,1],
+            [1,10,5,5,10,10,10,10,5,2,2],
+            [1,11,10,5,5,11,10,10,5,3,2],
+            [1,20,20,10,5,10,20,20,10,2,1],
+            [1,10,5,5,10,10,10,10,5,2,2],
+            [1,30,30,15,30,10,10,10,15,6,3],
+            [1,12,10,6,10,12,10,10,5,4,2],
+            [1,30,6,15,30,11,30,10,5,2,6],
+            [1,20,20,10,5,10,20,20,10,2,1],
+            [1,110,5,55,55,110,110,110,5,22,2]
+        ]
+    ]
+
+    //
+    const tableDivContainer = document.createElement('div')
+    tableDivContainer.id = 'tablediv-container'
+
+    const directions = document.createElement('h3')
+    directions.innerText = `Rows = Base, Columns = Divisor`
+    tableDivContainer.append(directions)
+
+    
+    const tableDiv = document.createElement('div')
+    tableDiv.id = 'tablediv'
+
+    tableDivContainer.append(tableDiv)
+
+    colAssign = function(element, val) {
+        if (val > 30) return 'col9'
+        if (val > 20) return 'col8'
+        if (val > 15) return 'col7'
+        if (val > 12) return 'col6'
+        if (val > 10) return 'col5'
+        if (val > 7) return 'col4'
+        if (val > 5) return 'col3'
+        if (val > 3) return 'col2'
+        if (val > 1) return 'col1'
+        return 'col0'
+    }
+
+    for (let i = 0; i < 6; i++) {
+
+        const tableContainer = document.createElement('div')
+        tableContainer.classList.add('table-container')
+        const tableTitle = document.createElement('h3')
+        tableTitle.innerText = `k = ${i + 6}`
+        const table = document.createElement('table')
+        tableContainer.append(tableTitle)
+        tableContainer.append(table)
+        for (let j = -1; j < 11; j++) {
+            const tableRow = document.createElement('tr')
+            for (let k = -1; k < 11; k++) {
+                let tableData
+                if (j < 0) {
+                    tableData = document.createElement('th')
+                    tableData.innerText = k + 1;
+                    if (k < 0) tableData.innerText = ''
+                    tableData.classList.add('horizontal-header')
+                } else {
+                    if (k < 0) {
+                        tableData = document.createElement('th')
+                        tableData.innerText = j + 1;
+                        tableData.classList.add('vertical-header')
+                    } else {
+                        tableData = document.createElement('td')
+                        let value = tableData.innerText = tableArr[i][j][k]
+                        tableData.classList.add(colAssign(tableData, value))
+                        // console.log(tableData.classList)
+                        // throw "STOP"
+                        tableData.innerText = value
+                        tableData.classList.add('table-data')
+                    };
+                };
+                tableRow.append(tableData)
+            }
+            table.append(tableRow)
+        }
+        tableDiv.append(tableContainer)
+    }
+
+    const settingsButton = document.querySelector('.settings-button')
+    const table = document.querySelector('#table')
+    settingsButton.addEventListener('click', function(){
+        table.classList.toggle('active')
+        menuBackground.click()
+        if (table.classList.contains('active')) {
+            table.append(tableDivContainer.cloneNode('deep'))
+        } else {
+            setTimeout(function(){
+                table.innerHTML = ''
+            }, 350)
+        }
+    })
+
     </script>
 </body>
 </html>
