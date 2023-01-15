@@ -50,10 +50,11 @@ header h1 {
     align-items: center;
     transition: 50ms;
     z-index: 1;
+    user-select: none;
 }
 
 .cube:not(.active):hover {filter: brightness(96%); transition: filter 0s}
-.cube:not(.active):active {filter: brightness(94%)}
+.cube:not(.active):not(.pointer):active {filter: brightness(94%)}
 
 .cube.upsidedown::before {
     position: absolute;
@@ -70,7 +71,6 @@ header h1 {
     right: 16px;
 }
 
-
 .goal-cube {
     margin: 4px 2px;
     box-shadow: 2px 2px 3px rgb(0 0 0 / 20%)
@@ -78,6 +78,9 @@ header h1 {
 .solution-cube {
     margin: 4px 2px;
     box-shadow: 2px 2px 3px rgb(0 0 0 / 20%);
+}
+.cube.pointer {
+    cursor: pointer;
 }
 
 .red {background-color: rgb(196, 41, 38)}
@@ -138,6 +141,7 @@ header h1 {
     margin: auto;
     margin-top: 5px;
     margin-bottom: 10px;
+    user-select: none;
 }
 
 .restraint-cube {
@@ -172,6 +176,7 @@ header h1 {
     color: white;
     position: relative;
     bottom: 10px;
+    user-select: none;
 }
 
 #solution-view-container {
@@ -198,13 +203,16 @@ header h1 {
     flex-wrap: wrap;
     padding: 2px 0;
 }
-#solution-container:not(.active):hover {
+#solution-container:hover, #solution-container.active, #solution-container.hover {
     background-color: rgb(26, 93, 218);
     transition-duration: 0s;
 }
-#solution-container:not(.active):active {
+/* #solution-container.hover {
+    background-color: rgb(26, 93, 218);
+} */
+/* #solution-container:not(.active):active {
     background-color: rgb(24, 90, 211);
-}
+} */
 #solution-bar {
     position: relative;
     bottom: 25px;
@@ -453,10 +461,7 @@ header h1 {
     box-shadow: 0 2px 3px rgb(0 0 0 / 35%);
     border-radius: 8px;
     opacity: 0;
-    visibility: hidden;
-    transition: 0.22s ease;
-    transition-property: opacity, visibility;
-    /* transition: visibility 0.22s ease; */
+    transition: opacity 0.22s ease;
     z-index: 5;
 }
 .selector-toggle:first-child {
@@ -476,7 +481,7 @@ header h1 {
 }
 .selector-container.shown {
     opacity: 1;
-    visibility: visible;
+    /* visibility: visible; */
 }
 #wild-picker-content {
     display: flex;
@@ -506,15 +511,18 @@ header h1 {
     visibility: hidden;
     position: fixed;
     width: 100%;
-    height: 100vw;
+    height: 100vh;
     background-color: black;
     top: 0;
     /* cursor: pointer; */
     transition: 0.25s cubic-bezier(.4,0,.2,1);
 }
+#selector-background {
+    transition: 0.22s cubic-bezier(.4,0,.2,1) !important;
+}
 #answer-background.shown{
     visibility: visible;
-    opacity: 0.4;
+    opacity: 0.2;
 }
 #answer-background {z-index: 6;}
 #selector-background {z-index: 4}

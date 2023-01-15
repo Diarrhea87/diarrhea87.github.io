@@ -22,7 +22,6 @@ onmessage = (e) => {
         console.log(randomize, setCubes, setUniverse, setVariations, setGoal, setForbidden)
     
         // GENERAL FUNCTIONS:
-
         function getRandomNumber(min, max) {
             return Math.floor(Math.random() * (max + 1 - min)) + min;
         };
