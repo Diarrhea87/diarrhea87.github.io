@@ -80,6 +80,7 @@
 ]
 
 for (let i = 6; i <= 11; i++) {
+    break;
     let valuesArr = []
 
     for (let j = 1; j <= 11; j++) {
@@ -101,7 +102,7 @@ for (let i = 6; i <= 11; i++) {
     // '\n',valuesArr[8],
     // '\n',valuesArr[9],
     // '\n',valuesArr[10])
-    console.log(valuesArr)
+    // console.log(valuesArr)
 }
 
 
@@ -132,4 +133,157 @@ function cycleLength(base, divisor, k) {
     return valuesArr.length
 };
 
-// console.log(cycleLength(6, 5, 11))
+function cycle(base, exponent, divisor, k, log) {
+    
+    let mod = k * divisor
+    let reducedBase = base % mod
+    let valuesMap = new Map([[0, 1]])
+
+    // CYCLING
+    let cycle = 0, valuesArr = [], initExp
+    for (let i = 1, currVal = 1; i < 1000 && !cycle; i++) {
+        valuesArr.push(currVal)
+        currVal *= reducedBase
+        currVal %= mod
+        valuesMap.set(i, currVal)
+        if (currVal === valuesArr[valuesArr.length - 1] && valuesArr.length > 2) {
+            cycle = 'CONTINUOUS'
+            if (currVal === 0) valuesArr.shift()
+        } else if (valuesArr.includes(currVal)) {
+            for (let i = valuesArr.length - 1; i >= 0; i--) {
+                cycle++;
+                if (valuesArr[i] === currVal) {
+                    initExp = i
+                    break;
+                }
+            }
+            if (currVal !== 1) valuesArr.shift()
+        };
+    };
+    // console.log(valuesArr)
+    if (log) console.log(cycle)
+    if (log) console.log(exponent)
+    if (log) console.log(initExp)
+    
+    let finalExponent = exponent
+
+    if (cycle !== 'CONTINUOUS') {
+        finalExponent -= initExp
+        finalExponent %= cycle
+        finalExponent = initExp + finalExponent
+    }
+    
+    let ans;
+    if (valuesMap.get(exponent)) {
+        ans = valuesMap.get(exponent)
+    } else {
+        ans = valuesMap.get(finalExponent)
+    }
+
+    if (cycle === 'CONTINUOUS') {
+        if (exponent >= valuesArr.length) ans = valuesArr[valuesArr.length - 1]
+    }
+    let cycleAnswer = ans + '/' + divisor
+
+    // SQUARING
+
+    // EXPAND EXPONENT
+                
+    let maxExponent = 0, binaryArr = []
+    while (2 ** (maxExponent + 1) <= exponent) maxExponent++
+    for (let i = maxExponent, currVal = exponent; i >= 0; i--) {
+        if (exponent === 0) {
+            break;
+        }
+        if (currVal - 2 ** i >= 0) {
+            currVal -= 2 ** i
+            binaryArr.push((2 ** i).toString())
+        }
+    };
+    // console.log(maxExponent)
+
+    // CYCLING
+    let squareValues = new Map([[undefined, 1]]);
+    for (let i = 0, currVal = base; i < maxExponent + 1; i++) {
+        if (i) {
+            currVal **= 2
+            currVal %= mod
+        } else {
+            currVal %= mod
+        }
+        squareValues.set((2 ** i).toString(), currVal)
+    }
+
+    // MULTIPLYING
+
+    // console.log(binaryArr)
+    // console.log(squareValues)
+
+    let squareAnswer
+    if (binaryArr.length > 1) {
+        let product;
+        for (let x of binaryArr) {
+            if (product !== undefined) {
+                product *= squareValues.get(x)
+            } else {
+                product = squareValues.get(x)
+            };
+        };
+
+        squareAnswer = product % mod
+    } else {
+        squareAnswer = squareValues.get(binaryArr[0])
+    }
+    squareAnswer = squareAnswer + '/' + divisor
+    
+    if (log) console.log(cycleAnswer)
+    if (log) console.log(squareAnswer)
+    return (cycleAnswer === squareAnswer)
+};
+
+// console.log(cycleLength(6,7,9))
+// console.log(cycle(6,55,7,9))
+// console.log(cycle(3,6,9,11, 'log'))
+// console.log(cycle(10,5,4,11, 'log'))
+// console.log(cycle(50,25,4,11))    
+// console.log(cycle(4,7,8,7,'log'))
+console.log(cycle(8,10,1,11,'log'))
+
+
+
+
+for (let i = 6; i <= 11; i++) {
+    // break;
+    let valuesArr = []
+
+    for (let j = 1; j <= 11; j++) {
+        let baseArr = []
+        for (k = 1; k <= 11; k++) {
+            let truefalse = true
+            for (let l = 0; l < 1; l++) {
+                // if (!cycle(k, l, j, i)) truefalse = 'false'
+                if (!cycle(k, l, j, i)) {
+                    // console.log([k, l, j, i])
+                    // cycle(k, l, j, i, 1)
+                    baseArr.push([k, l, j, i])
+                }
+            }
+            // baseArr.push(truefalse)
+        }
+        if (!baseArr.length) continue
+        valuesArr.push(baseArr)
+    }
+
+    // console.log('\n',valuesArr[0],
+    // '\n',valuesArr[1],
+    // '\n',valuesArr[2],
+    // '\n',valuesArr[3],
+    // '\n',valuesArr[4],
+    // '\n',valuesArr[5],
+    // '\n',valuesArr[6],
+    // '\n',valuesArr[7],
+    // '\n',valuesArr[8],
+    // '\n',valuesArr[9],
+    // '\n',valuesArr[10])
+    console.log(valuesArr)
+}

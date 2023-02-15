@@ -670,6 +670,7 @@
                 console.log(base)
                 if (base === 0) {
                     let result = (inputArr[2] === '0') ? 1 : 0
+                    if (inputArr[0] === '0' && inputArr[2] === '0') throw "0^0 is not defined"
                     const finalAnswer = document.createElement('p')
                     if (cycleType === 'double') {
                         if (result && inputArr[4] == 0) result = 0;
@@ -681,7 +682,7 @@
                     }
                     cycling.append(finalAnswer)
                     squaring.append(finalAnswer.cloneNode(true))
-                    if (cycleType === 'division') {
+                    if (cycleType === 'division') { 
                         const finalAnswerDouble = document.createElement('p')
                         finalAnswerDouble.innerText = `(${inputArr[0]}^${inputArr[2]}) / ${inputArr[4]} ≡ ${result}`
                         if (result) finalAnswerDouble.innerText += `/${inputArr[4]}`
@@ -697,7 +698,7 @@
                 }
 
                 // CYCLING
-                let cycle = false, valuesArr = [], valuesMap = new Map([[0, 1]]);
+                let cycle = 0, valuesArr = [], valuesMap = new Map([[0, 1]]), initExp;
                 for (let i = 1, currVal = 1; i < 1000 && !cycle; i++) {
                     valuesArr.push(currVal)
                     const newCycle = document.createElement('p')
@@ -707,7 +708,13 @@
                         cycle = "CONTINUOUS"
                         if (currVal === 0) break;
                     } else if (valuesArr.includes(currVal)) {
-                        cycle = true;
+                        for (let i = valuesArr.length - 1; i >= 0; i--) {
+                            cycle++;
+                            if (valuesArr[i] === currVal) {
+                                initExp = i
+                                break;
+                            }
+                        }
                         if (currVal !== 1) valuesArr.shift()
                     };
                     cycling.append(newCycle)
@@ -717,16 +724,23 @@
                 // SET CYCLE LENGTH
 
                 const cycleLength = document.createElement('p')
-                cycleLength.innerText = `Cycle length is ${valuesArr.length}`
+                cycleLength.innerText = `Cycle length is ${cycle}`
                 if (cycle === 'CONTINUOUS') cycleLength.innerText = `Cycle is continuous`
                 cycleLength.style.margin = "18px 0"
                 cycling.append(cycleLength)
 
                 const finalReduction = document.createElement('p')
                 const finalAnswer = document.createElement('p')
-                let finalExponent = inputArr[2] % valuesArr.length
-                if (!finalExponent && inputArr[2] !== '0') finalExponent = valuesArr.length
+
+                let finalExponent = parseFloat(inputArr[2])
                 let newAnswer = valuesMap.get(finalExponent)
+
+                if (!newAnswer) {
+                    finalExponent -= initExp
+                    finalExponent %= cycle
+                    finalExponent = initExp + finalExponent
+                    newAnswer = valuesMap.get(finalExponent)
+                }
                 if (cycle === 'CONTINUOUS') {
                     if (inputArr[2] >= valuesArr.length) newAnswer = valuesArr[valuesArr.length - 1]
                     finalReduction.innerText = `${base}^${inputArr[2]} ≡ ${newAnswer}`
@@ -784,7 +798,7 @@
                 };
 
                 // CYCLING
-                let squareValues = new Map();
+                let squareValues = new Map([[undefined, 1]]);
                 for (let i = 0, currVal = base; i < maxExponent + 1; i++) {
                     const increment = document.createElement('p')
                     if (i) {
@@ -817,7 +831,7 @@
                             product = squareValues.get(x)
                         };
                     };
-
+                    console.log(product)
                     multiply.innerText += ` ≡ ${product % mod}`
                 } else {
                     multiply.innerText += `${inputArr[0]}${inputArr[1]}${inputArr[2]} ≡ ${squareValues.get(binaryArr[0])}`
@@ -1156,8 +1170,6 @@
                         tableData = document.createElement('td')
                         let value = tableData.innerText = tableArr[i][j][k]
                         tableData.classList.add(colAssign(tableData, value))
-                        // console.log(tableData.classList)
-                        // throw "STOP"
                         tableData.innerText = value
                         tableData.classList.add('table-data')
                     };

@@ -553,31 +553,31 @@ const keyboardContainer = document.querySelector('#keyboard-container');
 const keyboardButtons = document.querySelectorAll(".keyboard-row > div")
 
 const inputValues = {
-    "flatArray": {
-        "setNameArr1": [],
-        "setNameArr2": [],
-        "restrictionArr1": [],
-        "restrictionArr2": []
+    flatArray: {
+        setNameArr1: [],
+        setNameArr2: [],
+        restrictionArr1: [],
+        restrictionArr2: []
     },
-    "wrapValue": {
-        "setNameArr1": {'values':[0, 0], 'row':0},
-        "setNameArr2": {'values':[0, 0], 'row':0},
-        "restrictionArr1": {'values':[0, 0], 'row':0},
-        "restrictionArr2": {'values':[0, 0], 'row':0}
+    wrapValue: {
+        setNameArr1: {values:[0, 0], row:0},
+        setNameArr2: {values:[0, 0], row:0},
+        restrictionArr1: {values:[0, 0], row:0},
+        restrictionArr2: {values:[0, 0], row:0}
     },
-    "divNodes": {
-        "setNameArr1": [],
-        "setNameArr2": [],
-        "restrictionArr1": [],
-        "restrictionArr2": []
+    divNodes: {
+        setNameArr1: [],
+        setNameArr2: [],
+        restrictionArr1: [],
+        restrictionArr2: []
     },
-    "blankWild": {
-        "solution1": [false, false, false, false],
-        "solution2": [false, false, false, false]
+    blankWild: {
+        solution1: [false, false, false, false],
+        solution2: [false, false, false, false]
     },
-    "wildCube": {
-        "solution1": undefined,
-        "solution2": undefined
+    wildCube: {
+        solution1: undefined,
+        solution2: undefined
     }
 };
 let activeSolution = 'solution1';
