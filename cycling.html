@@ -601,7 +601,7 @@
                 let cycleType;
                 if (inputArr[1] !== "^") throw "Invalid Expression"
                 if (inputArr.length === 3) cycleType = 'normal'
-                // if (inputArr.length === 5 && inputArr[3] === "^") cycleType = 'double'
+                if (inputArr.length === 5 && inputArr[3] === "^") cycleType = 'double'
                 if (inputArr.length === 5 && inputArr[3] === "/") cycleType = 'division'
                 if (!cycleType) throw "Invalid Expression"
 
@@ -635,7 +635,7 @@
                     };
                 });
                 answerToggleContainer.append(cycleToggle, exponentToggle, answerToggleDiv);
-                answerContainer.append(answerToggleContainer);
+                if (cycleType !== 'double') answerContainer.append(answerToggleContainer);
                 const method = document.createElement('div')
                 method.id = 'method'
                 answerContainer.append(method)
@@ -726,13 +726,18 @@
                 const cycleLength = document.createElement('p')
                 cycleLength.innerText = `Cycle length is ${cycle}`
                 if (cycle === 'CONTINUOUS') cycleLength.innerText = `Cycle is continuous`
-                cycleLength.style.margin = "18px 0"
+                if (cycleType === 'double' && cycle  !== 'CONTINUOUS') {
+                    cycleLength.style.marginTop = "18px"
+                } else {
+                    cycleLength.style.margin = "18px 0"
+                }
                 cycling.append(cycleLength)
 
                 const finalReduction = document.createElement('p')
                 const finalAnswer = document.createElement('p')
 
                 let finalExponent = parseFloat(inputArr[2])
+                if (cycleType === 'double') finalExponent = inputArr[2] ** inputArr[4]
                 let newAnswer = valuesMap.get(finalExponent)
 
                 if (!newAnswer) {
@@ -741,100 +746,215 @@
                     finalExponent = initExp + finalExponent
                     newAnswer = valuesMap.get(finalExponent)
                 }
+
+                let doubleFinalExponent // FOR DOUBLE CYCLING
                 if (cycle === 'CONTINUOUS') {
-                    if (inputArr[2] >= valuesArr.length) newAnswer = valuesArr[valuesArr.length - 1]
-                    finalReduction.innerText = `${base}^${inputArr[2]} ≡ ${newAnswer}`
-                } else {
+                    if (cycleType === 'double') {
+                        if (inputArr[2] ** inputArr[4] >= valuesArr.length) {
+                            newAnswer = valuesArr[valuesArr.length - 1]
+                        }
+                        finalReduction.innerText = `${inputArr[0]}^(${inputArr[2]}^${inputArr[4]}) ≡ ${newAnswer}`
+                        answer.innerText = finalReduction.innerText 
+                    } else {
+                        if (inputArr[2] >= valuesArr.length) {
+                            newAnswer = valuesArr[valuesArr.length - 1]
+                        }
+                        finalReduction.innerText = `${base}^${inputArr[2]} ≡ ${newAnswer}`
+                    }
+                    console.log(finalReduction.innerText)
+                    cycling.append(finalReduction)
+                } else if (cycleType !== 'double') {
                     finalReduction.innerText = `${base}^${inputArr[2]} ≡ ${base}^${finalExponent} ≡ ${newAnswer}`
+                    cycling.append(finalReduction)
+                } else { // DOUBLE CYCLING
+
+                    let base2 = inputArr[2] % cycle
+                    let exponent2 = inputArr[4]
+                    let mod2 = cycle
+
+                    if (base2 === 0) {
+                        let result = (inputArr[4] == '0') ? 1 : 0
+                        if (inputArr[2] === '0' && inputArr[4] === '0') throw "0^0 is not defined"
+                    }
+
+                    const initSecondCycle = document.createElement('p')
+                    initSecondCycle.innerText = `Reduce ${inputArr[2]}^${inputArr[4]} mod ${mod2}`
+                    initSecondCycle.style.marginBottom = '18px'
+                    cycling.append(initSecondCycle)
+
+
+                    if (inputArr[2] != base2) {
+                        const initReduction = document.createElement('p')
+                        initReduction.style.marginBottom = "18px"
+                        initReduction.innerText = `${inputArr[2]}^${exponent2} ≡ ${base2}^${exponent}`
+                        if (base2 === 0) initReduction.innerText += ` ≡ 0`
+                        cycling.append(initReduction)
+                        initReduction.style.margin = '18px'                 
+                    }
+
+                    let cycle2 = 0, valuesArr2 = [], valuesMap = new Map([[0, 1]]), initExp2;
+                    for (let i = 1, currVal = 1; i < 1000 && !cycle2; i++) {
+                        valuesArr2.push(currVal)
+                        const newCycle = document.createElement('p')
+                        newCycle.innerText = `${base2}^${i} ≡ ${currVal *= base2} ≡ ${currVal %= mod2}`
+                        valuesMap.set(i, currVal)
+                        if (currVal === valuesArr2[valuesArr2.length - 1] && valuesArr2.length > 2) {
+                            cycle2 = "CONTINUOUS"
+                            if (currVal === 0) break;
+                        } else if (valuesArr2.includes(currVal)) {
+                            for (let i = valuesArr2.length - 1; i >= 0; i--) {
+                                cycle2++;
+                                if (valuesArr2[i] === currVal) {
+                                    initExp2 = i
+                                    break;
+                                }
+                            }
+                            if (currVal !== 1) valuesArr2.shift()
+                        };
+                        if (base2 !== 0) cycling.append(newCycle)
+                    };
+                    console.log(cycle2)
+
+                    const cycleLength = document.createElement('p')
+                    cycleLength.innerText = `Cycle length is ${cycle2}`
+                    if (cycle2 === 'CONTINUOUS') cycleLength.innerText = `Cycle is continuous`
+                    cycleLength.style.margin = "18px 0"
+                    if (base2 !== 0) cycling.append(cycleLength)
+
+                    const finalReduction2 = document.createElement('p')
+
+                    let finalExponent2 = parseFloat(exponent2)
+                    let newAnswer2 = valuesMap.get(finalExponent2)  
+
+                    if (!newAnswer2) {
+                        finalExponent2 -= initExp2
+                        finalExponent2 %= cycle2
+                        finalExponent2 = initExp2 + finalExponent2
+                        newAnswer2 = valuesMap.get(finalExponent2)
+                    }
+
+                    if (cycle2 === 'CONTINUOUS') {
+                        if (inputArr[4] >= valuesArr2.length) newAnswer2 = valuesArr2[valuesArr2.length - 1]
+                        finalReduction2.innerText = `${base2}^${exponent2} ≡ ${newAnswer2}`
+                        console.log(finalReduction2.innerText)
+                        cycling.append(finalReduction2)
+                    } else {
+                        finalReduction2.innerText = `${inputArr[2]}^${exponent2}`
+                        if (base2 !== 0) finalReduction2.innerText += ` ≡ ${base2}^${finalExponent2}`
+                        finalReduction2.innerText += ` ≡ ${newAnswer2}`
+                        cycling.append(finalReduction2)
+                    }
+                    doubleFinalExponent = newAnswer2
+
+                    let doubleFinalAnswer = valuesMap.get(doubleFinalExponent)
+
+                    if (!doubleFinalAnswer) {
+                        doubleFinalExponent -= initExp2
+                        doubleFinalExponent %= cycle2
+                        doubleFinalExponent = initExp2 + doubleFinalExponent
+                        doubleFinalAnswer = valuesMap.get(doubleFinalExponent)
+                    }
+
+                    finalAnswer.innerText = `${inputArr[0]}^(${inputArr[2]}^${inputArr[4]}) ≡ ${inputArr[0]}^${doubleFinalExponent} ≡ ${doubleFinalAnswer}`
+                    cycling.append(finalAnswer)
+                    answer.innerText = `${inputArr[0]}^(${inputArr[2]}^${inputArr[4]}) ≡ ${doubleFinalAnswer}`
                 }
-                cycling.append(finalReduction)
-                if (inputArr[0] != base) {
+                
+                if (inputArr[0] != base && cycleType !== 'double') {
                     finalAnswer.innerText = `${inputArr[0]}^${inputArr[2]} ≡ ${newAnswer}`
                     cycling.append(finalAnswer)
                 }
-                if (cycleType === 'normal') answer.innerText = finalAnswer.innerText ? finalAnswer.innerText : finalReduction.innerText
+                if (cycleType === 'normal') {
+                    if (finalAnswer.innerText) {
+                        answer.innerText = finalAnswer.innerText
+                    } else {
+                        answer.innerText = `${base}^${inputArr[2]} ≡ ${newAnswer}`
+                    }
+                }
 
                 // SQUARING
 
-                // EXPAND EXPONENT
-                
-                let maxExponent = 0, binaryString, binaryArr = []
-                while (2 ** (maxExponent + 1) <= exponent) maxExponent++
-                for (let i = maxExponent, currVal = exponent; i >= 0; i--) {
-                    if (exponent === 0) {
-                        binaryString = 0
-                        break;
-                    }
-                    if (currVal - 2 ** i >= 0) {
-                        currVal -= 2 ** i
-                        binaryArr.push((2 ** i).toString())
-                        if (!binaryString) {
-                            binaryString = 2 ** i
-                        } else {
-                            binaryString = 2 ** i + " + " + binaryString
+                if (cycleType !== 'double') {
+                    // EXPAND EXPONENT
+                    
+                    let maxExponent = 0, binaryString, binaryArr = []
+                    while (2 ** (maxExponent + 1) <= exponent) maxExponent++
+                    for (let i = maxExponent, currVal = exponent; i >= 0; i--) {
+                        if (exponent === 0) {
+                            binaryString = 0
+                            break;
                         }
-                    }
-                };
-                console.log(maxExponent)
-                console.log(binaryString)
-
-                if (typeof binaryString === "string") {
-                    const binary = document.createElement('p')
-                    squaring.append(binary)
-                    binary.innerText = `${base}^(${binaryString})`
-
-                    const expand = document.createElement('p')
-                    let expandedString
-                    for (let x of binaryArr.reverse()) {
-                        if (expandedString) {
-                            expandedString += ` x (${base}^${x})`
-                        } else {
-                            expandedString = `(${base}^${x})`
+                        if (currVal - 2 ** i >= 0) {
+                            currVal -= 2 ** i
+                            binaryArr.push((2 ** i).toString())
+                            if (!binaryString) {
+                                binaryString = 2 ** i
+                            } else {
+                                binaryString = 2 ** i + " + " + binaryString
+                            }
                         }
-                    }
-                    expand.innerText = expandedString
-                    squaring.append(expand)
-
-                };
-
-                // CYCLING
-                let squareValues = new Map([[undefined, 1]]);
-                for (let i = 0, currVal = base; i < maxExponent + 1; i++) {
-                    const increment = document.createElement('p')
-                    if (i) {
-                        increment.innerText = `${base}^${2 ** i} ≡ (${base}^${2 ** (i - 1)})^2 ≡ ${currVal **= 2} ≡ ${currVal %= mod}`
-                    } else {
-                        increment.innerText = `${base}^${2 ** i} ≡ ${currVal} ≡ ${currVal %= mod}`
-                        increment.style.marginTop = "18px"
-                    }
-                    squareValues.set((2 ** i).toString(), currVal)
-                    squaring.append(increment)
-                }
-
-                // MULTIPLYING
-
-                console.log(binaryArr)
-                console.log(squareValues)
-
-                const multiply = document.createElement('p')
-                multiply.innerText = ""
-                multiply.style.marginTop = "18px"
-                squaring.append(multiply)
-                if (typeof binaryString === "string") {
-                    let product;
-                    for (let x of binaryArr) {
-                        if (multiply.innerText) {
-                            multiply.innerText += ` x ${squareValues.get(x)}`
-                            product *= squareValues.get(x)
-                        } else {
-                            multiply.innerText += `${squareValues.get(x)}`
-                            product = squareValues.get(x)
-                        };
                     };
-                    console.log(product)
-                    multiply.innerText += ` ≡ ${product % mod}`
-                } else {
-                    multiply.innerText += `${inputArr[0]}${inputArr[1]}${inputArr[2]} ≡ ${squareValues.get(binaryArr[0])}`
+                    console.log(maxExponent)
+                    console.log(binaryString)
+
+                    if (typeof binaryString === "string") {
+                        const binary = document.createElement('p')
+                        squaring.append(binary)
+                        binary.innerText = `${base}^(${binaryString})`
+
+                        const expand = document.createElement('p')
+                        let expandedString
+                        for (let x of binaryArr.reverse()) {
+                            if (expandedString) {
+                                expandedString += ` x (${base}^${x})`
+                            } else {
+                                expandedString = `(${base}^${x})`
+                            }
+                        }
+                        expand.innerText = expandedString
+                        squaring.append(expand)
+
+                    };
+
+                    // CYCLING
+                    let squareValues = new Map([[undefined, 1]]);
+                    for (let i = 0, currVal = base; i < maxExponent + 1; i++) {
+                        const increment = document.createElement('p')
+                        if (i) {
+                            increment.innerText = `${base}^${2 ** i} ≡ (${base}^${2 ** (i - 1)})^2 ≡ ${currVal **= 2} ≡ ${currVal %= mod}`
+                        } else {
+                            increment.innerText = `${base}^${2 ** i} ≡ ${currVal} ≡ ${currVal %= mod}`
+                            increment.style.marginTop = "18px"
+                        }
+                        squareValues.set((2 ** i).toString(), currVal)
+                        squaring.append(increment)
+                    }
+
+                    // MULTIPLYING
+
+                    console.log(binaryArr)
+                    console.log(squareValues)
+
+                    const multiply = document.createElement('p')
+                    multiply.innerText = ""
+                    multiply.style.marginTop = "18px"
+                    squaring.append(multiply)
+                    if (typeof binaryString === "string") {
+                        let product;
+                        for (let x of binaryArr) {
+                            if (multiply.innerText) {
+                                multiply.innerText += ` x ${squareValues.get(x)}`
+                                product *= squareValues.get(x)
+                            } else {
+                                multiply.innerText += `${squareValues.get(x)}`
+                                product = squareValues.get(x)
+                            };
+                        };
+                        console.log(product)
+                        multiply.innerText += ` ≡ ${product % mod}`
+                    } else {
+                        multiply.innerText += `${inputArr[0]}${inputArr[1]}${inputArr[2]} ≡ ${squareValues.get(binaryArr[0])}`
+                    }
                 }
                 
                 if (cycleType === 'division') {
@@ -848,9 +968,11 @@
 
                 method.innerHTML = cycling.innerHTML
 
+                let fadeMethodDelay = (cycleType === 'double') ? 250 : 400
+                console.log(fadeMethodDelay)
                 setTimeout(() => {answer.classList.add('show')}, 150 * fadeDelay)
                 setTimeout(() => {answerToggleContainer.classList.add('show')}, 250 * fadeDelay)
-                setTimeout(() => {fadeMethod()}, 400 * fadeDelay)
+                setTimeout(() => {fadeMethod()}, fadeMethodDelay * fadeDelay)
 
             } catch (error) {
                 console.log(error)

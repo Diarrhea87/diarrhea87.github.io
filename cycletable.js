@@ -247,7 +247,7 @@ function cycle(base, exponent, divisor, k, log) {
 // console.log(cycle(10,5,4,11, 'log'))
 // console.log(cycle(50,25,4,11))    
 // console.log(cycle(4,7,8,7,'log'))
-console.log(cycle(8,10,1,11,'log'))
+// console.log(cycle(8,10,1,11,'log'))
 
 
 
@@ -285,5 +285,5 @@ for (let i = 6; i <= 11; i++) {
     // '\n',valuesArr[8],
     // '\n',valuesArr[9],
     // '\n',valuesArr[10])
-    console.log(valuesArr)
+    // console.log(valuesArr)
 }
