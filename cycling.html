@@ -740,7 +740,7 @@
                 if (cycleType === 'double') finalExponent = inputArr[2] ** inputArr[4]
                 let newAnswer = valuesMap.get(finalExponent)
 
-                if (!newAnswer) {
+                if (newAnswer === undefined) {
                     finalExponent -= initExp
                     finalExponent %= cycle
                     finalExponent = initExp + finalExponent
@@ -789,15 +789,15 @@
                         initReduction.innerText = `${inputArr[2]}^${exponent2} ≡ ${base2}^${exponent}`
                         if (base2 === 0) initReduction.innerText += ` ≡ 0`
                         cycling.append(initReduction)
-                        initReduction.style.margin = '18px'                 
+                        initReduction.style.margin = '18px'
                     }
 
-                    let cycle2 = 0, valuesArr2 = [], valuesMap = new Map([[0, 1]]), initExp2;
+                    let cycle2 = 0, valuesArr2 = [], valuesMap2 = new Map([[0, 1]]), initExp2;
                     for (let i = 1, currVal = 1; i < 1000 && !cycle2; i++) {
                         valuesArr2.push(currVal)
                         const newCycle = document.createElement('p')
                         newCycle.innerText = `${base2}^${i} ≡ ${currVal *= base2} ≡ ${currVal %= mod2}`
-                        valuesMap.set(i, currVal)
+                        valuesMap2.set(i, currVal)
                         if (currVal === valuesArr2[valuesArr2.length - 1] && valuesArr2.length > 2) {
                             cycle2 = "CONTINUOUS"
                             if (currVal === 0) break;
@@ -824,16 +824,22 @@
                     const finalReduction2 = document.createElement('p')
 
                     let finalExponent2 = parseFloat(exponent2)
-                    let newAnswer2 = valuesMap.get(finalExponent2)  
+                    let newAnswer2 = valuesMap2.get(finalExponent2)
 
-                    if (!newAnswer2) {
+                    if (newAnswer2 === undefined) {
                         finalExponent2 -= initExp2
                         finalExponent2 %= cycle2
                         finalExponent2 = initExp2 + finalExponent2
-                        newAnswer2 = valuesMap.get(finalExponent2)
+                        newAnswer2 = valuesMap2.get(finalExponent2)
                     }
 
+                    console.log(valuesMap2)
+                    console.log(finalExponent2)
+                    console.log(newAnswer2)
+
                     if (cycle2 === 'CONTINUOUS') {
+                        console.log(inputArr[4])
+                        console.log(valuesArr2.length)
                         if (inputArr[4] >= valuesArr2.length) newAnswer2 = valuesArr2[valuesArr2.length - 1]
                         finalReduction2.innerText = `${base2}^${exponent2} ≡ ${newAnswer2}`
                         console.log(finalReduction2.innerText)
@@ -848,12 +854,18 @@
 
                     let doubleFinalAnswer = valuesMap.get(doubleFinalExponent)
 
-                    if (!doubleFinalAnswer) {
+                    if (doubleFinalAnswer === undefined) {
                         doubleFinalExponent -= initExp2
                         doubleFinalExponent %= cycle2
                         doubleFinalExponent = initExp2 + doubleFinalExponent
                         doubleFinalAnswer = valuesMap.get(doubleFinalExponent)
                     }
+
+                    console.log(initExp2)
+                    console.log(cycle2)
+
+                    console.log(newAnswer2)
+                    console.log(doubleFinalExponent)
 
                     finalAnswer.innerText = `${inputArr[0]}^(${inputArr[2]}^${inputArr[4]}) ≡ ${inputArr[0]}^${doubleFinalExponent} ≡ ${doubleFinalAnswer}`
                     cycling.append(finalAnswer)
