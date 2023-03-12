@@ -199,7 +199,7 @@ function newPuzzle() {
 
     // GEN NEW PUZZLE
 
-    let params = Object.values(puzzleParamaters)
+    params = Object.values(puzzleParamaters)
     console.log(params)
 
     const mainPuzzleWorker = new Worker('onsets_worker.js');
@@ -228,8 +228,7 @@ function newPuzzle() {
                 if (key.classList[1] === translateName(puzzleData.variationsMap.get('wild'))) key.classList.add('wild-cube')
             }
         }
-
-        // FORBIDDEN
+        
         console.log(puzzleData);
         console.log(puzzleData.forbidden)
         for (let forbiddenCube of puzzleData.forbidden) {
@@ -245,6 +244,7 @@ function newPuzzle() {
             };
             forbiddenContainer.append(newForbiddenCube);
         };
+        let solutionScores = []
 
         // GOAL
         function goalAddCube(cube, row) {
@@ -310,7 +310,6 @@ function newPuzzle() {
         }
 
         // REQUIRED
-        let solutionScores = []
         if (puzzleData.variations.includes("twoSolutions")) {
             console.log(puzzleData.solution)
             for (let currSolution of puzzleData.solution) {
@@ -553,31 +552,31 @@ const keyboardContainer = document.querySelector('#keyboard-container');
 const keyboardButtons = document.querySelectorAll(".keyboard-row > div")
 
 const inputValues = {
-    flatArray: {
-        setNameArr1: [],
-        setNameArr2: [],
-        restrictionArr1: [],
-        restrictionArr2: []
+    "flatArray": {
+        "setNameArr1": [],
+        "setNameArr2": [],
+        "restrictionArr1": [],
+        "restrictionArr2": []
     },
-    wrapValue: {
-        setNameArr1: {values:[0, 0], row:0},
-        setNameArr2: {values:[0, 0], row:0},
-        restrictionArr1: {values:[0, 0], row:0},
-        restrictionArr2: {values:[0, 0], row:0}
+    "wrapValue": {
+        "setNameArr1": {'values':[0, 0], 'row':0},
+        "setNameArr2": {'values':[0, 0], 'row':0},
+        "restrictionArr1": {'values':[0, 0], 'row':0},
+        "restrictionArr2": {'values':[0, 0], 'row':0}
     },
-    divNodes: {
-        setNameArr1: [],
-        setNameArr2: [],
-        restrictionArr1: [],
-        restrictionArr2: []
+    "divNodes": {
+        "setNameArr1": [],
+        "setNameArr2": [],
+        "restrictionArr1": [],
+        "restrictionArr2": []
     },
-    blankWild: {
-        solution1: [false, false, false, false],
-        solution2: [false, false, false, false]
+    "blankWild": {
+        "solution1": [false, false, false, false],
+        "solution2": [false, false, false, false]
     },
-    wildCube: {
-        solution1: undefined,
-        solution2: undefined
+    "wildCube": {
+        "solution1": undefined,
+        "solution2": undefined
     }
 };
 let activeSolution = 'solution1';
@@ -1021,7 +1020,7 @@ function submitInput() {
             } else if (arr.length == 3) {
                 return setOperation([arr[0], arr[1], arr[2]]);
             } else if (arr.length > 3) {
-                return calcSet([setOperation(arr.slice(0, 3)), arr[3], ...arr.slice(4, arr.length)])
+                return setOperation([calcSet(arr.slice(0, 3)), arr[3], ...arr.slice(4, arr.length)])
             };
         };
         
@@ -1263,7 +1262,6 @@ function submitInput() {
                 if (puzzleData.variationsMap.get('wild')) {
                     input = input.replaceAll(puzzleData.variationsMap.get('wild'), translateName(currWild))
                 }
-                console.log(input)
                 let inputScore = altCalcScore(input)
                 console.log(inputScore)
                 console.log(requiredScore)
