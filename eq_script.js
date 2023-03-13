@@ -520,7 +520,7 @@ function newPuzzle() {
     let params = Object.values(puzzleParamaters)
     console.log(params)
 
-    const mainPuzzleWorker = new Worker('equations_worker.js');
+    const mainPuzzleWorker = new Worker('eq_worker.js');
 
     if (queuedPuzzleData) {
         mainPuzzleWorker.postMessage([
