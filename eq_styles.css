@@ -89,7 +89,7 @@ header h1 {
 .green {background-color: rgb(21, 156, 95)}
 .cube.black {background-color: rgb(23, 41, 53)}
 
-.square-root::after {content: url(/icons/root.svg);}
+.square-root:not(.solution-cube)::after {content: url(/icons/root.svg)}
 .keyboard-button.square-root{content: url(/icons/root_black.svg)}
 .left-parenthesis:not(.keyboard-button), .right-parenthesis:not(.keyboard-button) {
     margin: 0 3px;
@@ -624,20 +624,25 @@ header h1 {
 
 #answer-content {
     display: flex;
-    height: 100%;
+    height: calc(100% - 55px);
     width: 100%;
     overflow-y: scroll;
     flex-direction: column;
     align-items: center;
     text-align: center;
+    flex-shrink: 0;
+    padding-bottom: 30px;
 }
 
 #input-result {
-    margin: 50px 0 10px 0;
+    margin: 30px 0 10px 0;
     width: 100%;
     background-color: rgba(255, 0, 0, 0.271);
     text-align: left;
-    padding: 20px 30px;
+    padding: 18px 30px;
+}
+#input-result.correct {
+    background-color: rgba(47, 238, 70, 0.518);
 }
 #input-result h2 {
     font-size: 1.7em;
@@ -649,8 +654,39 @@ header h1 {
     font-size: 1.1em !important;
 }
 
+/* #answer-content h2 {
+    margin-top: 0;
+} */
+
 #answer-content p {
+    font-family: Helvetica, sans-serif;
     font-size: 1.17em;
+}
+
+.evaluation-paragraph {
+    font-size: 14px !important;
+    /* font-style: italic; */
+    color: rgb(116, 116, 116);
+    margin: 6px 0 18px 0;
+}
+
+#goal-title {
+    width: 86%;
+    padding: 8px;
+    border-top: 1px solid whitesmoke;
+    border-bottom: 1px solid whitesmoke;
+    transition: 30ms ease;
+    transition-property: border-top-color, border-bottom-color;
+}
+/* #goal-title:hover {
+    border-top-color: rgb(90, 90, 90);
+    border-bottom-color: rgb(90, 90, 90);
+
+} */
+
+#goal-list {
+    position: relative;
+    right: 14px;
 }
 
 .answer-solution-container {
@@ -668,4 +704,68 @@ header h1 {
     display: flex;
     flex-direction: row;
     line-height: 48px;
+}
+
+#breakdown-container {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    width: 86%;
+    height: 0;
+    overflow: hidden;
+}
+#breakdown-content {
+    width: 100%;
+    text-align: center;
+}
+@font-face {font-family: 'Latin Modern Math'; src: url('fonts/LatinmodernmathRegular-z8EBa.otf');}
+#breakdown-content p {
+    font-size: 20px;
+    margin: 8px 0;
+    padding: 4px 0;
+    font-family: 'Times New Roman', Times, serif;
+    /* font-family: 'Latin Modern Math', 'Times New Roman', Times, serif; */
+    letter-spacing: 1px;
+    /* font-weight: 550; */
+}
+/* #breakdown-content p:hover {
+    background-color: rgb(236, 236, 236);
+} */
+#breakdown-content p:first-child {
+    margin-top: 0;
+}
+
+#separator-div {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 86%;
+    margin: 10px 0;
+}
+
+#breakdown-button {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    content: "Show Breakdown";
+    background-color: whitesmoke;
+    padding: 0 3px;
+    height: 32px;
+    width: 140px;
+    color: rgb(116, 116, 116);
+    cursor: pointer;
+}
+#breakdown-button.active {
+    width: 136px;
+}
+#breakdown-button p {
+    font-size: 14px;
+}
+#breakdown-button svg {
+    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+#breakdown-button.active svg {
+    transform: rotate(180deg);
 }

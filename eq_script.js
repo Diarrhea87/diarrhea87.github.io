@@ -344,39 +344,39 @@ function randomArrayValue (arr) {
     return arr[getRandomNumber(0, arr.length - 1)]
 };
 
-function translateFunction(input, type) {
-    if (type === "object") {
-        return input.map(val => {
-            let modify = val;
-            switch (modify.cube) {
-                case "-": modify.cube = "−"; break;
-                case "/": modify.cube = "÷"; break;
-                case "√": modify.cube = "√"; break;
-            }
-            return modify;
-        })
-    } else if (type === "array") {
-        return input.map(val => {
-            let newval = val;
-            switch (val) {
-                case "-": newval = "−"; break;
-                case "/": newval = "÷"; break;
-                case "√": newval = "√"; break;
-            }
-            return newval;
-        })
-    } else if (type === "prim") {
-        let output = input
-        switch (input) {
-            case "-": output = "−"; break;
-            case "/": output = "÷"; break;
-            case "√": output = "√"; break;
-        }
-        return output
-    }
-}
+// function translateFunction(input, type) {
+//     if (type === "object") {
+//         return input.map(val => {
+//             let modify = val;
+//             switch (modify.cube) {
+//                 case "-": modify.cube = "−"; break;
+//                 // case "/": modify.cube = "÷"; break;
+//                 // case "√": modify.cube = "√"; break;
+//             }
+//             return modify;
+//         })
+//     } else if (type === "array") {
+//         return input.map(val => {
+//             let newval = val;
+//             switch (val) {
+//                 case "-": newval = "−"; break;
+//                 // case "/": newval = "÷"; break;
+//                 // case "√": newval = "√"; break;
+//             }
+//             return newval;
+//         })
+//     } else if (type === "prim") {
+//         let output = input
+//         switch (input) {
+//             case "-": output = "−"; break;
+//             // case "/": output = "÷"; break;
+//             // case "√": output = "√"; break;
+//         }
+//         return output
+//     }
+// }
 
-function translateName(input, typeSymbols) {
+function translateName(input) {
     switch (input.toString()) {
         case "one": return "1";
         case "two": return "2";
@@ -389,11 +389,12 @@ function translateName(input, typeSymbols) {
         case "nine": return "9";
         case "zero": return "0";
         case "add": return "+";
-        case "subtract": return (typeSymbols) ? "-" : "−";
+        case "subtract": return "−";
         case "multiply": return "x";
-        case "divide": return (typeSymbols) ? "/" : "÷";
+        case "divide": return "÷";
         case "exponent": return "^";
         case "square-root": return "√"
+        case "factorial": return "!"
         case "left-parenthesis": return "(";
         case "right-parenthesis": return ")";
         case "1": return "one";
@@ -411,29 +412,100 @@ function translateName(input, typeSymbols) {
         case "−": return "subtract";
         case "*": return "multiply";
         case "x": return "multiply";
-        case "/": return "divide";
+        // case "/": return "divide";
         case "÷": return "divide";
         case "^": return "exponent";
         case "s": return "square-root";
         case "√": return "square-root";
+        case "!": return "factorial"
         case "(": return "left-parenthesis";
         case ")": return "right-parenthesis";
         case "Backspace": return "backspace"
      };
 }
 
+function base10(num) {
+    switch (num) {
+        case 'j': return 10;
+        case 'k': return 11;
+        default: return num;
+    }
+}
+
+function createSvg(type) {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    switch (type) {
+        case 'arrow':
+            svg.setAttribute('viewBox', "0 0 24 24")
+            svg.setAttribute('fill', "currentColor")
+
+            path.setAttribute('fill-rule', 'evenodd');
+            path.setAttribute('d', 'M4.929 7.913l7.078 7.057 7.064-7.057a1 1 0 111.414 1.414l-7.77 7.764a1 1 0 01-1.415 0L3.515 9.328a1 1 0 011.414-1.414z');
+            path.setAttribute('clip-rule', 'evenodd');
+            svg.append(path)
+            return svg
+        case 'square-root':
+            // svg.setAttribute('viewBox', "0 0 11.112498 11.112498")
+            svg.setAttribute('viewBox', "0 0 11 11")
+            // svg.setAttribute('fill', "currentColor")
+            path.setAttribute('style', 'fill:#002724;fill-opacity:0;stroke:#ffffff;stroke-width:0.61764;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1')
+            path.setAttribute('d', 'M 3.2579811,5.611843 H 3.7564006 L 4.5501808,7.7347416 5.6947001,3.3781839 7.8545189,3.3778064');
+            svg.append(path)
+            return svg
+    }
+}
+
+let puzzleParamaters = 
+{
+    randomize: 
+        false,
+    setCubes: 
+        [   
+            [1, '+', 2, 1,],
+            [0, 'x', 'x', 1],
+            [5, '−'],
+            [1, 8]
+        ],
+    setVariations:
+        ['multipleOperations', 'base', 'log'],
+    setVariationsLength: 
+        3,
+    setGoal:
+        [
+            {cube: 1, color: 'red', orientation: 'up'},
+            {cube: '+', color: 'red', orientation: 'up'},
+            {cube: 1, color: 'red', orientation: 'up'}
+        ],
+    setForbidden:
+        {
+            forbiddenArrLength: 0
+        },
+}
+
+// puzzleParamaters = {
+//     randomize: undefined,
+//     setCubes: undefined,
+//     setVariations: undefined,
+//     setVariationsLength: undefined,
+//     setGoal: undefined,
+//     setForbidden: undefined,
+// }
+
 function newPuzzle() {
 
     // RESETTING CONTAINERS
     inputValues.flatArray = []
     inputValues.wrapValue = {'values': [0, 0], 'row': 0}
-    inputValues.resourceColors = {
-        "available": [[], [], [], []],
-        "used": [[], [], [], []]
+    inputValues.resources = {
+        values: [[], [], [], []],
+        available: [[], [], [], []],
+        used: [[], [], [], []]
     }
-    inputValues.requiredColors = {
-        "available": [[], [], [], []],
-        "used": [[], [], [], []]
+    inputValues.required = {
+        values: [[], [], [], []],
+        available: [[], [], [], []],
+        used: [[], [], [], []]
     }
     solutionContainer.innerHTML = ""
     forbiddenContainer.innerHTML = ""
@@ -445,9 +517,8 @@ function newPuzzle() {
 
     // GEN NEW PUZZLE
 
-    puzzleParamaters = {"data":"data"}
     let params = Object.values(puzzleParamaters)
-    // console.log(params)
+    console.log(params)
 
     const mainPuzzleWorker = new Worker('equations_worker.js');
 
@@ -465,7 +536,7 @@ function newPuzzle() {
         console.log(puzzleData)
 
         // FORBIDDEN
-        let modifiedForbiddenArr = translateFunction(puzzleData.forbidden, 'object')
+        let modifiedForbiddenArr = puzzleData.forbidden
         for (let forbiddenCube of modifiedForbiddenArr) {
             const newForbiddenCube = document.createElement("div")
             newForbiddenCube.innerHTML = forbiddenCube.cube
@@ -476,7 +547,7 @@ function newPuzzle() {
         };
 
         // GOAL
-        let modifiedGoalArr = translateFunction(puzzleData.goal, 'object')
+        let modifiedGoalArr = puzzleData.goal
         for (let goalCube of modifiedGoalArr) {
             const newGoalCube = document.createElement("div")
             newGoalCube.innerHTML = goalCube.cube
@@ -499,6 +570,8 @@ function newPuzzle() {
         // REQUIRED
         let resourcesArr = JSON.parse(JSON.stringify(puzzleData.modifiedCubes))
         let requiredArr = puzzleData.solution.cubes
+
+        console.log(puzzleData.solution.flag)
         console.log(requiredArr)
         if (getRandomNumber(0, 2)) requiredArr = deleteFirstArrItem(requiredArr, randomArrayValue(requiredArr.toString()))
         console.log(requiredArr)
@@ -513,11 +586,12 @@ function newPuzzle() {
             };
             const newRequiredCube = document.createElement('div')
             newRequiredCube.classList.add('cube', 'restraint-cube', color, translateName(requiredCube))
-            newRequiredCube.innerHTML = translateFunction(requiredCube, "prim")
+            newRequiredCube.innerHTML = requiredCube
             if (requiredCube === "√") newRequiredCube.innerHTML = ""
             requiredContainer.append(newRequiredCube)
-            inputValues.requiredColors.available[colorIndex].push(requiredCube.toString())
-            resourcesArr[colorIndex] = deleteFirstArrItem (resourcesArr[colorIndex], requiredCube)
+            inputValues.required.values[colorIndex].push(requiredCube.toString())
+            inputValues.required.available[colorIndex].push(requiredCube.toString())
+            resourcesArr[colorIndex] = deleteFirstArrItem(resourcesArr[colorIndex], requiredCube)
         }
         
         // RESOURCES
@@ -532,16 +606,17 @@ function newPuzzle() {
                 };
                 const newResourcesCube = document.createElement('div')
                 newResourcesCube.classList.add('cube', 'resource-cube', color, translateName(resourcesCube.toString()))
-                newResourcesCube.innerHTML = translateFunction(resourcesCube, "prim")
+                newResourcesCube.innerHTML = resourcesCube
                 console.log(resourcesCube)
                 if (resourcesCube === "√") newResourcesCube.innerHTML = ""
                 resourcesContainer.append(newResourcesCube)
-
-                inputValues.resourceColors.available[i].push(resourcesCube.toString())
+                
+                inputValues.resources.values[i].push(resourcesCube.toString())
+                inputValues.resources.available[i].push(resourcesCube.toString())
             };
         };
-        console.log(inputValues.requiredColors)
-        console.log(inputValues.resourceColors)
+        console.log(inputValues.required)
+        console.log(inputValues.resources)
 
         // VARIATIONS
         const variationsDisplay = variationsContainer.querySelector('ul')
@@ -572,16 +647,25 @@ function newPuzzle() {
         }
         console.log(puzzleData.variations)
         console.log(variationsDisplay)
-        console.groupCollapsed("QUEUE PUZZLE")
-        const queuePuzzleWorker = new Worker('equations_worker.js');
-        queuePuzzleWorker.postMessage(params)
+        // console.groupCollapsed("QUEUE PUZZLE")
+        //     const queuePuzzleWorker = new Worker('equations_worker.js');
+        //     queuePuzzleWorker.postMessage(params)
 
-        queuePuzzleWorker.onmessage = (e) => {
-            queuedPuzzleData = e.data
-            queuePuzzleWorker.terminate();
-        }
+        //     queuePuzzleWorker.onmessage = (e) => {
+        //         queuedPuzzleData = e.data
+        //         queuePuzzleWorker.terminate();
+        //     }
 
         // mainPuzzleWorker.terminate();
+
+        // let string = '1+(1+1)'
+        // let string = '0x31+18x58−2'
+        let string = '√'
+        for (let i = 0; i < string.length; i++) {
+            inputCube(translateName(string.charAt(i)))
+        }
+        submitInput()
+
     };
 };
 
@@ -606,18 +690,18 @@ const keyboardButtons = document.querySelectorAll(".keyboard-row > div")
 console.log(keyboardButtons)
 
 const inputValues = {
-    "flatArray": [],
-    "wrapValue": {'values': [0, 0], 'row': 0},
-    "divNodes": [],
-    "resourceColors": {
-        "available": [[], [], [], []],
-        "used": [[], [], [], []]
+    flatArray: [],
+    wrapValue: {values: [0, 0], row: 0},
+    divNodes: [],
+    resources: {
+        available: [[], [], [], []],
+        used: [[], [], [], []]
     },
-    "requiredColors": {
-        "available": [[], [], [], []],
-        "used": [[], [], [], []]
+    required: {
+        available: [[], [], [], []],
+        used: [[], [], [], []]
     },
-    "wildCube": undefined
+    wildCube: undefined
 }
 
 let puzzleData;
@@ -666,13 +750,14 @@ for (let button of keyboardButtons) button.addEventListener('click', function() 
 function inputCube(cube) {
     if (document.querySelector('.selector-container')) return;
     if (cube === undefined) return;
+    if (cube === 'factorial' && !puzzleData.variations.get('factorial')) return;
     let input, flatArray, wrap;
     input = solutionContainer;
     flatArray = inputValues.flatArray;
     wrap = inputValues.wrapValue;
 
-    let reqCol = inputValues.requiredColors
-    let resCol = inputValues.resourceColors
+    let reqCol = inputValues.required
+    let resCol = inputValues.resources
 
     // console.log(reqCol)
 
@@ -684,9 +769,14 @@ function inputCube(cube) {
         if (/[()]/.test(symbol)) cubeWidth = 16;
         wrap.values[wrap.row] -= cubeWidth;
         checkInputWidth(0);
-        let currColor = input.lastElementChild.classList[3], colorIndex
-        input.lastElementChild.remove()
 
+        let cubeType;
+        if (input.lastElementChild.classList.contains('required')) cubeType = 'required';
+        if (input.lastElementChild.classList.contains('resource')) cubeType = 'resource';
+        // console.log(cubeType)
+        let currColor = input.lastElementChild.classList[4], colorIndex
+        input.lastElementChild.remove()
+        if (!cubeType) return;
         switch (currColor) {
             case "red": colorIndex = 0; break;
             case "blue": colorIndex = 1; break;
@@ -694,14 +784,10 @@ function inputCube(cube) {
             case "black": colorIndex = 3; break;
             default: return;
         }
-        console.log(colorIndex)
-        if (symbol === "÷") symbol = "/"
-        if (reqCol.used[colorIndex].includes(symbol)) {
+        if (reqCol.used[colorIndex].includes(symbol) && cubeType === 'required') {
             reqCol.used[colorIndex] = deleteFirstArrItem(reqCol.used[colorIndex], symbol)
             reqCol.available[colorIndex].push(symbol)
-            return;
-        }
-        if (resCol.used[colorIndex].includes(symbol)) {
+        } else if (resCol.used[colorIndex].includes(symbol) && cubeType === 'resource') {
             resCol.used[colorIndex] = deleteFirstArrItem(resCol.used[colorIndex], symbol)
             resCol.available[colorIndex].push(symbol)
         }
@@ -711,21 +797,26 @@ function inputCube(cube) {
     };
     if (parseFloat(currCube) >= puzzleData.variations.get('base')) return;
 
-    const solutionCube = document.createElement("div");
+    const solutionCube = document.createElement('div');
     solutionCube.innerHTML = currCube
-    if (currCube === "√") solutionCube.innerHTML = ""
+    if (currCube === '√') {
+        solutionCube.innerHTML = ''
+        const svg = createSvg('square-root')
+        solutionCube.append(svg)
+    }
     solutionCube.classList.add(cube);
     let cubeWidth = 16;
     if (!/[()]/.test(currCube)) {
         cubeWidth = 46
-        solutionCube.classList.add("cube", "solution-cube");
-        let symbol = translateName(cube, true)
+        solutionCube.classList.add('cube', 'solution-cube');
+        let symbol = translateName(cube)
         let colorIndex;
         for (let i = 0; i < 4; i++) {
             if (reqCol.available[i].includes(symbol)) {
                 colorIndex = i
                 reqCol.available[i] = deleteFirstArrItem(reqCol.available[i], symbol)
                 reqCol.used[i].push(symbol)
+                solutionCube.classList.add('required')
                 break;
             }
         }
@@ -735,6 +826,7 @@ function inputCube(cube) {
                     colorIndex = i
                     resCol.available[i] = deleteFirstArrItem(resCol.available[i], symbol)
                     resCol.used[i].push(symbol)
+                    solutionCube.classList.add('resource')
                     break;
                 }
             }
@@ -745,10 +837,12 @@ function inputCube(cube) {
             case 2: solutionCube.classList.add("green"); break;
             case 3: solutionCube.classList.add("black"); break;
             default:
+                solutionCube.classList.add('unavailable')
                 let color;
                 if (/[0123]/.test(currCube)) color = randomArrayValue(["red", "blue"])
                 if (/[456\^]/.test(currCube)) color = "green"
                 if (/[789√]/.test(currCube)) color = "black"
+                if (currCube === "!") color = "red"
                 if (currCube === "+") color = randomArrayValue(["red", "black"])
                 if (currCube === "−") color = randomArrayValue(["red", "green"])
                 if (currCube === "x") color = randomArrayValue(["blue", "green"])
@@ -760,7 +854,18 @@ function inputCube(cube) {
     //     solutionCube.classList.add('wild-cube')
     //     solutionCube.addEventListener('click', toggleWildPicker)
     // }
-    if (/\d/.test(currCube)) {solutionCube.addEventListener('click', toggleSelector); solutionCube.classList.add('pointer')}
+    if (/\d/.test(currCube)) {
+        solutionCube.addEventListener('click', toggleSelector);
+        solutionCube.classList.add('pointer')
+    }
+    if (puzzleData.variations.get('imaginary') && currCube === "−") {
+        solutionCube.addEventListener('click', toggleSelector);
+        solutionCube.classList.add('pointer')
+    }
+    if (puzzleData.variations.get('log') && currCube === "÷") {
+        solutionCube.addEventListener('click', toggleSelector);
+        solutionCube.classList.add('pointer')
+    }
     if (puzzleData.variations.get('base') > 10 && currCube === "^") {solutionCube.addEventListener('click', toggleSelector); solutionCube.classList.add('pointer')}
     if (puzzleData.variations.get('base') > 11 && currCube === "√") {solutionCube.addEventListener('click', toggleSelector); solutionCube.classList.add('pointer')}
     solutionCube.addEventListener('click', showKeyboard)
@@ -862,6 +967,7 @@ const selectorBackground = document.createElement('div')
 selectorBackground.id = 'selector-background'
 selectorBackground.addEventListener('click', hideSelector)
 document.body.append(selectorBackground)
+
 function toggleSelector(e) {
     e.stopPropagation()
     if (document.querySelector('.selector-container')) {
@@ -945,7 +1051,7 @@ function select(e) {e.stopPropagation()}
 
 function toggleOrientation(e) {
     let cube = this.parentElement.parentElement.parentElement
-    if (cube.classList.contains('square-root') && this.dataset.type === "sideways") {
+    if (cube.classList.contains('divide') && this.dataset.type === "upsidedown") {
         notify(`Input Error!`, 'red', 'bounce', 1000, '40px', '120px')
         return;
     }
@@ -1004,6 +1110,7 @@ function submitInput() {
                     case "^":
                     case "*":
                         return (arr[0] ** arr[2]);
+                    case "l": return (Math.log(arr[0]) / Math.log(arr[2]))
                 }
             } else if (arr.length > 3) {
                 return operation([operation(arr.slice(0, 3)), arr[3], ...arr.slice(4, arr.length)])
@@ -1077,14 +1184,6 @@ function submitInput() {
                     arr.push('complex')
                 }
                 return arr
-            }
-    
-            function base10(num) {
-                switch (num) {
-                    case 'j': return 10;
-                    case 'k': return 11;
-                    default: return num;
-                }
             }
     
             function numFactors(num) {
@@ -1288,18 +1387,30 @@ function submitInput() {
         for (let cube of nodes) {
             let newVal = translateName(cube.classList[0])
             if (!isNaN(parseFloat(newVal))) newVal = parseFloat(newVal)
+            if (cube.classList.contains('exponent')) {
+                if (cube.classList.contains('sideways') || cube.classList.contains('upsidedown')) {
+                    newVal = 10
+                }
+            } else if (cube.classList.contains('square-root')) {
+                if (cube.classList.contains('sideways') || cube.classList.contains('upsidedown')) {
+                    newVal = 11
+                }
+            }
             if (typeof newVal === "number") {
                 if (cube.classList.contains('upsidedown')) newVal *= -1
-                if (cube.classList.contains('sideways')) {
-                    newVal = 1 / newVal
-                }
+                if (cube.classList.contains('sideways')) newVal = 1 / newVal
+            } else {
+                if (cube.classList.contains('sideways') && cube.classList.contains('divide')) newVal = 'l'
+                if (cube.classList.contains('sideways') && cube.classList.contains('subtract')) newVal = 'i'
+                if (cube.classList.contains('sideways') && cube.classList.contains('divide')) newVal = 'l'
+                if (cube.classList.contains('upsidedown') && cube.classList.contains('divide')) newVal = 'l'
             }
             toParseArr.push(newVal)
         }
         console.log(toParseArr)
         let answerArr = parseInput(toParseArr)
 
-        let title, paragraph, answer;
+        let title, paragraph = '', answer;
         (function checkInput() {
 
             title = 'Incorrect:'
@@ -1308,6 +1419,7 @@ function submitInput() {
             let goalArr = puzzleData.variations.get('multipleOf') ? puzzleData.goalModValues : puzzleData.goalValues
             let deltaMap = new Map();
             for (let val of answerArr) {
+                console.log(val)
                 if (answer) break;
                 let value = (puzzleData.variations.get('multipleOf')) ? val[0] % puzzleData.variations.get('multipleOf') : val[0]
                 let delta;
@@ -1333,102 +1445,65 @@ function submitInput() {
                 return;
             }
 
+            // let currWild = (i <= 2) ? inputValues.wildCube.solution1 : inputValues.wildCube.solution2
+            // console.log(currWild)
+
+            let requiredValues = clone(inputValues.required.values)
+            let resourcesValues = clone(inputValues.resources.values)
+            for (let i = 0; i < 4; i++) resourcesValues[i] = resourcesValues[i].concat(requiredValues[i])
+
+            console.log(requiredValues)
+            console.log(inputValues.resources.values)
+            console.log(resourcesValues)
             // throw "STOP"
-
-            function altCalcScore(inputArr) {
-                let score = [0, 0, 0, 0, 0, 0, 0, 0]
-                for (let x of inputArr) {
-                    switch (x) {
-                        case "B": score[0]++; break;
-                        case "R": score[1]++; break;
-                        case "G": score[2]++; break;
-                        case "Y": score[3]++; break;
-                        case "V": score[4]++; break;
-                        case "Ʌ": score[4]++; break;
-                        case "U": score[5]++; break;
-                        case "∩": score[5]++; break;
-                        case "-": score[6]++; break;
-                        case "'": score[7]++; break;
-                    };
-                };
-                return score;
-            };
-
-            // console.log(requiredContainer.dataset.values)
-            // console.log(resourcesContainer.dataset.values)
-            // for (let i = 1; i <= (twoSolutions ? 4 : 2); i++) {
-            //     let currWild = (i <= 2) ? inputValues.wildCube.solution1 : inputValues.wildCube.solution2
-            //     console.log(currWild)
-            //     let requiredValues = requiredContainer.dataset.values
-            //     let resourcesValues = requiredContainer.dataset.values.concat(resourcesContainer.dataset.values)
-            //     if (puzzleData.variationsMap.get('wild')) {
-            //         requiredValues = requiredValues.replaceAll(puzzleData.variationsMap.get('wild'), translateName(currWild))
-            //         resourcesValues = resourcesValues.replaceAll(puzzleData.variationsMap.get('wild'), translateName(currWild))
-            //     }
-            //     let requiredScore = altCalcScore(requiredValues)
-            //     let resourcesScore = altCalcScore(resourcesValues)
-            //     let input
-            //     switch (i) {
-            //         case 1: input = restrictionArr1; break;
-            //         case 2: input = setNameArr1; break;
-            //         case 3: input = restrictionArr2; break;
-            //         case 4: input = setNameArr2; break;
-            //     };
-        
-            //     if (puzzleData.variationsMap.get('wild')) {
-            //         input = input.replaceAll(puzzleData.variationsMap.get('wild'), translateName(currWild))
-            //     }
-            //     console.log(input)
-            //     let inputScore = altCalcScore(input)
-            //     console.log(inputScore)
-            //     console.log(requiredScore)
-                
-            //     for (let j = 0; j < requiredScore.length; j++) {
-            //         let min = requiredScore[j]
-            //         let max = resourcesScore[j]
-            //         let curr = inputScore[j]
-            //         if (curr < min) {
-            //             console.log(i)
-            //             paragraph = `Required cubes missing from Solution.`
-            //             return;
-            //         };
+            // if (puzzleData.variationsMap.get('wild')) {
+            //     requiredValues = requiredValues.replaceAll(puzzleData.variationsMap.get('wild'), translateName(currWild))
+            //     resourcesValues = resourcesValues.replaceAll(puzzleData.variationsMap.get('wild'), translateName(currWild))
+            // }
     
-            //         if (curr > max) {
-            //             if (j >= 5 && max !== 0) continue;
-            //             let extraCube;
-            //             switch (j) {
-            //                 case 0: extraCube = 'Blue'; break
-            //                 case 1: extraCube = 'Red'; break
-            //                 case 2: extraCube = 'Green'; break
-            //                 case 3: extraCube = 'Yellow'; break
-            //                 case 4: 
-            //                     let arr = []
-            //                     if (input.includes("V")) arr.push('"Universe"')
-            //                     if (input.includes("Ʌ")) arr.push('"Empty-Set"')
-            //                     extraCube = arr[getRandomNumber(0, arr.length - 1)];
-            //                     break;
-            //                 case 5:
-            //                     let arr2 = []
-            //                     if (input.includes("U")) arr2.push('"Or"')
-            //                     if (input.includes("∩")) arr2.push('"And"')
-            //                     extraCube = arr2[getRandomNumber(0, arr2.length - 1)];
-            //                     break;
-            //                 case 6: extraCube = '"Minus"'
-            //                 case 7: extraCube = '"Not"'
-            //             }
-            //             if (max === 0) {
-            //                 paragraph = `Resources does not contain a ${extraCube} cube.`
-            //                 return;
-            //             } else {
-            //                 paragraph = `${i % 2 == 0 ? 'Set Name' : 'Restriction'} has too many ${extraCube} cubes.`
-            //                 return;
-            //             };
-            //         };
-            //     };
-            // };
-            title = 'Correct'
-            // inputResult.style.backgroundColor = 'rgba(92, 255, 80, 0.518)';
+            // if (puzzleData.variationsMap.get('wild')) {
+            //     arr = arr.replaceAll(puzzleData.variationsMap.get('wild'), translateName(currWild))
+            // }
+            let input = answer[1][answer[1].length - 1].flat()
+            console.log(arr)
+            console.log(input)
 
+            if (inputValues.required.available.flat().length) {
+                paragraph = `Required cubes missing from Solution.`
+                return;
+            } else { // DETECT OVERUSED RESOURCES
+                let resources = resourcesValues.flat()
+                console.log(resources)
+                let modifiedResources = clone(resources)
+                let operationRegex = /[+−x÷l^√]/
+
+                for (let i = 0; i < input.length; i++) {
+                    let val = input[i];
+                    if (!isNaN(val)) {
+                        if (val % 1 !== 0) val = 1 / val;
+                        val = Math.abs(val).toString();
+                    }
+                    
+                    let multiOps;
+                    if (puzzleData.variations.get('multipleOperations') && operationRegex.test(val)) {
+                        multiOps = true
+                    }
+                    if (val === 'j' || val === 10) val = '^'
+                    if (val === 'k' || val === 11) val = '√'
+
+                    if (modifiedResources.includes(val)) {
+                        if (!multiOps) modifiedResources = deleteFirstArrItem(modifiedResources, val)
+                    } else {
+                        if (resources.includes(val)) {
+                            paragraph = `Resources does not contain a ${val} cube.`
+                        } else {
+                            paragraph = `Solution has too many ${val} cubes.`
+                        }
+                        return;
+                    }
+                }
+            }
+            title = 'Correct'
         })();
 
         // DISPLAYING ANSWER
@@ -1461,17 +1536,47 @@ function submitInput() {
         // RESULT
         const inputResult = document.createElement('div')
         inputResult.id = 'input-result'
+        if (title === 'Correct') inputResult.classList.add('correct')
 
         const resultTitle = document.createElement('h2')
         const resultParagraph = document.createElement('p');
         resultTitle.innerText = title
         resultParagraph.innerText = paragraph
 
-        // throw 'STOP'    
-
         inputResult.append(resultTitle)
         inputResult.append(resultParagraph)
         answerContent.append(inputResult)
+
+        // GOAL
+        const goalTitle = document.createElement('h2')
+        goalTitle.innerText = 'Goal'
+        goalTitle.id = 'goal-title'
+        answerContent.append(goalTitle)
+
+        const goalParagraph = (puzzleData.variations.get('multipleOf')) ? `Goal reduces down to:` : `Goal is equal to:`
+        const goalList = document.createElement('ul')
+        goalList.id = 'goal-list'
+        goalList.style.cssText = 'display: flex; justify-content: center; flex-direction: column; text-align: left;'
+
+
+        let goalArr = puzzleData.variations.get('multipleOf') ? puzzleData.goalModValues : puzzleData.goalValues
+        goalArr = goalArr.sort((a, b) => 
+            {if (a.toString().length < b.toString().length) return -1}
+        )
+        console.log(goalArr)
+        for (let goal of goalArr) {
+            const goalValue = document.createElement('li')
+            goalValue.innerText = goal
+            goalValue.style.cssText = 'text-align: left'
+            goalList.append(goalValue)
+        }
+
+        answerContent.append(goalParagraph)
+        answerContent.append(goalList)
+
+        const goalHorizontalRule = document.createElement('hr')
+        goalHorizontalRule.style.width = '86%'
+        answerContent.append(goalHorizontalRule)
 
         // TITLE
         const titleNode = document.createElement('h2')
@@ -1485,14 +1590,122 @@ function submitInput() {
         inputSolutionContainer.append(inputAnswer)
         answerContent.append(inputSolutionContainer)
 
+        // PARAGRAPH
         const evaluationParagraph = document.createElement('p')
         evaluationParagraph.innerText = `Your solution evaluates to ${answer[0]}`
+        evaluationParagraph.classList.add('evaluation-paragraph')
         answerContent.append(evaluationParagraph)
 
+        // INPUT BREAKDOWN
+        const breakdownContainer = document.createElement('div')
+        const breakdownContent = document.createElement('div')
+        breakdownContainer.id = 'breakdown-container'
+        breakdownContent.id = 'breakdown-content'
+        console.log(answer[1])
+        let breakdownHeight1 = 0
+        for (let i = answer[1].length - 1; i >= -1; i--) {
+            breakdownHeight1 += 38.4
+            const level = document.createElement('p')
+            let arr = answer[1][i]
+
+            let string = ''
+            // console.log(arr)
+            function stringify(arr) {
+                for (let j = 0; j < arr.length; j++) {
+                    function pushNumber(input, index) {
+                        if (index === input.length - 1) return base10(input[index]);
+                        if (typeof input[index + 1] !== 'number') return base10(input[index]);
+                        j++
+                        let base = puzzleData.variations.get('base') ?? 10
+                        return base10(input[index]) * base + base10(input[index + 1])
+                    }
+        
+                    if (typeof arr[j] === 'number' || arr[j] === 'k' || arr[j] === 'j') {
+                        string += (pushNumber(arr, j))
+                    } else if (Array.isArray(arr[j])) {
+                        string += "("
+                        stringify(arr[j])
+                        string += ")"
+                    } else {
+                        switch (arr[j]) {
+                            case "l": string += 'log'; break;
+                            case "#": string += 'x'; break;
+                            default: string += arr[j]; break;
+                        }
+                    };
+                }
+            }
+            if (i > -1) {
+                stringify(arr)
+            } else {
+                string = answer[0]
+            }
+            level.innerText = string
+            breakdownContent.append(level)
+        }
+        breakdownContainer.append(breakdownContent)
+        answerContent.append(breakdownContainer)
+
         // SEPARATE ANSWER
+        const inputSeparatorDiv = document.createElement('div')
         const horizontalRule = document.createElement('hr')
-        horizontalRule.style.cssText = 'width: 80%;'
-        answerContent.append(horizontalRule)
+        inputSeparatorDiv.id = 'separator-div'
+        horizontalRule.style.cssText = 'width: 100%;'
+        inputSeparatorDiv.append(horizontalRule)
+        answerContent.append(inputSeparatorDiv)
+
+        // BREAKDOWN BUTTON
+        const breakdownButton = document.createElement('div')
+        const breakdownButtonLabel = document.createElement('p')
+        breakdownButton.id = 'breakdown-button'
+        breakdownButtonLabel.innerText = 'Show Breakdown'
+        breakdownButton.append(breakdownButtonLabel)
+
+        const arrowSvg = createSvg('arrow')
+        arrowSvg.style.cssText = 'width: 14px; height: 14px; margin-left: 4px;'
+        breakdownButton.append(arrowSvg)
+
+        breakdownButton.addEventListener('click', function() {
+            this.classList.toggle('active')
+            let breakdownHeight
+            if (this.classList.contains('active')) {
+                breakdownButtonLabel.innerText = 'Hide Breakdown'
+                breakdownHeight = breakdownHeight1
+                if (Math.abs(answerContent.scrollHeight - answerContent.scrollTop - answerContent.clientHeight) < 1) {
+                    answerContent.scrollTo({top: answerContent.scrollTop - 1})
+                } 
+                const scrollElement = document.createElement('div')
+                scrollElement.style.cssText = `height: ${breakdownHeight + "px"}; flex-shrink: 0;`
+                answerContent.append(scrollElement)
+                scrollElement.animate(
+                [{height: "0px"}], {
+                    fill: 'forwards',
+                    duration: 450,
+                    easing: 'cubic-bezier(.13,.94,.37,.99)',
+                });
+                breakdownContainer.animate(
+                [{height: breakdownHeight + "px"}], {
+                    fill: 'forwards',
+                    duration: 450,
+                    easing: 'cubic-bezier(.13,.94,.37,.99)',
+                });
+                let height = breakdownContent.offsetTop
+                setTimeout(function () {answerContent.scrollTo({top: height - 108, behavior: 'smooth'})}, 8)
+                // setTimeout(() => {clearInterval(scrollInterval)}, 750)
+                // setTimeout(function() {breakdownContent.scrollIntoView(true, {behavior: "smooth"})}, 700)
+                // setTimeout(function () {breakdownContent.scrollIntoView({behavior: 'smooth', block: 'start'})}, 0)
+             } else {
+                breakdownButtonLabel.innerText = 'Show Breakdown'
+                breakdownHeight = 0
+                breakdownContainer.animate(
+                [{height: breakdownHeight + "px"}], {
+                    fill: 'forwards',
+                    duration: 450,
+                    easing: 'cubic-bezier(.13,.94,.37,.99)',
+                });
+             }
+        })
+        inputSeparatorDiv.append(breakdownButton)
 
         // DEFINED TITLE
         const titleNode2 = document.createElement('h2')
@@ -1555,11 +1768,19 @@ function submitInput() {
         defindSolutionContainer.append(definedAnswer)
         answerContent.append(defindSolutionContainer)
 
+        // PARAGRAPH
+        const solutionParagraph = document.createElement('p')
+        solutionParagraph.innerText = `Solution evaluates to ${puzzleData.solution.solution}`
+        solutionParagraph.classList.add('evaluation-paragraph')
+        answerContent.append(solutionParagraph)
+
+        // SOLUTION BREAKDOWN
+        // const solutionSeparatorDiv = inputSeparatorDiv.cloneNode('deep')
+        // answerContent.append(solutionSeparatorDiv)
 
         newAnswer.append(answerContent)
 
         answerBackground.classList.toggle('shown')
-        console.log("A")
         newAnswer.classList.toggle('shown')
 
     } catch (error) {
@@ -1567,3 +1788,13 @@ function submitInput() {
         notify('Invalid input!', 'red', 'bounce', 1500, '', '')
     }
 };
+
+document.addEventListener('keydown', function(keypress){
+    if (keypress.key !== 'p') return
+    console.log(inputValues)
+
+    // answerContent.scrollTo({top: answerContent.scrollTop - 10})
+    // console.log(answerContent.scrollTop)
+    // console.log(answerContent.scrollHeight)
+    // console.log(answerContent.offsetHeight)
+});

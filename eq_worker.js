@@ -17,11 +17,11 @@ onmessage = (e) => {
             console.log(message + math.round((stopTimer.getTime() - setTimer.getTime())/1000 - start, 3) + " SECONDS")
             return;
         }
-        console.log(message + (stopTimer.getTime() - setTimer.getTime())/1000 + " SECONDS")
+        if (message) console.log(message + (stopTimer.getTime() - setTimer.getTime())/1000 + " SECONDS")
         return (stopTimer.getTime() - setTimer.getTime())/1000
     }
 
-    function generatePuzzle(randomize = false, setCubes, setVariations) {
+    function generatePuzzle(randomize = false, setCubes, setVariations, setVariationsLength, setGoal, setForbidden) {
 
         let returnNewPuzzle;
 
@@ -58,20 +58,32 @@ onmessage = (e) => {
     
         function customEval(arr, leftFlag, rightFlag) {
             let arrOperation = arr[1], answer = [], flag = []
+            if (parseBigInt) {
+                try {
+                    if (typeof arr[0] === 'bigint') arr[2] = BigInt(arr[2])
+                    if (typeof arr[2] === 'bigint') arr[0] = BigInt(arr[0])
+                } catch {
+                    return [[], []]
+                }
+            }
             switch (arrOperation) {
                 case "+":
                     answer.push(arr[0] + arr[2]);
                     flag.push(leftFlag + "+" + rightFlag); break;
-                case "-":
+                case "−":
                     answer.push(arr[0] - arr[2]);
-                    flag.push(leftFlag + "-" + rightFlag); break;
+                    flag.push(leftFlag + "−" + rightFlag); break;
                 case "x":
                     answer.push(arr[0] * arr[2]);
                     flag.push(leftFlag + "x" + rightFlag); break;
-                case "/":
+                case "÷":
+                    if (arr[2] === 0) return [[], []]
                     answer.push(arr[0] / arr[2]);
                     flag.push(leftFlag + "÷" + rightFlag);
                     if (logarithm) {
+                        if (arr[0] <= 0) break;
+                        if (arr[2] <= 0) break;
+                        if (arr[2] === 1) break;
                         answer.push(log(arr[0], arr[2]))
                         flag.push(leftFlag + 's÷' + rightFlag)
                     }
@@ -157,6 +169,7 @@ onmessage = (e) => {
         let cubesArr;
     
         (function generateCubes() {
+
             if (setCubes) {
                 cubesArr = setCubes;
                 console.log(cubesArr);
@@ -173,7 +186,7 @@ onmessage = (e) => {
                     case 3: redCubes.push(2); break;
                     case 4: redCubes.push(3); break;
                     case 5: redCubes.push("+"); break;
-                    case 6: redCubes.push("-"); break;
+                    case 6: redCubes.push("−"); break;
                     default: redCubes.push(null);
                 };
             };
@@ -188,7 +201,7 @@ onmessage = (e) => {
                     case 3: blueCubes.push(2); break;
                     case 4: blueCubes.push(3); break;
                     case 5: blueCubes.push("x"); break;
-                    case 6: blueCubes.push("/"); break;
+                    case 6: blueCubes.push("÷"); break;
                     default: blueCubes.push(null);
                 };
             };
@@ -201,7 +214,7 @@ onmessage = (e) => {
                     case 1: greenCubes.push(4); break;
                     case 2: greenCubes.push(5); break;
                     case 3: greenCubes.push(6); break;
-                    case 4: greenCubes.push("-"); break;
+                    case 4: greenCubes.push("−"); break;
                     case 5: greenCubes.push("x"); break;
                     case 6: greenCubes.push("^"); break;
                     default: greenCubes.push(null);
@@ -217,7 +230,7 @@ onmessage = (e) => {
                     case 2: blackCubes.push(8); break;
                     case 3: blackCubes.push(9); break;
                     case 4: blackCubes.push("+"); break;
-                    case 5: blackCubes.push("/"); break;
+                    case 5: blackCubes.push("÷"); break;
                     case 6: blackCubes.push("√"); break;
                     default: blackCubes.push(null);
                 };
@@ -236,9 +249,9 @@ onmessage = (e) => {
         let logarithm, parseBigInt = true;
     
         (function generateVariations() {
+
             variationsMap = new Map();
-            console.log(setVariations)
-            setVariations = ['base', 'factorial', 'numberOfFactors']
+
             if (setVariations) {
                 for (let x of setVariations) {
                     switch (x) {
@@ -281,8 +294,7 @@ onmessage = (e) => {
             }
             
             let i = 0;
-            // let variationLength = setVariationsLength ?? 6
-            let variationLength = 6;
+            let variationLength = setVariationsLength ?? 6
 
             while (variationsMap.size < variationLength) {
                 i++
@@ -355,22 +367,22 @@ onmessage = (e) => {
         };
 
         (function generateGoal() {
+            
             console.group("GENERATING GOAL: ")
+
+            if (setGoal) {
+                goalArr = setGoal;
+                console.log(setGoal);
+                return;
+            }
+
             let resourcesArr = cubesArr.flat();
             let numeralsArr = resourcesArr.filter(val => typeof val === "number");
             let operationsArr = resourcesArr.filter(val => typeof val === "string");
             let coloredNumerals;
     
-            //console.log(resourcesArr);
-            //console.log(numeralsArr);
-            //console.log(operationsArr);
-    
             //FUNCTION ADDS CUBE TO GOAL THEN REMOVES IT FROM RESOURCES
             function goalAdd(cube, orientation = "up", forceColor = false) {
-                // console.log("D")
-                // console.log(randomNumerals)
-                // console.log(randomNumerals[0])
-                // console.log(cube)
                 let colorIndex;
                 //RANDOMLY CHOOSE COLOR INDEX UNTIL CUBE IS FOUND
                 if (!forceColor) {
@@ -425,10 +437,11 @@ onmessage = (e) => {
             };
     
             //ADDING CUBES TO THE GOAL
+
             let randomNumerals = randomSort(numeralsArr);
             if (variationsMap.get('base')) randomNumerals = randomNumerals.filter(val => val < variationsMap.get('base'))
             console.log(randomNumerals)
-            let randomOperations = randomSort(operationsArr).filter(val => (val !== "√" && val !== "/"));
+            let randomOperations = randomSort(operationsArr).filter(val => (val !== "√" && val !== "÷"));
             let zeroFilter = variationsMap.get('wild') === 0 ? () => true : (val) => val !== 0
     
             let goalStatus = [];
@@ -490,7 +503,7 @@ onmessage = (e) => {
                 goalAdd(randomNumerals.filter(zeroFilter)[0]);
     
                 //APPEND OPERATION AND NUMERALS
-                if (randomOperations[0] === "^")  { // IF EXPONENT, APPEND IT + 1 NUMERAL
+                if (randomOperations[0] === "^" ** variationsMap.get('multipleOf'))  { // IF EXPONENT, APPEND IT + 1 NUMERAL
                     goalAdd(randomOperations[0]);
                     goalAdd(randomNumerals.filter(zeroFilter)[0]);
                     goalStatus.push("EXPONENTOP");
@@ -518,7 +531,7 @@ onmessage = (e) => {
                 if (!goalStatus.includes("EXPONENTOP")) {
                     goalAdd(randomOperations.filter(val => val !== "^")[0]);
                 } else {
-                    goalAdd(randomOperations.filter(val => val !== "^" && val !== "+" && val !== "-")[0]);
+                    goalAdd(randomOperations.filter(val => val !== "^" && val !== "+" && val !== "−")[0]);
                 }
                 getRandomNumber(0, 1) ? goalAdd2Numerals(false) : goalAdd(randomNumerals[0]);
             } else if (goalArr.length === 4 && getRandomNumber(0, 1)) { // IF GOAL LENGTH = 4; APPEND OPERATION AND 1 CUBE (50%)
@@ -534,9 +547,12 @@ onmessage = (e) => {
 
             // console.log(modifiedCubesArr);
         })();
-        let operationRegex = /[-+/x^]/
+
+        let operationRegex = /[+−x÷^]/
         const goalValues = [], goalFlags = [], goalModValues = [];
+
         //CALCULATE GOAL
+
         (function calcGoal(arr = goalArr, init = true) {
             if (init) {
                 // goalArr.length = 0
@@ -544,10 +560,10 @@ onmessage = (e) => {
                 // variationsMap.set('base', undefined)
                 // variationsMap.set('decimal', true)
                 // variationsMap.set('multipleOf', 11)
-                // let goalString = "4^735"
+                // let goalString = "4^73+5"
                 // console.log(strToArr(goalString))
                 // for (let x of strToArr(goalString)) goalArr.push(new GoalCube(x, 'black', 'up'));
-                console.log(goalArr)
+                // console.log(goalArr)
 
                 let newGoalArr = [];
                 for (let i = 0; i < goalArr.length; i++) {
@@ -670,12 +686,16 @@ onmessage = (e) => {
         let forbiddenArr = [], forbiddenArrLength;
     
         (function generateForbidden() { // RANDOMLY ADD CUBES TO FORBIDDEN ARRAY
+
             console.group("VALUES AND FORBIDDEN: ")
             switch (goalArr.length) { // forbiddenArrLength BASED ON GOAL 
                 case 3: forbiddenArrLength = 8 + getRandomNumber(0, 1); break;
                 case 4: forbiddenArrLength = 7 + getRandomNumber(0, 1); break;
                 case 5: forbiddenArrLength = 6 + getRandomNumber(0, 1); break;
                 case 6: forbiddenArrLength = 5 + getRandomNumber(0, 1); break;
+            }
+            if (setForbidden) {
+                forbiddenArrLength = setForbidden.forbiddenArrLength
             }
 
             if (variationsMap.get('base')) {
@@ -762,6 +782,8 @@ onmessage = (e) => {
             }
 
             if (variationsMap.get('log')) logarithm = true;
+            let randomFactor = (randomize) ? 1 : 0;
+            console.log(randomFactor)
             parseBigInt = false;
 
             let stop;
@@ -826,8 +848,10 @@ onmessage = (e) => {
                     } else {
                         answer.push(num); flag.push(arr[0].toString())
                         answer.push(-1 * num); flag.push("u" + arr[0])
-                        answer.push(1 / num); flag.push("s" + arr[0])
-                        answer.push(-1 / num); flag.push("n" + arr[0])
+                        if (num !== 0) {
+                            answer.push(1 / num); flag.push("s" + arr[0])
+                            answer.push(-1 / num); flag.push("n" + arr[0])
+                        }
                         if (variationsMap.get('factorial') && isFactoriable(num)) {
                             answer.push(factorial(num)); flag.push(arr[0] + "!")
                         }
@@ -872,8 +896,8 @@ onmessage = (e) => {
                 if (permutationsArr.length % 100000 === 0 && permutationsArr.length) {
                     console.log((permutationsArr.length/1000) + " THOUSAND")
                     console.log(logTime())
-                    if (logTime() > 7) stop = true;
                 }
+                if (logTime() > 7) stop = true;
                 if (!solutionLengths.includes(arr.length)) {
                     let permutationValues = calcSolution(arr)
                     calcCount[(arr.length - 1) / 2]++;
@@ -899,7 +923,7 @@ onmessage = (e) => {
                         }
                         solutionsArr.push(new Solution(solutionEval, solutionFlag, cubesArr));
                         solutionLengths.push(arr.length);
-                        if (!getRandomNumber(0, 10)) {
+                        if (!getRandomNumber(0, 10) && randomize) {
                             console.log("ENDING CYCLE")
                             stop = true;
                         }
@@ -912,7 +936,7 @@ onmessage = (e) => {
                     for (let i of filterDuplicates(operations)) {
                         for (let j of filterDuplicates(numerals)) {
                             if (variationsMap.get('base')) {
-                                if (i !== 0 && Math.random() >= 0.5 && numerals.length > 1) {
+                                if (i !== 0 && Math.random() >= 0.5 * randomFactor && numerals.length > 1) {
                                     for (let k of deleteFirstArrItem(filterDuplicates(numerals), j)) {
                                     solutionCycle(arr.concat(i).concat(parseFloat(`${j}${k}`)), deleteFirstArrItems(numerals, j, k), deleteFirstArrItem(operations, i))
                                     }
@@ -929,7 +953,7 @@ onmessage = (e) => {
             console.log(numeralsArr)
             for (let i of filterDuplicates(numeralsArr)) {
                 if (variationsMap.get('base')) {
-                    if (i !== 0 && Math.random() >= 0.5) {
+                    if (i !== 0 && Math.random() >= 0.5 * randomFactor) {
                         for (let j of deleteFirstArrItem(filterDuplicates(numeralsArr), i)) {
                             solutionCycle([parseFloat(`${i}${j}`)], deleteFirstArrItems(numeralsArr, i, j), operationsArr);
                         }
@@ -958,8 +982,10 @@ onmessage = (e) => {
                 console.log("NO SOLUTION, NEW PUZZLE");
                 if (randomize) returnNewPuzzle = true;
             } else {
-                let highestSolutionLengthIndex = solutionLengths.indexOf(solutionLengths.slice().sort((a, b) => a - b)[solutionLengths.length - 1]);
-                solution = solutionsArr[highestSolutionLengthIndex - 2];
+                console.log(solutionLengths)
+                let highestLength = solutionLengths.slice().sort((a, b) => a - b)[solutionLengths.length - 1]
+                let highestLengthIndex = solutionLengths.indexOf(highestLength) - 2;
+                solution = solutionsArr[highestLengthIndex];
                 console.log("SOL", solution);
             };
             logTime("DONE: ")
