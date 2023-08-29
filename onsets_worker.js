@@ -76,7 +76,7 @@ onmessage = (e) => {
     
     function generatePuzzle(randomize = true, setCubes, setUniverse, setVariations, setVariationsLength, setGoal, setForbidden, forceSymmetricDifference) {
         
-        let returnNewPuzzle;
+        let returnNewPuzzle, metaData = [];
     
         console.log(randomize, setCubes, setUniverse, setVariations, setGoal, setForbidden)
     
@@ -452,15 +452,15 @@ onmessage = (e) => {
         (function generateUniverse() {
             universeArr = randomSort(["BRGY","BRG","BRY","BR","BGY","BG","BY","B","RGY","RG","RY","R","GY","G","Y",""]).slice(0, getRandomNumber(10, 14));        
         })();
-    
+        
+        if (setUniverse) universeArr = setUniverse
+
         let blue, red, green, yellow;
         blue = universeArr.filter(val => /B/.test(val));
         red = universeArr.filter(val => /R/.test(val));
         green = universeArr.filter(val => /G/.test(val));
         yellow = universeArr.filter(val => /Y/.test(val));
-    
-        if (setUniverse) {universeArr = setUniverse}
-    
+        
         console.log(universeArr)
         
         // GENERATE VARIATIONS:
@@ -486,7 +486,7 @@ onmessage = (e) => {
                         case "noNull": variationsArr.push("noNull"); noNull = true; break;
                         case "absValue": variationsArr.push("absValue"); break;
                         case "double": variationsArr.push({"double": variationInput("double")}); break;
-                        // case "double": variationsArr.push({"double": "R∩B"})
+                        // case "double": variationsArr.push({"double": "B"})
                         // double = ["BRGY", "BRY", "BR", "BRG"]; break;
                         case "requiredCard": variationsArr.push({"requiredCard": variationInput("requiredcard")}); break;
                         case "forbiddenCard": variationsArr.push({"forbiddenCard": variationInput("forbiddencard")}); break;
@@ -643,7 +643,6 @@ onmessage = (e) => {
                 switch (Object.keys(variationsArr[i])[0]) {
                     case "requiredCube": requiredCube = variationsArr[i].requiredCube; break;
                     case "wild": wild = variationsArr[i].wild; break;
-                    // case "double": double = variationsArr[i].double; break;
                     case "forbiddenCard": forbiddenCard = variationsArr[i].forbiddenCard; break;
                     case "requiredCard": requiredCard = variationsArr[i].requiredCard; break;
                 };
@@ -651,6 +650,7 @@ onmessage = (e) => {
             console.log(variationsArr);
             if (double) {
                 console.log("DOUBLE", double);
+                metaData.push(double)
                 universeArr = universeArr.concat(universeArr.filter(val => double.includes(val))).sort();
                 console.log(universeArr)
             };
@@ -1185,7 +1185,8 @@ onmessage = (e) => {
         };
         
         let noRestrictions;
-        (mustContain || equals) ? generateRestrictions() : noRestrictions = 1;
+        (mustContain || equals) ? generateRestrictions() : noRestrictions = true;
+        if (noRestrictions) metaData.push('noRestrictions')
         let solution;
     
         function generateSolutions() {
@@ -1241,7 +1242,7 @@ onmessage = (e) => {
                 for (let i = 0; i < 16; i++) array.push([]);
                 backupSolution.push([[], array]);
             };
-            const backupIndex = {"index": undefined, "length": 3}
+            const backupIndex = {index: undefined, length: 3}
             let permutationsCount = 0;
             let findPermCount = 0;
     
@@ -1547,15 +1548,16 @@ onmessage = (e) => {
         generateSolutions()
         console.log(solution)
         // solution = {
-        //     "restriction": ["R", "<", "B"],
-        //     "cards": ["BG", "BRG", ""],
-        //     "flag": "RUB",
-        //     "blankCard": "BRY"
+        //     restriction: ["R", "<", "B"],
+        //     cards: ["BG", "BRG", ""],
+        //     flag: "RUB",
+        //     blankCard: "BRY"
         // }
 
+        console.log(randomize)
         if (returnNewPuzzle) return generatePuzzle(randomize, setCubes, setUniverse, setVariations, setVariationsLength, setGoal, setForbidden, forceSymmetricDifference);
         class PuzzleData {
-            constructor(cubesArr, modifiedCubesArr, universeArr, variationsArr, variationsMap, goalArr, goalShape, goalValues, forbiddenArr, solution) {
+            constructor(cubesArr, modifiedCubesArr, universeArr, variationsArr, variationsMap, goalArr, goalShape, goalValues, forbiddenArr, solution, metaData) {
                 this.cubes = cubesArr;
                 this.modifiedCubes = modifiedCubesArr;
                 this.universe = universeArr;
@@ -1566,13 +1568,14 @@ onmessage = (e) => {
                 this.goalValues = goalValues;
                 this.forbidden = forbiddenArr;
                 this.solution = solution;
+                this.metaData = metaData
             };
     
             getRestrictions() {
                 return this.cubes[3].filter(val => val === '<' || val === '=');
             };
         };
-        return new PuzzleData(cubesArr, modifiedCubesArr, universeArr, variationsArr, variationsMap, goalArr, goalShape, goalValues, forbiddenArr, solution)
+        return new PuzzleData(cubesArr, modifiedCubesArr, universeArr, variationsArr, variationsMap, goalArr, goalShape, goalValues, forbiddenArr, solution, metaData)
     };
 
     let queueData = generatePuzzle(...e.data)

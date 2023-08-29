@@ -48,9 +48,10 @@ header h1 {
     position: relative;
     justify-content: center;
     align-items: center;
-    transition: 50ms;
+    transition: filter 50ms, opacity 50ms;
     z-index: 1;
     user-select: none;
+    
 }
 
 .cube:not(.active):hover {filter: brightness(96%); transition: filter 0s}
@@ -78,9 +79,22 @@ header h1 {
 .solution-cube {
     margin: 4px 2px;
     box-shadow: 2px 2px 3px rgb(0 0 0 / 20%);
+    position: absolute;
+    cursor: default;
+}
+#new-answer .cube {
+    margin: 4px 2px;
+    position: relative;
+    cursor: default;
 }
 .cube.pointer {
     cursor: pointer;
+}
+.cube.active {
+    z-index: 5;
+}
+.cube.hidden {
+    opacity: 0;
 }
 
 .red {background-color: rgb(196, 41, 38)}
@@ -96,10 +110,14 @@ header h1 {
     line-height: 50px;
     color: white;
     font-size: 28px;
+    user-select: none;
 }
 #new-answer .left-parenthesis, #new-answer .right-parenthesis {
     box-shadow: none;
     color: black;
+}
+#solution-container .left-parenthesis, #solution-container .right-parenthesis, #goal-container .left-parenthesis, #goal-container .right-parenthesis {
+    position: absolute;
 }
 
 #board-container {
@@ -185,7 +203,8 @@ header h1 {
     height: 100px;
     flex-wrap: wrap;
     width: 436px;
-    position: relative
+    position: relative;
+    align-self: center;
 }
 
 #solution-container {
@@ -193,7 +212,7 @@ header h1 {
     align-self: flex-end;
     height: 50px;
     width: 100%;
-    /* cursor: text; */
+    cursor: text;
     position: relative;
     bottom: 6px;
     transition: ease 0.1s;
@@ -207,6 +226,7 @@ header h1 {
     background-color: rgb(26, 93, 218);
     transition-duration: 0s;
 }
+
 /* #solution-container.hover {
     background-color: rgb(26, 93, 218);
 } */
@@ -222,6 +242,28 @@ header h1 {
     height: 6px;
     display: flex;
     justify-content: center;
+}
+#cursor {
+    position: absolute;
+    top: 8px;
+    left: 228px;
+    height: 38px;
+    width: 2.5px;
+    border-radius: 10px;
+    background-color: white;
+    transition: opacity 100ms ease
+}
+#cursor:not(.blink-animation) {
+    opacity: 0;
+}
+#cursor.blink-animation {
+    animation: blink 1s ease infinite;
+}
+@keyframes blink {
+    0% {opacity: 1;}
+    30% {opacity: 1;}
+    60% {opacity: 0;}
+    90%{opacity: 0;}
 }
 
 #equals-container {
@@ -261,15 +303,19 @@ header h1 {
     align-self: flex-end;
     height: 50px;
     width: 100%;
-    /* cursor: text; */
+    cursor: text;
     position: relative;
     bottom: 6px;
-    /* transition: ease 0.1s; */
+    transition: ease 0.1s;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    /* flex-wrap: wrap; */
+    flex-wrap: wrap;
     padding: 2px 0;
+}
+#goal-container:hover {
+    background-color: rgb(26, 93, 218);
+    transition-duration: 0s;
 }
 
 #goal-bar {
@@ -405,6 +451,7 @@ header h1 {
     transition: background-color 10ms;
     text-align: center;
     line-height: 50px;
+    user-select: none;
 }
 
 .keyboard-large-button {
@@ -530,9 +577,6 @@ header h1 {
     /* cursor: pointer; */
     visibility: visible;
     opacity: 0.15;
-}
-.cube.active {
-    z-index: 5;
 }
 
 
@@ -693,11 +737,18 @@ header h1 {
     background-color: rgb(241, 241, 241);
     display: flex; 
     flex-direction: column;
+    max-width: 80%;
+    flex-wrap: wrap;
     align-items: center;
     box-shadow: 0px 3px 5px rgb(0 0 0 / 20%);
     padding: 5px 10px;
     border-radius: 8px;
     transition: transform 0.2s;
+}
+.answer-solution-sub-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .answer-solution-container > :first-child, .answer-solution-container > :last-child {

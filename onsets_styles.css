@@ -2,18 +2,9 @@
     box-sizing: border-box;
 }
 
-#equations-link {
-    z-index: 5;
-    position: absolute;
-    top: 50px;
-    opacity: 0;
-}
-#equations-link:hover {
-    opacity: 1;
-}
-html {
+/* html {
     scroll-behavior: smooth;
-}
+} */
 body {
     font-family: Arial, Helvetica, sans-serif;
     background-color: whitesmoke;
@@ -319,12 +310,15 @@ header h1 {
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: 50ms;
+    transition: filter 50ms, opacity 50ms;
+    user-select: none;
 }
 
 .cube:hover {filter: brightness(98%); transition: filter 0s}
 .cube:active {filter: brightness(96%)}
-
+.cube.hidden {
+    opacity: 0;
+}
 .cube.red:not(#puzzle-container .wild-cube)::after {
     display: block;
     content: "";
@@ -469,7 +463,10 @@ header h1 {
 #new-answer .left-parenthesis, #new-answer .right-parenthesis {
     box-shadow: none;
     color: black;
-}   
+}
+#solution-container .left-parenthesis, #solution-container .right-parenthesis, #restriction-container .left-parenthesis, #restriction-container .right-parenthesis {
+    position: absolute;
+}
 
 .left-parenthesis::after {content: "("}
 .right-parenthesis::after {content: ")"}
@@ -496,6 +493,7 @@ header h1 {
 
 .restraint-container {
     display: flex;
+    position: relative;
     width: 100%;
     height: 100%;
     border-radius: 2px;
@@ -580,6 +578,7 @@ header h1 {
     height: 90px;
     padding: 0 15px;
     flex-wrap: wrap;
+    position: relative;
 }
 
 #restriction-container, #solution-container {
@@ -601,16 +600,25 @@ header h1 {
 .solution-cube {
     margin: 2px;
     box-shadow: 2px 2px 3px rgb(0 0 0 / 20%);
+    position: absolute;
 }
-
+#new-answer .cube {
+    margin: 4px 2px;
+    position: relative;
+    cursor: default;
+}
 #restriction-container:hover, #solution-container:hover {
     background-color: rgb(71, 17, 34);
     transition-duration: 0s;
 }
+/* #restriction-container.active, #solution-container.active {
+    background-color: rgb(71, 17, 34);
+    transition-duration: 0s;
 
-#restriction-container:active, #solution-container:active {
+} */
+/* #restriction-container:active, #solution-container:active {
     background-color: rgb(67, 16, 32);
-}
+} */
 
 #restriction-bar, #solution-bar {
     position: relative;
@@ -621,6 +629,28 @@ header h1 {
     height: 6px;
     display: flex;
     justify-content: center;
+}
+#cursor {
+    position: absolute;
+    top: 8px;
+    left: 271px;
+    height: 38px;
+    width: 2.5px;
+    border-radius: 10px;
+    background-color: white;
+    transition: opacity 100ms ease
+}
+#cursor:not(.blink-animation) {
+    opacity: 0;
+}
+#cursor.blink-animation {
+    animation: blink 1s ease infinite;
+}
+@keyframes blink {
+    0% {opacity: 1;}
+    30% {opacity: 1;}
+    60% {opacity: 0;}
+    90%{opacity: 0;}
 }
 
 #equals-container {
@@ -659,7 +689,7 @@ header h1 {
     position: absolute;
     width: 154px;
     height: 28px;
-    border-radius: 6px;
+    border-radius: 8px;
     background-color: rgb(71, 17, 34);
     display: flex;
     justify-content: space-between;
@@ -671,8 +701,8 @@ header h1 {
     color: white;
     font-weight: 550;
     font-size: 13px;
-    line-height: 28px;
-    height: 28px;
+    line-height: 26px;
+    height: 26px;
     width: 76px;
     text-align: center;
     z-index: 2;
@@ -683,39 +713,47 @@ header h1 {
     height: 28px;
     width: 76px;
     left: 0;
-    border-radius: 6px;
+    border-radius: 8px;
     background-color: rgb(62, 15, 30);
-    transition: ease 0.1s left;
+    transition: cubic-bezier(0.785, 0.135, 0.15, 0.86) 0.14s left;
 }
 
 #solution-form-toggle-div.move {
     left: calc(100% - 74px);
 }
 
+.restraint-container #solution-form-container {
+    bottom: 6px;
+    right: 12px;
+    background-color: rgb(205, 185, 30);
+}
+.restraint-container #solution-form-toggle-div {
+    background-color: rgb(192, 173, 28);
+}
+
 #goal-view-container {
     display: flex;
+    width: 174px;
+    height: 180px;
     flex-wrap: wrap;
-    width: 100%;
-    flex-direction: row;
+    align-self: center;
 }
 #goal-container {
     border-radius: 5px;
     align-self: flex-end;
-    /* height: 54px; */
     width: 100%;
     position: relative;
-    bottom: 6px;
-    transition: ease 0.08s;
+    bottom: 4px;
+    /* transition: ease 0.08s; */
     display: flex;
     justify-content: center;
     align-items: center;
-    /* flex-wrap: wrap; */
     flex-direction: column;
+    padding-bottom: 2px;
+    /* flex-wrap: wrap; */
 }
-#goal-view-container.three-rows {
-    align-self: flex-end;
-    position: relative;
-    bottom: 20px
+#goal-view-container.three-rows #goal-container {
+    bottom: 10px;
 }
 
 .goal-row {
@@ -760,6 +798,12 @@ header h1 {
     height: 6px;
     display: flex;
     justify-content: center;
+    /* align-self: flex-end;
+    bottom: 25px; */
+}
+#goal-view-container.three-rows #goal-bar {
+    align-self: flex-end;
+    bottom: 25px;
 }
 
 #bottom-puzzle-container {
@@ -811,6 +855,8 @@ header h1 {
     margin: 5px;
     justify-content: center;
     align-items: center;
+    height: 116px;
+    width: 78px;
     /* perspective: 900px; */
 }
 
@@ -845,7 +891,6 @@ header h1 {
     width: 75px;
     box-shadow: none;
     border-radius: 8px;
-    /* margin: 1.5px */
     /* display: none; */
 }
 
@@ -853,7 +898,6 @@ header h1 {
     .double .card-content-front {
         height: 112px;
         width: 74px;
-        /* background-color: blue; */
     }
 }
 
@@ -1115,7 +1159,7 @@ td {
     display: flex;
     position: fixed;
     width: 100%;
-    bottom: 2px;
+    bottom: 0px;
     background-color: rgb(239, 239, 239);
     justify-content: center;
     flex-wrap: wrap;
@@ -1190,11 +1234,16 @@ td {
     background-color: whitesmoke;
     position: fixed;
     bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
     height: 87%;
+    
     width: 90%;
     max-width: 1200px;
+    transform: translateX(-50%);
+    left: 50%;
+    
+    /* left: 100px;
+    width: 900px; */
+
     box-shadow: 0 0 5px rgb(0 0 0 / 40%);
     border-radius: 10px 10px 0 0;
     translate: 0 100%;
@@ -1265,13 +1314,14 @@ td {
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
-    border-radius: 6px;
+    border-radius: 8px;
     height: 30px;
     width: 184px;
     background-color:rgb(235, 235, 235);
     margin: 15px;
 }
 .answer-left-toggle, .answer-right-toggle {
+    font-size: 14px;
     height: 30px;
     line-height: 30px;
     text-align: center;
@@ -1284,27 +1334,39 @@ td {
     height: 30px;
     width: 90px;
     left: 0;
-    border-radius: 6px;
+    border-radius: 8px;
     background-color: rgb(220, 220, 220);
-    transition: ease 0.1s left;
+    transition: cubic-bezier(0.785, 0.135, 0.15, 0.86) 0.14s left;
 }
 .answer-toggle-div.move {left: calc(100% - 90px);}
 
 #answer-content p {
     font-size: 1.17em;
-    /* margin: 0; */
-    /* color: white; */
+}
+
+#evaluation-paragraph {
+    color: rgb(116, 116, 116);
+    font-size: 14px !important;
+    margin: 6px 0px 18px;
 }
 
 .answer-solution-container {
     background-color: rgb(241, 241, 241);
     display: flex; 
     flex-direction: column;
+    max-width: 80%;
+    flex-wrap: wrap;
     align-items: center;
     box-shadow: 0px 3px 5px rgb(0 0 0 / 20%);
     padding: 10px;
     border-radius: 8px;
     transition: transform 0.2s;
+}
+
+.answer-solution-sub-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .answer-solution-container > :first-child, .answer-solution-container > :last-child {

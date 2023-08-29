@@ -1,12 +1,13 @@
 let setTimer = new Date();
 
+// Start of functions
 function clone(arr) {
     return JSON.parse(JSON.stringify(arr))
 }
 
 function logTime(message = "") {
     let stopTimer = new Date();
-    console.log(message + (stopTimer.getTime() - setTimer.getTime())/1000 + " SECONDS")
+    console.log(message + (stopTimer.getTime() - setTimer.getTime()) / 1000 + " SECONDS")
 };
 
 // [1, 2, 3, 4, 5, 6, 7, 8, 9, '+', '−', 'x', '÷', '^', '√', '(', ')']
@@ -49,11 +50,11 @@ function logTime(message = "") {
             return operation([operation(arr.slice(0, 3)), arr[3], ...arr.slice(4, arr.length)])
         }
     };
-    
+
     function evaluate(input) {
 
         // console.groupCollapsed("EVALUATE")
-        
+
         let inputsArr = [input.slice()];
         let returnArr = []
 
@@ -82,7 +83,7 @@ function logTime(message = "") {
             if (!/[f][fnjk]|[fnjk][f]|[fnjk]{3,}|([+−x÷l^]){2,}|√[+−x÷l^]|#[+−x÷l^]|[fnjk]#|^[x^]/.test(string)) return true;
             return false;
         }
-        
+
         for (let i = 0; i < input.length; i++) {
             let replace = (i === input.length - 1)
             if (input[i] === '^' && puzzleData.variations.get('base') >= 11) {
@@ -107,7 +108,7 @@ function logTime(message = "") {
             let arr = []
             if (typeof val === 'number' || val === 'j' || val === 'k') {
                 arr.push('number', 'complex')
-                if (val % 1 === 0 || val === 'j' || val === 'k') return ['number','natural','complex']
+                if (val % 1 === 0 || val === 'j' || val === 'k') return ['number', 'natural', 'complex']
                 if (val < 0) arr.push('negative')
                 if (val % 1 !== 0) arr.push('fraction')
             } else if (typeof val === "string") {
@@ -129,7 +130,7 @@ function logTime(message = "") {
 
         function numFactors(num) {
             let length = 0, arr = [];
-        
+
             function generateDivisors(curIndex, curDivisor, arr) {
                 if (curIndex == arr.length) {
                     length++;
@@ -140,7 +141,7 @@ function logTime(message = "") {
                     curDivisor *= arr[curIndex][1];
                 }
             }
-        
+
             for (let i = 2; i * i <= num; i++) {
                 if (num % i == 0) {
                     let count = 0;
@@ -151,9 +152,9 @@ function logTime(message = "") {
                     arr.push([count, i]);
                 }
             }
-            if (num > 1) arr.push([ 1, num ]);
+            if (num > 1) arr.push([1, num]);
             let curIndex = 0, curDivisor = 1;
-        
+
             generateDivisors(curIndex, curDivisor, arr);
             return length;
         };
@@ -191,7 +192,7 @@ function logTime(message = "") {
                     console.log(index)
                     j++
                     let subsequentVal = pushNumber(inputsArr[i], j)
-                    arr.push(Math.pow(subsequentVal, 1/index));
+                    arr.push(Math.pow(subsequentVal, 1 / index));
                 } else if (inputsArr[i][j] === '#') {
                     j++
                     let subsequentVal = pushNumber(inputsArr[i], j)
@@ -221,7 +222,7 @@ function logTime(message = "") {
         console.log(returnArr)
         console.groupEnd()
         return returnArr;
-        
+
     };
 
     function parseInput(arr) {
@@ -307,7 +308,7 @@ function logTime(message = "") {
         return returnArr;
     };
 
-    let puzzleData = {variations: new Map([['base', 12], ['numberOfFactors', true]])}
+    let puzzleData = { variations: new Map([['base', 12], ['numberOfFactors', true]]) }
     // −÷√
     let input = '2iii5+5'.split("")
     // let input = ['√', '9']
@@ -325,11 +326,11 @@ function getRandomNumber(min, max) {
 
 function randomSort(input) {
     let arr = [...input];
-    for (let i = arr.length -1; i > 0; i--) {
-      let j = Math.floor(Math.random() * i);
-      let k = arr[i];
-      arr[i] = arr[j];
-      arr[j] = k;
+    for (let i = arr.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * i);
+        let k = arr[i];
+        arr[i] = arr[j];
+        arr[j] = k;
     }
     return arr;
 };
@@ -339,42 +340,9 @@ function deleteFirstArrItem(array, item) {
     let index = array.indexOf(item);
     return array.slice(0, index).concat(array.slice(index + 1));
 };
-
-function randomArrayValue (arr) {
+function randomArrayValue(arr) {
     return arr[getRandomNumber(0, arr.length - 1)]
 };
-
-// function translateFunction(input, type) {
-//     if (type === "object") {
-//         return input.map(val => {
-//             let modify = val;
-//             switch (modify.cube) {
-//                 case "-": modify.cube = "−"; break;
-//                 // case "/": modify.cube = "÷"; break;
-//                 // case "√": modify.cube = "√"; break;
-//             }
-//             return modify;
-//         })
-//     } else if (type === "array") {
-//         return input.map(val => {
-//             let newval = val;
-//             switch (val) {
-//                 case "-": newval = "−"; break;
-//                 // case "/": newval = "÷"; break;
-//                 // case "√": newval = "√"; break;
-//             }
-//             return newval;
-//         })
-//     } else if (type === "prim") {
-//         let output = input
-//         switch (input) {
-//             case "-": output = "−"; break;
-//             // case "/": output = "÷"; break;
-//             // case "√": output = "√"; break;
-//         }
-//         return output
-//     }
-// }
 
 function translateName(input) {
     switch (input.toString()) {
@@ -412,7 +380,7 @@ function translateName(input) {
         case "−": return "subtract";
         case "*": return "multiply";
         case "x": return "multiply";
-        // case "/": return "divide";
+        case "/": return "divide";
         case "÷": return "divide";
         case "^": return "exponent";
         case "s": return "square-root";
@@ -421,7 +389,7 @@ function translateName(input) {
         case "(": return "left-parenthesis";
         case ")": return "right-parenthesis";
         case "Backspace": return "backspace"
-     };
+    };
 }
 
 function base10(num) {
@@ -455,13 +423,19 @@ function createSvg(type) {
             return svg
     }
 }
+// End of functions
 
-let puzzleParamaters = 
+// Create elements
+const cursor = document.createElement('div')
+cursor.id = 'cursor'
+cursor.classList.add('blink-animation')
+
+let puzzleParamaters =
 {
-    randomize: 
+    randomize:
         false,
-    setCubes: 
-        [   
+    setCubes:
+        [
             [1, '+', 2, 1,],
             [0, 'x', 'x', 1],
             [5, '−'],
@@ -469,18 +443,18 @@ let puzzleParamaters =
         ],
     setVariations:
         ['multipleOperations', 'base', 'log'],
-    setVariationsLength: 
+    setVariationsLength:
         3,
     setGoal:
         [
-            {cube: 1, color: 'red', orientation: 'up'},
-            {cube: '+', color: 'red', orientation: 'up'},
-            {cube: 1, color: 'red', orientation: 'up'}
+            { cube: 1, color: 'red', orientation: 'up' },
+            { cube: '+', color: 'red', orientation: 'up' },
+            { cube: 1, color: 'red', orientation: 'up' }
         ],
     setForbidden:
-        {
-            forbiddenArrLength: 0
-        },
+    {
+        forbiddenArrLength: 0
+    },
 }
 
 // puzzleParamaters = {
@@ -492,11 +466,11 @@ let puzzleParamaters =
 //     setForbidden: undefined,
 // }
 
+// New Puzzle
 function newPuzzle() {
 
-    // RESETTING CONTAINERS
-    inputValues.flatArray = []
-    inputValues.wrapValue = {'values': [0, 0], 'row': 0}
+    // Reset Containers
+    inputValues.wrap = { 'values': [0, 0], 'row': 0 }
     inputValues.resources = {
         values: [[], [], [], []],
         available: [[], [], [], []],
@@ -513,14 +487,16 @@ function newPuzzle() {
     resourcesContainer.innerHTML = ""
     variationsContainer.querySelector('ul').innerHTML = ""
     goalContainer.innerHTML = ""
+    currInput = 'solution-container'
     changeRows()
+    // currInput = 'goal-container'
+    // changeRows()
 
-    // GEN NEW PUZZLE
-
+    // Generate New Puzzle
     let params = Object.values(puzzleParamaters)
     console.log(params)
 
-    const mainPuzzleWorker = new Worker('eq_worker.js');
+    const mainPuzzleWorker = new Worker('equations_worker.js');
 
     if (queuedPuzzleData) {
         mainPuzzleWorker.postMessage([
@@ -535,24 +511,27 @@ function newPuzzle() {
         puzzleData = e.data
         console.log(puzzleData)
 
-        // FORBIDDEN
+        // Display forbidden cubes
         let modifiedForbiddenArr = puzzleData.forbidden
         for (let forbiddenCube of modifiedForbiddenArr) {
             const newForbiddenCube = document.createElement("div")
             newForbiddenCube.innerHTML = forbiddenCube.cube
             if (forbiddenCube.cube === "√") newForbiddenCube.innerHTML = ""
             newForbiddenCube.classList.add("cube", "restraint-cube", forbiddenCube.color, translateName(forbiddenCube.cube.toString()));
-            
+
             forbiddenContainer.append(newForbiddenCube);
         };
 
-        // GOAL
+        // Display goal cubes
         let modifiedGoalArr = puzzleData.goal
         for (let goalCube of modifiedGoalArr) {
             const newGoalCube = document.createElement("div")
             newGoalCube.innerHTML = goalCube.cube
             newGoalCube.classList.add("cube", "goal-cube", goalCube.color, translateName(goalCube.toString()))
-            goalContainer.append(newGoalCube)
+            // goalContainer.append(newGoalCube)
+            // currInput = 'goal-container'
+            // checkInputWidth(46, newGoalCube)
+            // currInput = null
         };
 
         function findColorIndex(cube, ...index) {
@@ -567,15 +546,18 @@ function newPuzzle() {
             };
         };
 
-        // REQUIRED
+        // Determine required and resources cubes from solution
         let resourcesArr = JSON.parse(JSON.stringify(puzzleData.modifiedCubes))
         let requiredArr = puzzleData.solution.cubes
 
         console.log(puzzleData.solution.flag)
         console.log(requiredArr)
+
+        // Occasionally remove a cube from required
         if (getRandomNumber(0, 2)) requiredArr = deleteFirstArrItem(requiredArr, randomArrayValue(requiredArr.toString()))
         console.log(requiredArr)
 
+        // Place cubes from required arr into required
         for (let requiredCube of randomSort(requiredArr)) {
             let colorIndex = findColorIndex(requiredCube), color;
             switch (colorIndex) {
@@ -587,14 +569,19 @@ function newPuzzle() {
             const newRequiredCube = document.createElement('div')
             newRequiredCube.classList.add('cube', 'restraint-cube', color, translateName(requiredCube))
             newRequiredCube.innerHTML = requiredCube
+
+            // Ensure square root cubes contains svg, not innerHTML
             if (requiredCube === "√") newRequiredCube.innerHTML = ""
+
             requiredContainer.append(newRequiredCube)
             inputValues.required.values[colorIndex].push(requiredCube.toString())
             inputValues.required.available[colorIndex].push(requiredCube.toString())
+
+            // Remove required cube from resources
             resourcesArr[colorIndex] = deleteFirstArrItem(resourcesArr[colorIndex], requiredCube)
         }
-        
-        // RESOURCES
+
+        // Place cubes from resources arr into resources
         for (let i = 0; i < resourcesArr.length; i++) {
             for (let resourcesCube of resourcesArr[i]) {
                 let color;
@@ -608,9 +595,11 @@ function newPuzzle() {
                 newResourcesCube.classList.add('cube', 'resource-cube', color, translateName(resourcesCube.toString()))
                 newResourcesCube.innerHTML = resourcesCube
                 console.log(resourcesCube)
+
+                // Ensure square root cubes contain svg, not innerHTML
                 if (resourcesCube === "√") newResourcesCube.innerHTML = ""
+
                 resourcesContainer.append(newResourcesCube)
-                
                 inputValues.resources.values[i].push(resourcesCube.toString())
                 inputValues.resources.available[i].push(resourcesCube.toString())
             };
@@ -618,9 +607,9 @@ function newPuzzle() {
         console.log(inputValues.required)
         console.log(inputValues.resources)
 
-        // VARIATIONS
+        // Display variations
         const variationsDisplay = variationsContainer.querySelector('ul')
-        for (let x of puzzleData.variations) {variationsDisplay.append(document.createElement('li'))}
+        for (let x of puzzleData.variations) { variationsDisplay.append(document.createElement('li')) }
         for (let i = 0; i < variationsDisplay.children.length; i++) {
             let currVariation = Array.from(puzzleData.variations)[i]
             let variationToPush;
@@ -647,6 +636,9 @@ function newPuzzle() {
         }
         console.log(puzzleData.variations)
         console.log(variationsDisplay)
+
+        // Queue New Puzzle
+
         // console.groupCollapsed("QUEUE PUZZLE")
         //     const queuePuzzleWorker = new Worker('equations_worker.js');
         //     queuePuzzleWorker.postMessage(params)
@@ -660,18 +652,22 @@ function newPuzzle() {
 
         // let string = '1+(1+1)'
         // let string = '0x31+18x58−2'
+
+        // Preset Input
+        currInput = 'solution-container'
         let string = '√'
         for (let i = 0; i < string.length; i++) {
             inputCube(translateName(string.charAt(i)))
         }
-        submitInput()
+        solutionContainer.append(cursor)
+        // submitInput()
 
     };
 };
 
-// HEADING 
+// Heading 
 const settingsIcon = document.querySelector('#settings-ico')
-// CUBE CONTAINERS
+// Cube Containers
 const boardContainer = document.querySelector('#board-container')
 const forbiddenContainer = document.querySelector('#forbidden-container');
 const requiredContainer = document.querySelector('#required-container');
@@ -679,20 +675,50 @@ const resourcesContainer = document.querySelector('#resources-container');
 const solutionContainer = document.querySelector('#solution-container');
 const solutionHoverContainer = document.querySelector('#solution-hover-container')
 const goalContainer = document.querySelector('#goal-container');
-// MISC PUZZLE CONTAINERS
+// Misc. Puzzle Containers
 const variationsContainer = document.querySelector('#variations-container')
 const submitButton = document.querySelector('#submit-button');
 const header = document.querySelector('header')
-// KEYBOARD
+// Keyboard
 const keyboardContainer = document.querySelector('#keyboard-container');
 const keyboardButtons = document.querySelectorAll(".keyboard-row > div")
-
 console.log(keyboardButtons)
 
+solutionContainer.dataset.container = 'solution-container'
+goalContainer.dataset.container = 'goal-container'
+
+const workers = {
+    mainWorker: null,
+    queueWorker: null,
+}
+
 const inputValues = {
-    flatArray: [],
-    wrapValue: {values: [0, 0], row: 0},
-    divNodes: [],
+    solution: {
+        selectedCubeIndex: {
+            row: 0,
+            column: null,
+        },
+        cursorRow: 0,
+        wrap: {
+            row: 0,
+            elements: [[], []],
+            widths: [[], []],
+            values: [0, 0],
+        },
+    },
+    goal: {
+        selectedCubeIndex: {
+            row: 0,
+            column: null,
+        },
+        cursorRow: 0,
+        wrap: {
+            row: 0,
+            elements: [[], []],
+            widths: [[], []],
+            values: [0, 0],
+        },
+    },
     resources: {
         available: [[], [], [], []],
         used: [[], [], [], []]
@@ -706,77 +732,305 @@ const inputValues = {
 
 let puzzleData;
 let queuedPuzzleData;
+let currInput = null;
 newPuzzle()
 
-submitButton.addEventListener('click', submitInput);
-const newAnswer = document.createElement('div')
-const answerBackground = document.createElement('div')
-newAnswer.id = 'new-answer'
-answerBackground.id = 'answer-background'
-document.body.append(answerBackground)
-document.body.append(newAnswer)
-answerBackground.addEventListener('click', function(){
-    newAnswer.classList.remove('shown')
-    answerBackground.classList.remove('shown')
-})
-let keyboardActive = true;
-solutionContainer.addEventListener('click', toggleKeyboard);
-keyboardContainer.addEventListener('click', function(e) {e.stopPropagation()})
+// Cube Inputs
+solutionContainer.addEventListener('click', showKeyboard);
+goalContainer.addEventListener('click', showKeyboard);
+keyboardContainer.addEventListener('click', function (e) { e.stopPropagation() })
 document.addEventListener('click', hideKeyboard);
 
-
-function toggleKeyboard(e) {
-    e.stopPropagation();
-    keyboardActive = !keyboardActive;
-    keyboardContainer.classList.toggle("hidden")
-};
+// function toggleKeyboard(e) {
+//     e.stopPropagation();
+//     currInput = !currInput;
+//     cursor.classList.toggle('blink-animation')
+//     keyboardContainer.classList.toggle("hidden")
+// };
 function showKeyboard(e) {
+
+    let target = e.target.dataset.container
+    const targetElement = document.querySelector(`#${target}`)
+
     e.stopPropagation();
-    keyboardActive = true;
+    cursor.classList.add('blink-animation')
     keyboardContainer.classList.remove("hidden")
+
+    let wrap, container, selectedCubeIndex, row, column, cRow, frontCursor, clickedRow
+    if (currInput === 'solution-container') {
+        container = solutionContainer;
+        wrap = inputValues.solution.wrap
+        selectedCubeIndex = inputValues.solution.selectedCubeIndex
+        cRow = inputValues.solution
+    } else {
+        container = goalContainer;
+        wrap = inputValues.goal.wrap
+        selectedCubeIndex = inputValues.goal.selectedCubeIndex
+        cRow = inputValues.goal
+    };
+    
+    if (!targetElement.classList.contains('active') && currInput) {
+
+        const activeContainer = document.querySelector('#solution-container.active, #goal-container.active')
+        if (activeContainer) {
+            activeContainer.classList.remove('active')
+        }
+        for (let row of wrap.elements) {
+            for (let node of row) {
+                node.dataset.cursorOffset = 0
+            }
+        }
+        selectedCubeIndex.row = wrap.row
+        cRow.cursorRow = wrap.row
+        selectedCubeIndex.column = wrap.elements[wrap.row].length - 1
+
+        alignCursor()
+        alignNodes()
+    }
+
+    if (targetElement.classList.contains('active')) {
+
+        let previousSelectedCubeRow
+        
+        if (getSelectedCube()) {
+            previousSelectedCubeRow = getSelectedCube().dataset.row
+        } else {
+            previousSelectedCubeRow = 0
+        }
+
+        if (e.target === container) {
+
+            row = Math.floor((e.offsetY - 2) / 50)
+            
+            if (row < 0) row = 0;
+            if (row > wrap.row) row--
+
+            cRow.cursorRow = row
+            clickedRow = row
+
+            let leftBound = (container.offsetWidth - wrap.values[row]) / 2
+            let rightBound = leftBound + wrap.values[row]
+            if (e.offsetX < leftBound) { // Clicked to the left of all cubes
+
+                frontCursor = true;
+                if (row > 0) { // Ensure cube is not very first cube
+                    row--
+                    column = wrap.elements[row].length - 1
+                } else { // If cube is first cube, set index accordingly
+                    row = 0
+                    column = null
+                }
+
+            } else if (e.offsetX > rightBound) { // Clicked to the right of all cubes
+                column = wrap.widths[row].length - 1
+
+                if (wrap.row > row) { 
+                    clickedRow = row + 1
+                    cRow.cursorRow = row + 1
+                    frontCursor = true;
+                }
+
+            } else {
+
+                let difference = e.offsetX - leftBound
+                column = -1;
+                if (difference === 0) column = 0;
+                for (let i = 0; difference > 0; i++) {
+                    difference -= wrap.widths[row][i]
+                    column++
+                }
+
+                let clickedCube = wrap.elements[row][column]
+
+                // Clicking on left half of cube will keep column same as left cube
+                let halfWidth = (clickedCube.classList.contains('cube')) ? 23 : 8
+                if (difference + halfWidth < 0) {
+                    if (column > 0) { // Default, select cube to the left
+                        column--
+                    } else {  // If cube is first of its row
+                        frontCursor = true;
+                        if (row === 0) { // Cube is very first cube
+                            column = null
+                        } else { // Default, select last cube of previous row
+                            row--
+                            column = wrap.elements[row].length - 1
+                        }
+                    }
+                } else if (column === wrap.elements[row].length - 1) { // If clicked to the right of last cube in row
+                    if (wrap.row > row) { // Move cursor to first position of next row if applicable
+                        clickedRow = row + 1
+                        cRow.cursorRow = row + 1
+                        frontCursor = true;
+                    }
+                }
+
+            } 
+        } else {
+
+            let clickedCube = e.target
+            // if (clickedCube.classList.contains('pointer')) return;
+            if (clickedCube.nodeName === 'svg') return;
+            let halfWidth = (clickedCube.classList.contains('cube')) ? 23 : 8
+            clickedRow = parseInt(clickedCube.dataset.row)
+            row = clickedRow
+            column = wrap.elements[clickedRow].indexOf(clickedCube)
+            cRow.cursorRow = clickedRow
+            // Clicking on left half of cube select the previous cube
+            if (e.offsetX < halfWidth) {
+                if (column > 0) { // Default, select cube to the left
+                    column--
+                } else { // If cube is first of its row
+                    frontCursor = true;
+                    if (row === 0) { // Cube is very first cube
+                        column = null
+                    } else { // Default, select last cube of previous row
+                        row--
+                        column = wrap.elements[row].length - 1
+                    }
+                }
+            }
+        }
+        selectedCubeIndex.row = row
+        selectedCubeIndex.column = column
+
+        for (let i = 0; i < wrap.elements[previousSelectedCubeRow].length; i++) {
+            if (cRow.cursorRow == previousSelectedCubeRow) break;
+            wrap.elements[previousSelectedCubeRow][i].dataset.cursorOffset = 0
+        }
+        for (let i = 0; i < wrap.elements[clickedRow].length; i++) {
+            if (i > column || frontCursor) {
+                wrap.elements[clickedRow][i].dataset.cursorOffset = 6
+            } else [
+                wrap.elements[clickedRow][i].dataset.cursorOffset = 0
+            ]
+        }
+
+        alignCursor([70, 70], frontCursor)
+        alignNodes()
+
+    } else if (target === 'solution-container') {
+        currInput = 'solution-container'
+        solutionContainer.classList.add('active')
+        solutionContainer.append(cursor)
+        alignCursor([0, 0])
+    } else if (target === 'goal-container') {
+        currInput = 'goal-container'
+        goalContainer.classList.add('active')
+        goalContainer.append(cursor)
+        alignCursor([0, 0])
+    };
+
 }
 function hideKeyboard() {
-    keyboardActive = false;
+
+    if (!currInput) return;
+
+    const activeContainer = document.querySelector('#solution-container.active, #goal-container.active')
+    
+    let selectedCubeIndex, wrap;
+    if (currInput === 'solution-container') {
+        wrap = inputValues.solution.wrap
+        selectedCubeIndex = inputValues.solution.selectedCubeIndex
+        input = inputValues.solution
+    } else {
+        wrap = inputValues.goal.wrap
+        selectedCubeIndex = inputValues.goal.selectedCubeIndex
+        input = inputValues.goal
+    }
+
+    if (wrap) { // Clicked on container while another container was still active
+        for (let row of wrap.elements) {
+            for (let node of row) {
+                node.dataset.cursorOffset = 0
+            }
+        }
+
+        selectedCubeIndex.row = wrap.row
+        input.cursorRow = wrap.row
+        selectedCubeIndex.column = wrap.elements[wrap.row].length - 1
+        alignCursor()
+        alignNodes()
+    }
+
+    cursor.classList.remove('blink-animation')
+    if (activeContainer) {
+        solutionContainer.classList.remove('active')
+    }
     keyboardContainer.classList.add("hidden")
+
+    currInput = null;
 };
 
-document.addEventListener('keydown', function(keypress){
+document.addEventListener('keydown', function (keypress) {
+    // Input cube on keypress when keyboard is active
+
     // console.log(keypress.key);
-    if (!keyboardActive) return;
+    if (!currInput) return;
+    if (keypress.key === 'ArrowLeft' || keypress.key === 'ArrowRight') {
+        moveCursor(keypress.key)
+    }
     inputCube(translateName(keypress.key));
 });
-for (let button of keyboardButtons) button.addEventListener('click', function() {inputCube(this.classList[1])});
+for (let button of keyboardButtons) button.addEventListener('click', function () { inputCube(this.classList[1]) });
+
+function getSelectedCube(width) {
+    let selectedCubeIndex, wrap
+    if (currInput === 'solution-container') {
+        selectedCubeIndex = inputValues.solution.selectedCubeIndex
+        wrap = inputValues.solution.wrap
+    } else {
+        selectedCubeIndex = inputValues.goal.selectedCubeIndex
+        wrap = inputValues.goal.wrap
+    }
+    let value = width ? wrap.widths : wrap.elements
+    let cube = value[selectedCubeIndex.row][selectedCubeIndex.column]
+    return cube ? cube : null
+}
 
 function inputCube(cube) {
+
     if (document.querySelector('.selector-container')) return;
     if (cube === undefined) return;
     if (cube === 'factorial' && !puzzleData.variations.get('factorial')) return;
-    let input, flatArray, wrap;
-    input = solutionContainer;
-    flatArray = inputValues.flatArray;
-    wrap = inputValues.wrapValue;
-
+    let wrap, selectedCubeIndex;
+    if (currInput === 'solution-container') {
+        wrap = inputValues.solution.wrap;
+        selectedCubeIndex = inputValues.solution.selectedCubeIndex
+    } else {
+        wrap = inputValues.goal.wrap;
+        selectedCubeIndex = inputValues.goal.selectedCubeIndex
+    }
     let reqCol = inputValues.required
     let resCol = inputValues.resources
 
-    // console.log(reqCol)
+    // Determine current input
 
-    let currCube;
+    let symbol;
     if (cube === "backspace") {
-        let cubeWidth = 46;
-        if (!flatArray.length) return;
-        let symbol = flatArray.pop();
-        if (/[()]/.test(symbol)) cubeWidth = 16;
-        wrap.values[wrap.row] -= cubeWidth;
-        checkInputWidth(0);
 
-        let cubeType;
-        if (input.lastElementChild.classList.contains('required')) cubeType = 'required';
-        if (input.lastElementChild.classList.contains('resource')) cubeType = 'resource';
-        // console.log(cubeType)
-        let currColor = input.lastElementChild.classList[4], colorIndex
-        input.lastElementChild.remove()
+        const selectedCubeElement = getSelectedCube()
+
+        // If no cubes available, return
+        if (!selectedCubeElement) return;
+
+        // Set cube data
+        let cubeType = selectedCubeElement.dataset.restraint
+        let cubeWidth = 46;
+        let symbol = selectedCubeElement.innerText
+        if (/[()]/.test(symbol)) cubeWidth = 16;
+
+        // Modify row sizes and check lengths
+        wrap.values[selectedCubeIndex.row] -= cubeWidth
+        checkInputWidth(cubeWidth);
+
+        // Determine cube color, then remove it
+        let currColor = selectedCubeElement.dataset.color, colorIndex
+        selectedCubeElement.remove()
+
+        // Remove cube from inputValues color indexes if it has type
         if (!cubeType) return;
+
+        // Set color index
         switch (currColor) {
             case "red": colorIndex = 0; break;
             case "blue": colorIndex = 1; break;
@@ -784,139 +1038,830 @@ function inputCube(cube) {
             case "black": colorIndex = 3; break;
             default: return;
         }
+
         if (reqCol.used[colorIndex].includes(symbol) && cubeType === 'required') {
+            // If cube was required, move it from used array to avaiable array
+
             reqCol.used[colorIndex] = deleteFirstArrItem(reqCol.used[colorIndex], symbol)
             reqCol.available[colorIndex].push(symbol)
         } else if (resCol.used[colorIndex].includes(symbol) && cubeType === 'resource') {
+            // If cube was resources, move it from used array to available array
+
             resCol.used[colorIndex] = deleteFirstArrItem(resCol.used[colorIndex], symbol)
             resCol.available[colorIndex].push(symbol)
         }
+
         return;
     } else {
-        currCube = translateName(cube)
+        // Set symbol
+        symbol = translateName(cube)
     };
-    if (parseFloat(currCube) >= puzzleData.variations.get('base')) return;
 
+    // Don't add cubes not within base
+    if (parseFloat(symbol) >= puzzleData.variations.get('base')) return;
+
+    // Create cube and add HTML
     const solutionCube = document.createElement('div');
-    solutionCube.innerHTML = currCube
-    if (currCube === '√') {
+    solutionCube.innerHTML = symbol
+
+    if (symbol === '√') {
+        // Ensure square root cubes contain svg, not innerHTML
         solutionCube.innerHTML = ''
         const svg = createSvg('square-root')
+        svg.classList.add('svg') // Prevent redundant error from no having no classlist
+        svg.dataset.container = currInput
         solutionCube.append(svg)
     }
+
+    // Set classlist and width
     solutionCube.classList.add(cube);
     let cubeWidth = 16;
-    if (!/[()]/.test(currCube)) {
+
+    if (!/[()]/.test(symbol)) {
+        // Add classes and colors if cube is not parenthesis
+
         cubeWidth = 46
         solutionCube.classList.add('cube', 'solution-cube');
-        let symbol = translateName(cube)
-        let colorIndex;
+
+        let colorIndex, finalColor;
+
         for (let i = 0; i < 4; i++) {
             if (reqCol.available[i].includes(symbol)) {
+                // If required colors contains cubes, move it from available array to used array
+                // Then, set its color
                 colorIndex = i
                 reqCol.available[i] = deleteFirstArrItem(reqCol.available[i], symbol)
                 reqCol.used[i].push(symbol)
-                solutionCube.classList.add('required')
+                solutionCube.dataset.restraint = 'required'
                 break;
             }
         }
+
         if (colorIndex === undefined) {
+            // If cube is not in required
             for (let i = 0; i < 4; i++) {
                 if (resCol.available[i].includes(symbol)) {
+                    // If resources colors contains cubes, move it from available array to used array
+                    // Then, set its color
                     colorIndex = i
                     resCol.available[i] = deleteFirstArrItem(resCol.available[i], symbol)
                     resCol.used[i].push(symbol)
-                    solutionCube.classList.add('resource')
+                    solutionCube.dataset.restraint = 'resource'
                     break;
                 }
             }
         }
+
         switch (colorIndex) {
-            case 0: solutionCube.classList.add("red"); break;
-            case 1: solutionCube.classList.add("blue"); break;
-            case 2: solutionCube.classList.add("green"); break;
-            case 3: solutionCube.classList.add("black"); break;
+            case 0: finalColor = "red"; break;
+            case 1: finalColor = "blue"; break;
+            case 2: finalColor = "green"; break;
+            case 3: finalColor = "black"; break;
             default:
-                solutionCube.classList.add('unavailable')
+                // Cube was not in required nor resources, set random color value
+
+                solutionCube.dataset.restraint = 'unavailable'
                 let color;
-                if (/[0123]/.test(currCube)) color = randomArrayValue(["red", "blue"])
-                if (/[456\^]/.test(currCube)) color = "green"
-                if (/[789√]/.test(currCube)) color = "black"
-                if (currCube === "!") color = "red"
-                if (currCube === "+") color = randomArrayValue(["red", "black"])
-                if (currCube === "−") color = randomArrayValue(["red", "green"])
-                if (currCube === "x") color = randomArrayValue(["blue", "green"])
-                if (currCube === "÷") color = randomArrayValue(["blue", "black"])
-                solutionCube.classList.add(color)
+                if (/[0123]/.test(symbol)) color = randomArrayValue(["red", "blue"])
+                if (/[456\^]/.test(symbol)) color = "green"
+                if (/[789√]/.test(symbol)) color = "black"
+                if (symbol === "!") color = "red"
+                if (symbol === "+") color = randomArrayValue(["red", "black"])
+                if (symbol === "−") color = randomArrayValue(["red", "green"])
+                if (symbol === "x") color = randomArrayValue(["blue", "green"])
+                if (symbol === "÷") color = randomArrayValue(["blue", "black"])
+                finalColor = color
         }
+
+        solutionCube.classList.add(finalColor)
+        solutionCube.dataset.color = finalColor
     }
+
     // if (currCube === puzzleData.variationsMap.get('wild')) {
     //     solutionCube.classList.add('wild-cube')
     //     solutionCube.addEventListener('click', toggleWildPicker)
     // }
-    if (/\d/.test(currCube)) {
+
+    if (/\d/.test(symbol)) {
         solutionCube.addEventListener('click', toggleSelector);
         solutionCube.classList.add('pointer')
     }
-    if (puzzleData.variations.get('imaginary') && currCube === "−") {
+    if (puzzleData.variations.get('imaginary') && symbol === "−") {
         solutionCube.addEventListener('click', toggleSelector);
         solutionCube.classList.add('pointer')
     }
-    if (puzzleData.variations.get('log') && currCube === "÷") {
+    if (puzzleData.variations.get('log') && symbol === "÷") {
         solutionCube.addEventListener('click', toggleSelector);
         solutionCube.classList.add('pointer')
     }
-    if (puzzleData.variations.get('base') > 10 && currCube === "^") {solutionCube.addEventListener('click', toggleSelector); solutionCube.classList.add('pointer')}
-    if (puzzleData.variations.get('base') > 11 && currCube === "√") {solutionCube.addEventListener('click', toggleSelector); solutionCube.classList.add('pointer')}
+    if (puzzleData.variations.get('base') > 10 && symbol === "^") { solutionCube.addEventListener('click', toggleSelector); solutionCube.classList.add('pointer') }
+    if (puzzleData.variations.get('base') > 11 && symbol === "√") { solutionCube.addEventListener('click', toggleSelector); solutionCube.classList.add('pointer') }
+    
     solutionCube.addEventListener('click', showKeyboard)
-    if (checkInputWidth(cubeWidth)) {
-        flatArray.push(currCube)
-        input.append(solutionCube);
+    solutionCube.dataset.container = currInput
+
+    // Give and remove hidden classlist for fade in effect
+    solutionCube.classList.add('hidden')
+
+    if (checkInputWidth(cubeWidth, solutionCube)) {
+        solutionCube.classList.remove('hidden')
     }
 };
 
-function checkInputWidth(cubeWidth) {
-    let input = solutionContainer, wrap = inputValues.wrapValue
-    if (wrap.row > 0 && wrap.values[wrap.row] === 0 && boardContainer.offsetHeight > 450) {
-        wrap.row--
-        changeRows()
-    } else if (wrap.values[wrap.row] + cubeWidth >= input.offsetWidth) {
-        if (wrap.row < 3) {
-            wrap.row++
-            if (!wrap.values[wrap.row]) wrap.values[wrap.row] = 0
-            changeRows()
-        } else {
-            notify(`Solution is too big!`, 'red', 'bounce', 1000, '40px', '170px')
-            return false;
-        }
+function checkInputWidth(cubeWidth, element) {
+
+    let input, selectedCubeIndex, wrap, cRow
+    if (currInput === 'solution-container') {
+        input = solutionContainer
+        selectedCubeIndex = inputValues.solution.selectedCubeIndex
+        wrap = inputValues.solution.wrap
+        cRow = inputValues.solution
+    } else {
+        input = goalContainer
+        selectedCubeIndex = inputValues.goal.selectedCubeIndex
+        wrap = inputValues.goal.wrap
+        cRow = inputValues.goal
     }
-    wrap.values[wrap.row] += cubeWidth
+    let case1 = false;
+    let containerWidth = input.offsetWidth
+    let nodeAnimationDuration = 70;
+    let cursorAnimationDuration = [0, 30];
+    let frontCursor;
+
+    // console.log("INPUTDEBUG")
+    // console.log(wrap.values)
+    // console.log(wrap.row)
+    // console.log(wrap.values[wrap.row])
+    // console.log(cubeWidth)
+
+    if (element) {
+        // Append element if one is passed
+
+        // Create index for new cube
+        let newRow, newColumn
+
+        if (wrap.values[selectedCubeIndex.row] + cubeWidth >= containerWidth - 10) {
+            // If current row is too wide, move to next row
+            // Also, make sure cursor is not front cursor
+
+            // Maximum solution size
+            if (wrap.values[3]) {
+                if (wrap.values[3] + cubeWidth >= containerWidth - 10) {
+                    notify(`Solution is too big!`, 'red', 'bounce', 1000, '40px', '170px')
+                    return false;
+                }
+            }
+
+            if (selectedCubeIndex.column === wrap.widths[selectedCubeIndex.row].length - 1) {
+                // Selected cube is last fitting cube in row
+                newRow = selectedCubeIndex.row + 1
+                newColumn = 0
+                wrap.values[newRow] += cubeWidth
+
+                if (cRow.cursorRow === selectedCubeIndex.row) {
+                    // Case where cursor will end up onto next row
+                    cRow.cursorRow++
+                    cursorAnimationDuration = [0, 0]
+
+                    wrap.row++
+                    changeRows()
+                } else {
+                    // Case where cursor is at leftmost position on non-first row
+
+                    let overflowData = stopOverflow(selectedCubeIndex.row)
+                    cursorAnimationDuration = overflowData[0]
+                    nodeAnimationDuration = overflowData[1]
+                    frontCursor = overflowData[2]
+                }
+
+            } else {
+                // Default
+
+                // Edge case where cube must move to next row but other objects are in front (i.e. parenthesis that fit)
+                let totalWidth = wrap.widths[selectedCubeIndex.row].slice(0, selectedCubeIndex.column + 1).reduce((a, b) => a + b, 0)
+                if (totalWidth + cubeWidth > containerWidth - 10) {
+
+                    case1 = true
+
+                    newRow = selectedCubeIndex.row
+                    newColumn = selectedCubeIndex.column + 1
+                    wrap.values[newRow] += cubeWidth
+
+                } else {
+                    newRow = selectedCubeIndex.row
+                    if (selectedCubeIndex.column === null) {
+                        // Special case for first cube
+                       newColumn = selectedCubeIndex.column + 0
+                    } else {
+                       newColumn = selectedCubeIndex.column + 1
+                    }
+                    wrap.values[newRow] += cubeWidth
+
+                    let overflowData = stopOverflow(selectedCubeIndex.row)
+                    cursorAnimationDuration = overflowData[0]
+                    nodeAnimationDuration = overflowData[1]
+                    if (overflowData[2] !== null) frontCursor = overflowData[2]
+                }
+
+            }
+
+            // If wrap value does not contain index for spare row, make one
+            if (!wrap.values[wrap.row + 1]) wrap.values[wrap.row + 1] = 0
+            if (!wrap.widths[wrap.row + 1]) wrap.widths[wrap.row + 1] = []
+            if (!wrap.elements[wrap.row + 1]) wrap.elements[wrap.row + 1] = []
+
+        } else if (cRow.cursorRow !== selectedCubeIndex.row) {
+            // Case where cursor is at leftmost position and cube fits into previous row
+            newRow = selectedCubeIndex.row
+            newColumn = selectedCubeIndex.column + 1
+            wrap.values[newRow] += cubeWidth
+
+            frontCursor = true;
+        } else if (selectedCubeIndex.column === null) {
+            // Case where no cubes in input yet
+            newRow = selectedCubeIndex.row
+            newColumn = 0;
+            wrap.values[newRow] += cubeWidth
+        } else {
+            // Default, new index is 1 column to the right of current selected cube
+            newRow = selectedCubeIndex.row
+            newColumn = selectedCubeIndex.column + 1
+            wrap.values[newRow] += cubeWidth
+        }
+
+        // Add new cube into wrap indexes
+        wrap.widths[newRow].splice(newColumn, 0, cubeWidth)
+        wrap.elements[newRow].splice(newColumn, 0, element)
+
+        // Set position
+        let totalWidth = (wrap.values[newRow])
+        let leftBound = (containerWidth - totalWidth + cubeWidth) / 2
+        // Offset is sum of widths up to column
+        let offset = wrap.widths[newRow].slice(0, newColumn).reduce((a, b) => a + b, 0)
+        let position = leftBound + offset
+
+        element.dataset.offset = offset
+        element.dataset.row = newRow
+        element.dataset.cursorOffset = 0
+        element.style.top = 2 + (newRow * 50) + "px"
+        element.style.left = position + "px";
+
+        // Edge case where cube must move to next row but other objects are in front (i.e. parenthesis that fit)
+
+        if (case1) {
+
+            cRow.cursorRow++
+
+            let overflowData = stopOverflow(selectedCubeIndex.row)
+            cursorAnimationDuration = overflowData[0]
+            nodeAnimationDuration = overflowData[1]
+            if (overflowData[2] !== null) frontCursor = overflowData[2]
+
+            newRow = selectedCubeIndex.row + 1
+            newColumn = 0
+
+            for (let i = 1; i < wrap.elements[cRow.cursorRow].length; i++) {
+                wrap.elements[cRow.cursorRow][i].dataset.cursorOffset = 6
+            }
+
+        }
+
+        cursor.style.top = 8 + (newRow * 50) + "px"
+
+        input.append(element)
+        selectedCubeIndex.row = newRow;
+        selectedCubeIndex.column = newColumn;
+
+        // Adjust offset for succceeding cubes
+        for (let i = newColumn + 1; i < wrap.elements[newRow].length; i++) {
+            if (case1) break;
+            let element = wrap.elements[newRow][i]
+            element.dataset.offset = parseInt(element.dataset.offset) + cubeWidth
+        }
+
+    } else {
+        // Backspace, Remove element
+
+        // if (wrap.row > 0 && wrap.values[wrap.row] === 0 && boardContainer.offsetHeight > 450) {
+        if (wrap.row > 0 && wrap.values[wrap.row] === 0) {
+            // If current row is empty
+
+            wrap.row--
+            cRow.cursorRow--
+            changeRows()
+
+            wrap.widths[selectedCubeIndex.row].splice(selectedCubeIndex.column, 1)
+            wrap.elements[selectedCubeIndex.row].splice(selectedCubeIndex.column, 1)
+
+            if (selectedCubeIndex.row) {
+                selectedCubeIndex.row--
+                selectedCubeIndex.column = wrap.elements[wrap.row].length - 1
+            }
+            else {
+                selectedCubeIndex.column = null
+            }
+
+            alignCursor(0)
+            return;
+
+        }
+
+        cursorAnimationDuration = [0, 70]
+        const currCube = getSelectedCube()
+
+        // Remove selected cube from wrap values
+        wrap.widths[selectedCubeIndex.row].splice(selectedCubeIndex.column, 1)
+        wrap.elements[selectedCubeIndex.row].splice(selectedCubeIndex.column, 1)
+
+        // Adjust offset for succceeding cubes
+        for (let i = selectedCubeIndex.column; i < wrap.elements[selectedCubeIndex.row].length; i++) {
+            wrap.elements[selectedCubeIndex.row][i].dataset.offset -= cubeWidth
+        }
+
+        if (selectedCubeIndex.column) {
+
+            if (selectedCubeIndex.row !== cRow.cursorRow) {
+                // If cursor was at leftmost position of next row
+
+                let remainingSpace = (containerWidth - 10) - (wrap.values[selectedCubeIndex.row])
+                let nextCubeWidth = wrap.widths[selectedCubeIndex.row + 1][0]
+                if (nextCubeWidth && nextCubeWidth < remainingSpace) {
+                    // Default, move cursor to rightmost position of current row
+                    let cursorOffset = parseInt(currCube.dataset.offset) + 2
+                    let leftBound = (containerWidth - (wrap.values[selectedCubeIndex.row] + cubeWidth)) / 2
+                    position = leftBound + cursorOffset + cubeWidth
+
+                    cursor.animate(
+                        [{ left: position + "px" }], {
+                        fill: 'forwards',
+                        duration: 0,
+                        easing: 'ease',
+                    });
+                    cursor.style.top = 8 + (cRow.cursorRow * 50) + "px"
+                    // Then, let it animate to desired position with align cursor
+                    for (let node of wrap.elements[cRow.cursorRow]) { node.dataset.cursorOffset = 0 }
+                    cRow.cursorRow--
+                } else {
+                    // Not enough room to move next row cube into row, activate frontCursor
+                    selectedCubeIndex.column = wrap.elements[selectedCubeIndex.row].length
+                    frontCursor = true;
+                }
+
+            }
+
+            // Default, move selected cube to the left
+            selectedCubeIndex.column--
+
+        } else if (selectedCubeIndex.row) {
+            // If deleted cube is first of its row, set position accordingly and activate frontCursor
+            selectedCubeIndex.row--
+            selectedCubeIndex.column = wrap.elements[selectedCubeIndex.row].length - 1
+            frontCursor = true;
+        } else {
+            // Else deleted cube was first cube
+            selectedCubeIndex.row = 0
+            selectedCubeIndex.column = null
+            frontCursor = true;
+
+        }
+
+        let fillData = stopEmptySpace(selectedCubeIndex.row)
+        cursorAnimationDuration = fillData[0]
+        nodeAnimationDuration = fillData[1]
+        if (fillData[2] !== null) frontCursor = fillData[2]
+
+    };
+    // console.log(selectedCubeIndex)
+    // console.log(wrap.elements)
+    // console.log(wrap.widths)
+    // console.log(cursorRow)
+
+    alignCursor(cursorAnimationDuration, frontCursor)
+    alignNodes(nodeAnimationDuration)
+
     return true;
 }
 
+window.onresize = () => {
+    alignNodes()
+    alignCursor()
+}
+
+function alignNodes(duration = 70, rows = []) {
+
+    let input, wrap
+    if (currInput === 'solution-container') {
+        input = solutionContainer
+        wrap = inputValues.solution.wrap
+    } else {
+        input = goalContainer
+        wrap = inputValues.goal.wrap
+    }
+    let containerWidth = input.offsetWidth
+
+    for (let node of input.children) {
+
+        if (node.id === 'cursor') continue;
+        if (rows.includes(parseInt(node.dataset.row))) return // Future feature for optimization
+
+        let row = parseInt(node.dataset.row)
+        let leftBound = (containerWidth - wrap.values[row]) / 2
+        let position = leftBound + parseInt(node.dataset.offset) + parseInt(node.dataset.cursorOffset)
+
+        // node.style.top = 2 + (row * 50) + "px"
+        node.animate(
+            [{ left: position + "px" }], {
+            fill: 'forwards',
+            duration: duration,
+            easing: 'ease',
+        });
+        node.animate(
+            [{ top: (50 * row) + 2 + "px" }], {
+            fill: 'forwards',
+            duration: duration,
+            easing: 'ease',
+        });
+    };
+}
+
+function stopOverflow(startIndex) {
+
+    let input, selectedCubeIndex, wrap, cRow
+    if (currInput === 'solution-container') {
+        input = solutionContainer
+        selectedCubeIndex = inputValues.solution.selectedCubeIndex
+        wrap = inputValues.solution.wrap
+        cRow = inputValues.solution
+    } else {
+        input = goalContainer
+        selectedCubeIndex = inputValues.goal.selectedCubeIndex
+        wrap = inputValues.goal.wrap
+        cRow = inputValues.goal
+    }
+    let containerWidth = input.offsetWidth
+    let cursorAnimationDuration = [0, 30];
+    let nodeAnimationDuration = 120;
+    let frontCursor = null;
+    let defaultBehavior = false;
+
+    if (startIndex === undefined) {
+        startIndex = 0
+        defaultBehavior = true;
+    }
+
+    // Have extra cubes move into new row cubes
+    for (let i = startIndex; i < wrap.elements.length - 1; i++) {
+
+        let overflowAmount = (wrap.values[i]) - (containerWidth - 10)
+
+        if (overflowAmount >= 0 && i === wrap.row) {
+            wrap.row++
+            changeRows()
+        }
+        console.log(overflowAmount)
+        while (overflowAmount >= 0) {
+
+            let width = wrap.widths[i].pop()
+            overflowAmount -= width
+            console.log(width)
+
+            let element = wrap.elements[i].pop()
+            let newRow = parseInt(element.dataset.row) + 1
+            let offset = 0
+            wrap.values[i] -= width
+            wrap.elements[i + 1].unshift(element)
+            wrap.widths[i + 1].unshift(width)
+
+            for (let j = 0; j < wrap.elements[i + 1].length; j++) {
+                let element = wrap.elements[i + 1][j]
+                element.dataset.offset = parseInt(element.dataset.offset) + width
+            }
+
+            element.dataset.row = newRow
+            element.dataset.offset = offset
+            element.dataset.cursorOffset = 0
+            // nodeAnimationDuration = 70;
+            wrap.values[i + 1] += width
+
+            // Moves next row if selected cube does not fit onto row
+            if (selectedCubeIndex.column === wrap.elements[selectedCubeIndex.row].length - 1) {
+                // Ensure this doesn't happen if cursor is on leftmost position of row
+                if (selectedCubeIndex.row === cRow.cursorRow) {
+                    cRow.cursorRow++
+                    cursorAnimationDuration = [100, 100];
+                    frontCursor = true
+                    for (let node of wrap.elements[cRow.cursorRow]) { node.dataset.cursorOffset = 6 }
+                    nodeAnimationDuration = 100
+                };
+            }
+
+        }
+    }
+
+    return [cursorAnimationDuration, nodeAnimationDuration, frontCursor]
+
+}
+
+function stopEmptySpace(startIndex) {
+
+    let input, selectedCubeIndex, wrap, cRow
+    if (currInput === 'solution-container') {
+        input = solutionContainer
+        selectedCubeIndex = inputValues.solution.selectedCubeIndex
+        wrap = inputValues.solution.wrap
+        cRow = inputValues.solution
+    } else {
+        input = goalContainer
+        selectedCubeIndex = inputValues.goal.selectedCubeIndex
+        wrap = inputValues.goal.wrap
+        cRow = inputValues.goal
+    }
+    let containerWidth = input.offsetWidth
+    let cursorAnimationDuration = [0, 70];
+    let nodeAnimationDuration = 120;
+    let frontCursor = null;
+    let defaultBehavior = false;
+
+    if (startIndex === undefined) {
+        startIndex = 0;
+        defaultBehavior = true
+    }
+
+    // Have subsequent cubes fill in remaining space
+    for (let i = startIndex; i < wrap.elements.length - 1; i++) {
+
+        // Break if no subsequent cubes
+        if (!wrap.widths[i + 1][0]) break;
+
+        let remainingSpace = (containerWidth - 10) - (wrap.values[i])
+        while (wrap.widths[i + 1][0] < remainingSpace) {
+
+            let width = wrap.widths[i + 1].shift()
+            remainingSpace -= width
+
+            let offset = wrap.widths[i].reduce((a, b) => a + b, 0)
+
+            let element = wrap.elements[i + 1].shift()
+            wrap.values[i + 1] -= width
+            wrap.elements[i].push(element)
+            wrap.widths[i].push(width)
+
+            let newRow = parseInt(element.dataset.row) - 1
+            element.dataset.row = newRow
+            element.dataset.offset = offset
+            if (newRow === cRow.cursorRow) {
+                element.dataset.cursorOffset = 6
+            };
+            nodeAnimationDuration = 100;
+            wrap.values[i] += width
+
+            for (let j = 0; j < wrap.elements[i + 1].length; j++) {
+                wrap.elements[i + 1][j].dataset.offset -= width
+            }
+
+            // Moves cursor to previous row when cubes behind cursor get realigned to previous row
+            if (selectedCubeIndex.row !== cRow.cursorRow && selectedCubeIndex.column < wrap.elements[i].length) {
+                for (let node of wrap.elements[cRow.cursorRow]) { node.dataset.cursorOffset = 0 }
+                cRow.cursorRow--
+                cursorAnimationDuration = [0, 0];
+                frontCursor = false
+            }
+
+            // Next row becomes empty
+            if (!wrap.elements[i + 1].length) {
+                wrap.row--
+                changeRows()
+            }
+        }
+    }
+
+    return [cursorAnimationDuration, nodeAnimationDuration, frontCursor]
+
+}
+
+function moveCursor(key) {
+    let selectedCubeIndex, wrap, cRow
+    if (currInput === 'solution-container') {
+        selectedCubeIndex = inputValues.solution.selectedCubeIndex
+        wrap = inputValues.solution.wrap
+        cRow = inputValues.solution
+    } else {
+        selectedCubeIndex = inputValues.goal.selectedCubeIndex
+        wrap = inputValues.goal.wrap
+        cRow = inputValues.goal
+    }
+    let frontCursor;
+    let cursorAnimationDuration = [0, 100]
+    let fixRow = [];
+
+    if (key === 'ArrowLeft') {
+        // Left Arrow
+
+        if (selectedCubeIndex.row !== cRow.cursorRow) {
+            // Move cursor up a row
+            cursorAnimationDuration = [0, 0];
+            fixRow.push(cRow.cursorRow)
+            cRow.cursorRow--
+        }
+
+        if (selectedCubeIndex.column > 0) {
+            // Default, move left
+            selectedCubeIndex.column--
+        } else if (selectedCubeIndex.row) {
+            // If not on first row, to leftmost spot of current row
+            selectedCubeIndex.row--
+            selectedCubeIndex.column = wrap.elements[selectedCubeIndex.row].length - 1
+            frontCursor = true
+        } else {
+            // If on first row, move to leftmost position
+            selectedCubeIndex.row = 0
+            selectedCubeIndex.column = null
+            frontCursor = true
+        };
+
+    } else {
+        // Right arrow
+
+        if (selectedCubeIndex.column === null) {
+            // If cursor is in leftmost position, move to the right of first cube if it exists
+            if (wrap.elements[0].length) {
+                selectedCubeIndex.column = 0
+            }
+        } else if (selectedCubeIndex.column + 2 < wrap.elements[selectedCubeIndex.row].length) {
+            // Default, move right
+            selectedCubeIndex.column++
+        } else if (wrap.elements[selectedCubeIndex.row + 1].length) {
+            // Move onto next row if available
+            if (selectedCubeIndex.column + 2 === wrap.elements[selectedCubeIndex.row].length) {
+                // If cursor reaches position before rightmost position, move onto leftmost spot of next row
+                // Selected cube will still be rightmost cube of current row
+                selectedCubeIndex.column++
+                fixRow.push(cRow.cursorRow)
+                cRow.cursorRow++
+                cursorAnimationDuration = [0, 0];
+                frontCursor = true;
+            } else {
+                // If cursor is already on next row, set selected cube to be first cube on next row
+                selectedCubeIndex.row++
+                selectedCubeIndex.column = 0
+            }
+        } else if (selectedCubeIndex.column + 1 < wrap.elements[selectedCubeIndex.row].length) {
+            // If on last row, move to rightmost spot of last cube
+            selectedCubeIndex.column++
+        };
+
+    };
+
+    alignCursor(cursorAnimationDuration, frontCursor)
+
+    for (let row of fixRow) {
+        for (let node of wrap.elements[row]) {
+            node.dataset.cursorOffset = 0
+        }
+    }
+
+    if (frontCursor) {
+        for (let node of wrap.elements[cRow.cursorRow]) {
+            node.dataset.cursorOffset = 6
+        }
+    } else {
+        for (let i = 0; i < wrap.elements[selectedCubeIndex.row].length; i++) {
+            if (i <= selectedCubeIndex.column) {
+                wrap.elements[selectedCubeIndex.row][i].dataset.cursorOffset = 0;
+            } else {
+                wrap.elements[selectedCubeIndex.row][i].dataset.cursorOffset = 6;
+            }
+        }
+    }
+
+    alignNodes(120)
+
+    console.log(selectedCubeIndex)
+
+}
+
+function alignCursor(duration = [0, 30], frontCursor) {
+
+    let input, selectedCubeIndex, wrap, cursorRow
+    if (currInput === 'solution-container') {
+        input = solutionContainer
+        selectedCubeIndex = inputValues.solution.selectedCubeIndex
+        wrap = inputValues.solution.wrap
+        cursorRow = inputValues.solution.cursorRow
+    } else {
+        input = goalContainer
+        selectedCubeIndex = inputValues.goal.selectedCubeIndex
+        wrap = inputValues.goal.wrap
+        cursorRow = inputValues.goal.cursorRow
+    }
+    let containerWidth = input.offsetWidth
+
+    if (frontCursor) {
+        let cursorLeftBound = (containerWidth - wrap.values[cursorRow]) / 2
+        let cursorPosition = cursorLeftBound + 2
+        cursor.animate(
+            [{ top: 8 + cursorRow * 50 + "px" }], {
+            fill: 'forwards',
+            duration: duration[0],
+            easing: 'ease',
+        });
+        cursor.animate(
+            [{ left: cursorPosition + "px" }], {
+            fill: 'forwards',
+            duration: duration[1],
+            easing: 'ease',
+        });
+
+        cursor.classList.remove('blink-animation')
+        void cursor.offsetWidth;
+        cursor.classList.add('blink-animation')
+        return;
+    }
+
+    if (getSelectedCube() === null) {
+        let cursorPosition = (containerWidth / 2) + 2
+        cursor.animate(
+            [{ top: 8 + "px" }], {
+            fill: 'forwards',
+            duration: duration[1],
+            easing: 'ease',
+        });
+        cursor.animate(
+            [{ left: cursorPosition + "px" }], {
+            fill: 'forwards',
+            duration: duration[1],
+            easing: 'ease',
+        });
+
+        cursor.classList.remove('blink-animation')
+        void cursor.offsetWidth;
+        cursor.classList.add('blink-animation')
+        return;
+    }
+
+    let cursorLeftBound = (containerWidth - wrap.values[selectedCubeIndex.row]) / 2
+    let cursorOffset = parseInt(getSelectedCube().dataset.offset) + 2
+    let cubeWidth = getSelectedCube('width')
+    let cursorPosition = cursorLeftBound + cursorOffset + cubeWidth
+
+    cursor.animate(
+        [{ top: 8 + (selectedCubeIndex.row * 50) + "px" }], {
+        fill: 'forwards',
+        duration: duration[0],
+        easing: 'ease',
+    });
+    cursor.animate(
+        [{ left: cursorPosition + "px" }], {
+        fill: 'forwards',
+        duration: duration[1],
+        easing: 'ease',
+    });
+
+    // Reset cursor animation
+    cursor.classList.remove('blink-animation')
+    void cursor.offsetWidth;
+    cursor.classList.add('blink-animation')
+}
+
+
+document.onkeydown = function (keypress) {
+    if (keypress.key !== 'o') return
+    console.log(solutionContainer.childElementCount)
+    // checkInputWidth2(null)
+};
+
 function changeRows() {
-    let element = solutionContainer; wrap = inputValues.wrapValue
+
+    let element, wrap
+    if (currInput === 'solution-container') {
+        element = solutionContainer
+        wrap = inputValues.solution.wrap
+    } else {
+        element = goalContainer
+        wrap = inputValues.goal.wrap
+    }
+
     let elementHeight, parentHeight, boardHeight;
     elementHeight = 50 + 50 * wrap.row + "px"
     parentHeight = 100 + 50 * wrap.row + "px"
     boardHeight = 450 + 50 * wrap.row + "px"
     element.animate(
-        [{height: elementHeight}], {
-            fill: 'forwards',
-            duration: 100,
-            easing: 'ease',
+        [{ height: elementHeight }], {
+        fill: 'forwards',
+        duration: 100,
+        easing: 'ease',
     });
     element.parentNode.animate(
-        [{height: parentHeight}], {
-            fill: 'forwards',
-            duration: 100,
-            easing: 'ease',
+        [{ height: parentHeight }], {
+        fill: 'forwards',
+        duration: 100,
+        easing: 'ease',
     });
     boardContainer.animate(
-        [{height: boardHeight}], {
-            fill: 'forwards',
-            duration: 100,
-            easing: 'ease',
+        [{ height: boardHeight }], {
+        fill: 'forwards',
+        duration: 100,
+        easing: 'ease',
     });
 }
 
@@ -936,20 +1881,20 @@ function notify(message, color, animation, duration = 1500, height, width) {
     if (animation === 'bounce') {
         notification.animate(
             [
-            {top: 0, opacity: 0, easing: 'ease',},
-            {top: 72 + 'px', opacity: 1, offset: 0.4, easing: 'ease',},
-            {top: 68 + 'px', opacity: 1, offset: 0.8, easing: 'ease',},
-            {top: 70 + 'px', opacity: 1, easing: 'ease',}
+                { top: 0, opacity: 0, easing: 'ease', },
+                { top: 72 + 'px', opacity: 1, offset: 0.4, easing: 'ease', },
+                { top: 68 + 'px', opacity: 1, offset: 0.8, easing: 'ease', },
+                { top: 70 + 'px', opacity: 1, easing: 'ease', }
             ], {
             fill: "forwards",
-            duration: 350,
+            duration: 370,
         });
     }
     if (duration === 'persistent') return;
     notification.animate(
         [
-        {top: 0, opacity: 1, easing: 'ease',},
-        {top: 72 + 'px', opacity: 1, offset: 0.4, easing: 'ease',}
+            { top: 0, opacity: 1, easing: 'ease', },
+            { top: 72 + 'px', opacity: 1, offset: 0.4, easing: 'ease', }
         ], {
         fill: "forwards",
         duration: 300,
@@ -959,7 +1904,7 @@ function notify(message, color, animation, duration = 1500, height, width) {
 }
 
 const variationsArrowBox = document.querySelector('#variations-arrow-box')
-variationsArrowBox.addEventListener('click', function() {
+variationsArrowBox.addEventListener('click', function () {
     this.parentElement.classList.toggle('shown')
 })
 
@@ -1005,14 +1950,14 @@ function toggleSelector(e) {
     selectorContainer.append(upsidedownSetting)
     selectorContainer.append(sidewaysSetting)
     selectorContainer.addEventListener('click', select)
-    
+
     this.classList.toggle('active')
     solutionContainer.classList.toggle('active')
     selectorContainer.classList.toggle('shown')
     selectorBackground.classList.toggle('shown')
     header.classList.toggle('dark')
     keyboardContainer.classList.toggle('dark')
-    variationsArrowBox.parentElement.classList.toggle('dark') // REMOVE
+    variationsArrowBox.parentElement.classList.toggle('dark') // Remove
 }
 
 function hideSelector(e) {
@@ -1033,7 +1978,7 @@ function hideSelector(e) {
     if (e.clientX > minX && e.clientY > minY && e.clientX < maxX && e.clientY < maxY) {
         solutionContainer.classList.add('hover')
     }
-    selectorContainer.addEventListener('transitionend', function() {
+    selectorContainer.addEventListener('transitionend', function () {
         this.remove()
         solutionContainer.classList.remove('hover')
         let activeCube = document.querySelector('.cube.active')
@@ -1047,7 +1992,7 @@ function hideSelector(e) {
     variationsArrowBox.parentElement.classList.remove('dark') // REMOVE
 };
 
-function select(e) {e.stopPropagation()}
+function select(e) { e.stopPropagation() }
 
 function toggleOrientation(e) {
     let cube = this.parentElement.parentElement.parentElement
@@ -1059,15 +2004,38 @@ function toggleOrientation(e) {
     cube.classList.toggle(this.dataset.type)
 }
 
+// Answer Submission
+submitButton.addEventListener('click', submitInput);
+const newAnswer = document.createElement('div')
+const answerBackground = document.createElement('div')
+newAnswer.id = 'new-answer'
+
+answerBackground.id = 'answer-background'
+document.body.append(answerBackground)
+document.body.append(newAnswer)
+
+// When clicking on answer background, hide newAnswer and answerBackground
+answerBackground.addEventListener('click', function () {
+    newAnswer.classList.remove('shown')
+    answerBackground.classList.remove('shown')
+})
+
 function submitInput() {
     try {
         console.log(inputValues)
-        let nodes = solutionContainer.children
-        let arr = inputValues.flatArray
+        let nodes = []
+        let arr = []
+
+        for (let node of inputValues.solution.wrap.elements.flat()) {
+            nodes.push(node)
+            arr.push(translateName(node.classList[0]))
+        }
+
+        console.log(arr)
         let arrString = arr.join("")
         console.log(nodes)
         if (!nodes.length) {
-            notify('Input a Solution!', 'red', 'bounce', 1000, '', '160px'); 
+            notify('Input a Solution!', 'red', 'bounce', 1000, '', '160px');
             console.log('NO SOLUTION 1'); return;
         }
 
@@ -1078,7 +2046,7 @@ function submitInput() {
             console.log('Mismatched Parenthesis'); return;
         };
 
-        // CALCULATION
+        // Calculation
 
         function operation(arr) {
             if (arr.length === 1) {
@@ -1116,14 +2084,14 @@ function submitInput() {
                 return operation([operation(arr.slice(0, 3)), arr[3], ...arr.slice(4, arr.length)])
             }
         };
-        
+
         function evaluate(input) {
-    
+
             // console.groupCollapsed("EVALUATE")
-            
+
             let inputsArr = [input.slice()];
             let returnArr = []
-    
+
             function addPermutation(index, char, replace) {
                 if (inputsArr.length > 50) return;
                 if (replace) {
@@ -1136,7 +2104,7 @@ function submitInput() {
                     };
                 };
             };
-    
+
             function checkValidity(arr) {
                 let string = arr.map(val => {
                     if (number(val).includes('natural')) return 'n'
@@ -1149,7 +2117,7 @@ function submitInput() {
                 if (!/[f][fnjk]|[fnjk][f]|[fnjk]{3,}|([+−x÷l^]){2,}|√[+−x÷l^]|#[+−x÷l^]|[fnjk]#|^[x^]/.test(string)) return true;
                 return false;
             }
-            
+
             for (let i = 0; i < input.length; i++) {
                 let replace = (i === input.length - 1)
                 if (input[i] === '^' && puzzleData.variations.get('base') >= 11) {
@@ -1166,15 +2134,15 @@ function submitInput() {
                     };
                 };
             };
-    
+
             console.log(input)
             console.log(inputsArr)
-    
+
             function number(val) {
                 let arr = []
                 if (typeof val === 'number' || val === 'j' || val === 'k') {
                     arr.push('number', 'complex')
-                    if (val % 1 === 0 || val === 'j' || val === 'k') return ['number','natural','complex']
+                    if (val % 1 === 0 || val === 'j' || val === 'k') return ['number', 'natural', 'complex']
                     if (val < 0) arr.push('negative')
                     if (val % 1 !== 0) arr.push('fraction')
                 } else if (typeof val === "string") {
@@ -1185,10 +2153,10 @@ function submitInput() {
                 }
                 return arr
             }
-    
+
             function numFactors(num) {
                 let length = 0, arr = [];
-            
+
                 function generateDivisors(curIndex, curDivisor, arr) {
                     if (curIndex == arr.length) {
                         length++;
@@ -1199,7 +2167,7 @@ function submitInput() {
                         curDivisor *= arr[curIndex][1];
                     }
                 }
-            
+
                 for (let i = 2; i * i <= num; i++) {
                     if (num % i == 0) {
                         let count = 0;
@@ -1210,25 +2178,25 @@ function submitInput() {
                         arr.push([count, i]);
                     }
                 }
-                if (num > 1) arr.push([ 1, num ]);
+                if (num > 1) arr.push([1, num]);
                 let curIndex = 0, curDivisor = 1;
-            
+
                 generateDivisors(curIndex, curDivisor, arr);
                 return length;
             };
-    
+
             function factorial(num) {
                 if (num < 0 || num % 1 !== 0) return 'Invalid Factorial'
                 let factorial = 1;
                 for (let i = num; i > 0; i--, num--) factorial *= num
                 return factorial
             };
-    
+
             if (!inputsArr.length) throw "No possible interpretations"
             for (let i = 0; i < inputsArr.length; i++) {
                 let arr = []
                 for (let j = 0; j < inputsArr[i].length; j++) {
-    
+
                     function pushNumber(input, index) {
                         if (inputsArr[i][index] === '√') {
                             j++
@@ -1244,13 +2212,13 @@ function submitInput() {
                         let base = puzzleData.variations.get('base') ?? 10
                         return base10(input[index]) * base + base10(input[index + 1])
                     }
-    
+
                     if (inputsArr[i][j] === '√') {
                         let index = (number(inputsArr[i][j - 1]).includes('number')) ? arr.pop() : 2
                         console.log(index)
                         j++
                         let subsequentVal = pushNumber(inputsArr[i], j)
-                        arr.push(Math.pow(subsequentVal, 1/index));
+                        arr.push(Math.pow(subsequentVal, 1 / index));
                     } else if (inputsArr[i][j] === '#') {
                         j++
                         let subsequentVal = pushNumber(inputsArr[i], j)
@@ -1282,23 +2250,23 @@ function submitInput() {
                 }
                 returnArr.push([operation(arr), inputsArr[i]])
             };
-    
+
             console.log(returnArr)
             console.groupEnd()
             return returnArr;
-            
+
         };
-    
+
         function parseInput(arr) {
-    
+
             let index = [0];
             let permutationArr = [[[], [[]]]];
-    
+
             function navigate(currPosition) {
                 for (let i = 0; i < index.length - 1; i++) currPosition = currPosition[index[i]]
                 return currPosition
             };
-    
+
             for (let i = 0; i < arr.length; i++) {
                 for (let permutation of permutationArr.slice()) {
                     let currPosition = navigate(permutation[0])
@@ -1371,7 +2339,7 @@ function submitInput() {
             console.log(returnArr)
             return returnArr;
         };
-    
+
         // let puzzleData = {variations: new Map([['base', 12], ['numberOfFactors', true]])}
         // // −÷√
         // let input = '2iii5+5'.split("")
@@ -1460,7 +2428,7 @@ function submitInput() {
             //     requiredValues = requiredValues.replaceAll(puzzleData.variationsMap.get('wild'), translateName(currWild))
             //     resourcesValues = resourcesValues.replaceAll(puzzleData.variationsMap.get('wild'), translateName(currWild))
             // }
-    
+
             // if (puzzleData.variationsMap.get('wild')) {
             //     arr = arr.replaceAll(puzzleData.variationsMap.get('wild'), translateName(currWild))
             // }
@@ -1483,7 +2451,7 @@ function submitInput() {
                         if (val % 1 !== 0) val = 1 / val;
                         val = Math.abs(val).toString();
                     }
-                    
+
                     let multiOps;
                     if (puzzleData.variations.get('multipleOperations') && operationRegex.test(val)) {
                         multiOps = true
@@ -1513,7 +2481,7 @@ function submitInput() {
         const answerHeader = document.createElement('div')
         answerHeader.id = 'answer-header'
         const backButton = document.createElement('div')
-        backButton.addEventListener('click', () => {answerBackground.click()})
+        backButton.addEventListener('click', () => { answerBackground.click() })
         const newPuzzleButton = document.createElement('div')
         newPuzzleButton.addEventListener('click', () => {
             newPuzzle(queuedPuzzleData)
@@ -1560,8 +2528,7 @@ function submitInput() {
 
 
         let goalArr = puzzleData.variations.get('multipleOf') ? puzzleData.goalModValues : puzzleData.goalValues
-        goalArr = goalArr.sort((a, b) => 
-            {if (a.toString().length < b.toString().length) return -1}
+        goalArr = goalArr.sort((a, b) => { if (a.toString().length < b.toString().length) return -1 }
         )
         console.log(goalArr)
         for (let goal of goalArr) {
@@ -1578,7 +2545,7 @@ function submitInput() {
         goalHorizontalRule.style.width = '86%'
         answerContent.append(goalHorizontalRule)
 
-        // TITLE
+        // Title
         const titleNode = document.createElement('h2')
         titleNode.innerText = 'Your Solution'
         answerContent.append(titleNode)
@@ -1586,7 +2553,14 @@ function submitInput() {
         const inputSolutionContainer = document.createElement('div')
         const inputAnswer = document.createElement('div')
         inputSolutionContainer.classList = 'answer-solution-container'
-        for (let node of solutionContainer.children) inputAnswer.append(node.cloneNode('deep'))
+        inputAnswer.classList = 'answer-solution-sub-container'
+
+        for (let node of nodes) {
+            const newNode = node.cloneNode('deep')
+            newNode.style.left = '0px'
+            newNode.style.top = '0px'
+            inputAnswer.append(newNode)
+        }
         inputSolutionContainer.append(inputAnswer)
         answerContent.append(inputSolutionContainer)
 
@@ -1619,7 +2593,7 @@ function submitInput() {
                         let base = puzzleData.variations.get('base') ?? 10
                         return base10(input[index]) * base + base10(input[index + 1])
                     }
-        
+
                     if (typeof arr[j] === 'number' || arr[j] === 'k' || arr[j] === 'j') {
                         string += (pushNumber(arr, j))
                     } else if (Array.isArray(arr[j])) {
@@ -1665,45 +2639,45 @@ function submitInput() {
         arrowSvg.style.cssText = 'width: 14px; height: 14px; margin-left: 4px;'
         breakdownButton.append(arrowSvg)
 
-        breakdownButton.addEventListener('click', function() {
+        breakdownButton.addEventListener('click', function () {
             this.classList.toggle('active')
             let breakdownHeight
             if (this.classList.contains('active')) {
                 breakdownButtonLabel.innerText = 'Hide Breakdown'
                 breakdownHeight = breakdownHeight1
                 if (Math.abs(answerContent.scrollHeight - answerContent.scrollTop - answerContent.clientHeight) < 1) {
-                    answerContent.scrollTo({top: answerContent.scrollTop - 1})
-                } 
+                    answerContent.scrollTo({ top: answerContent.scrollTop - 1 })
+                }
                 const scrollElement = document.createElement('div')
                 scrollElement.style.cssText = `height: ${breakdownHeight + "px"}; flex-shrink: 0;`
                 answerContent.append(scrollElement)
                 scrollElement.animate(
-                [{height: "0px"}], {
+                    [{ height: "0px" }], {
                     fill: 'forwards',
                     duration: 450,
                     easing: 'cubic-bezier(.13,.94,.37,.99)',
                 });
                 breakdownContainer.animate(
-                [{height: breakdownHeight + "px"}], {
+                    [{ height: breakdownHeight + "px" }], {
                     fill: 'forwards',
                     duration: 450,
                     easing: 'cubic-bezier(.13,.94,.37,.99)',
                 });
                 let height = breakdownContent.offsetTop
-                setTimeout(function () {answerContent.scrollTo({top: height - 108, behavior: 'smooth'})}, 8)
+                setTimeout(function () { answerContent.scrollTo({ top: height - 108, behavior: 'smooth' }) }, 8)
                 // setTimeout(() => {clearInterval(scrollInterval)}, 750)
                 // setTimeout(function() {breakdownContent.scrollIntoView(true, {behavior: "smooth"})}, 700)
                 // setTimeout(function () {breakdownContent.scrollIntoView({behavior: 'smooth', block: 'start'})}, 0)
-             } else {
+            } else {
                 breakdownButtonLabel.innerText = 'Show Breakdown'
                 breakdownHeight = 0
                 breakdownContainer.animate(
-                [{height: breakdownHeight + "px"}], {
+                    [{ height: breakdownHeight + "px" }], {
                     fill: 'forwards',
                     duration: 450,
                     easing: 'cubic-bezier(.13,.94,.37,.99)',
                 });
-             }
+            }
         })
         inputSeparatorDiv.append(breakdownButton)
 
@@ -1740,7 +2714,7 @@ function submitInput() {
                 sideways = true;
                 continue;
             }
-            if (currSymbol === "-")  currSymbol = "−"
+            if (currSymbol === "-") currSymbol = "−"
             if (upsidedown) {
                 solutionCube.classList.add('upsidedown')
                 upsidedown = false;
@@ -1759,7 +2733,7 @@ function submitInput() {
             if (currSymbol === "÷") color = i ? "blue" : "black"
             if (currSymbol === "!") color = "red"
             solutionCube.classList.add(color)
-            
+
             solutionCube.classList.add(translateName(currSymbol))
             solutionCube.innerText = currSymbol
 
@@ -1789,9 +2763,10 @@ function submitInput() {
     }
 };
 
-document.addEventListener('keydown', function(keypress){
+document.addEventListener('keydown', function (keypress) {
     if (keypress.key !== 'p') return
     console.log(inputValues)
+    console.log(inputValues.solution.cursorRow)
 
     // answerContent.scrollTo({top: answerContent.scrollTop - 10})
     // console.log(answerContent.scrollTop)

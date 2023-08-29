@@ -1,28 +1,24 @@
 let setTimer = new Date()
 
+// Start of functions
 function getVariation(variation) {
     console.log()
     return puzzleData.variations[puzzleData.variations.findIndex(val => Object.keys(val)[0] === variation)][variation]
 };
-
 function test() {
     let stopTimer = new Date(); console.log((stopTimer.getTime() - setTimer.getTime())/1000 + " SECONDS");
 };
-
 function getRandomNumber(min, max) {
     return Math.floor(Math.random() * (max + 1 - min)) + min;
 };
-
 function deleteFirstArrItem(array, item) {
     if (!array.includes(item)) return array;
     let index = array.indexOf(item);
     return array.slice(0, index).concat(array.slice(index + 1));
 };
-
 function filterDuplicates(arr) {
     return [...new Set(arr)]
 };
-
 function randomSort(input) {
     let arr = [...input]
     for (let i = arr.length -1; i > 0; i--) {
@@ -33,7 +29,6 @@ function randomSort(input) {
     }
     return arr;
 };
-
 function calcScore(inputArr, type = 1) {
     let score = [0, 0, 0, 0, 0, false, false, false]
     if (type === 2) {
@@ -71,7 +66,6 @@ function calcScore(inputArr, type = 1) {
     };
     return score;
 };
-
 function translateName(input) {
     switch (input) {
         case "B": return "blue";
@@ -95,81 +89,166 @@ function translateName(input) {
         case "universe": return "V";
         case "empty-set": return "Ʌ";
     }
-}
+};
+function addColorChild(card, color) {
+    const newColor = document.createElement('div')
+    newColor.classList.add(color)
+    card.append(newColor)
+};
+// End of functions
+
+// Create Elements
+const cursor = document.createElement('div')
+cursor.id = 'cursor'
+cursor.classList.add('blink-animation')
 
 let puzzleParamaters = 
 {
-    'randomize': 
+    randomize: 
         false,
-    'setCubes': 
+    setCubes: 
         [   
             ["R", "G", "G", "V", "Y", "B"],
             [1, 3, 5],
             ["'", "-", "-", "-"],
             ["<", "="]
         ],
-    'setUniverse':
+    setUniverse:
         ['RG', 'BRY', 'RGY', 'B', 'BRG', 'Y', 'BG', '', 'BRGY', 'G', 'R', 'BY', 'RY'],
-    'setVariations':
+    setVariations:
         ['symmetricDifference', 'blankWild', 'wild', 'requiredCube'],
-    'setVariationsLength': 
+    setVariationsLength: 
         4,
-    'setGoal':
+    setGoal:
         {
-            'goalArr': [5, "*", 1, "*", 2],
-            'goalValues': [10],
-            'goalShape': 5
+            goalArr: [5, "*", 1, "*", 2],
+            goalValues: [10],
+            goalShape: 5
         },
-    'setForbidden':
+    setForbidden:
         {
-            'forbiddenArrLength': 0
+            forbiddenArrLength: 0
         },
-    'forceSymmetricDifference': true,
+    forceSymmetricDifference: true,
 }
 
+// RESTRICTIONLESS PUZZLE
+// puzzleParamaters = 
+// {
+//     'randomize': 
+//         false,
+//     'setCubes': 
+//         [   
+//             ["R", "G", "B"],
+//             [1, 3, 5],
+//             ["'", "-", "-", "-"],
+//             ["<", "="]
+//         ],
+//     'setUniverse':
+//         ['RG', 'BRY', 'RGY', 'B', 'BRG', 'Y', 'BG', '', 'BRGY', 'G', 'R', 'BY', 'RY'],
+//     'setVariations':
+//         ['symmetricDifference', 'double'],
+//     'setVariationsLength': 
+//         2,
+//     'setGoal':
+//         {
+//             'goalArr': [5, "*", 1, "*", 2],
+//             'goalValues': [10],
+//             'goalShape': 5
+//         },
+//     'setForbidden':
+//         {
+//             'forbiddenArrLength': 0
+//         },
+//     'forceSymmetricDifference': true,
+// }
+
+// puzzleParamaters = 
+// {
+//     'randomize': 
+//         false,
+//     'setCubes': 
+//         [   
+//             ["B", "G", "Y", "B"],
+//             [1, 3, 5],
+//             ["'", "-", "U", "-"],
+//             ["V", "<"]
+//         ],
+//     'setUniverse':
+//         ['RG', 'BRY', 'RGY', 'B', 'BRG', 'Y', 'BG', '', 'BRGY', 'G', 'R', 'BY', 'RY'],
+//     'setVariations':
+//         ['symmetricDifference', 'double', 'twoSolutions'],
+//     'setVariationsLength': 
+//         3,
+//     'setGoal':
+//         {
+//             'goalArr': [5, "*", 1, "*", 2],
+//             'goalValues': [10],
+//             'goalShape': 5
+//         },
+//     'setForbidden':
+//         {
+//             'forbiddenArrLength': 0
+//         },
+//     'forceSymmetricDifference': true,
+// }
+
 puzzleParamaters = {
-    'randomize': undefined,
-    'setCubes': undefined,
-    'setUniverse': undefined,
-    'setVariations': [],
-    // 'setVariations':
-    //     ['symmetricDifference', 'blankWild', 'wild', 'twoSolutions'],
-    'setVariationsLength': 6,
-    'setGoal': undefined,
-    'setForbidden': undefined,
-    'forceSymmetricDifference': undefined,
+    randomize: undefined,
+    setCubes: undefined,
+    setUniverse: undefined,
+    setVariations: [],
+    // setVariations:
+    //     [ 'double', 'symmetricDifference'],
+    setVariationsLength: 6,
+    // setVariationsLength: 2,
+    setGoal: undefined,
+    setForbidden: undefined,
+    forceSymmetricDifference: undefined,
 }
 
 // NEW PUZZLE
 function newPuzzle() {
     console.group("NEW PUZZLE")
 
-    // RESETTING CONTAINERS
+    // Reset Containers
+    inputValues.selectedCubeIndex = {
+        setNameArr1: {row: 0, column: null},
+        setNameArr2: {row: 0, column: null},
+        restrictionArr1: {row: 0, column: null},
+        restrictionArr2: {row: 0, column: null},
+    },
+    inputValues.cursorRow = {
+        setNameArr1: [0],
+        setNameArr2: [0],
+        restrictionArr1: [0],
+        restrictionArr2: [0],
+    },
     inputValues.flatArray = {
-        "setNameArr1": [],
-        "setNameArr2": [],
-        "restrictionArr1": [],
-        "restrictionArr2": []
+        setNameArr1: [],
+        setNameArr2: [],
+        restrictionArr1: [],
+        restrictionArr2: []
     };
-    inputValues.wrapValue = {
-        "setNameArr1": {'values':[0, 0], 'row':0},
-        "setNameArr2": {'values':[0, 0], 'row':0},
-        "restrictionArr1": {'values':[0, 0], 'row':0},
-        "restrictionArr2": {'values':[0, 0], 'row':0}
-    };
+    inputValues.wrap = {
+        setNameArr1: {elements: [[], []], widths: [[], []], values: [0, 0], row: 0},
+        setNameArr2: {elements: [[], []], widths: [[], []], values: [0, 0], row: 0},
+        restrictionArr1: {elements: [[], []], widths: [[], []], values: [0, 0], row: 0},
+        restrictionArr2: {elements: [[], []], widths: [[], []], values: [0, 0], row: 0},
+    },
     inputValues.divNodes = {
-        "setNameArr1": [],
-        "setNameArr2": [],
-        "restrictionArr1": [],
-        "restrictionArr2": []
+        setNameArr1: [],
+        setNameArr2: [],
+        restrictionArr1: [],
+        restrictionArr2: []
     };
     inputValues.blankWild = {
-        "solution1": [false, false, false, false],
-        "solution2": [false, false, false, false]
+        solution1: [false, false, false, false],
+        solution2: [false, false, false, false]
     };
     inputValues.wildCube = {
-        "solution1": undefined,
-        "solution2": undefined
+        solution1: null,
+        solution2: null
     }
     restrictionContainer.innerHTML = ""
     solutionContainer.innerHTML = ""
@@ -188,21 +267,33 @@ function newPuzzle() {
     for (let cell of map.querySelectorAll("td")) {
         cell.classList.remove('whitebg')
     }
+    for (let x of mapArr) {
+        x.classList.remove('strike-through')
+    }
+    for (let key of keyboardContainer.querySelectorAll('.wild-cube')) {
+        key.classList.remove('wild-cube')
+    }
+
     goalContainer.innerHTML = ""
     goalContainer.parentElement.classList.remove('three-rows')
 
-    for (let x of mapArr) x.classList.remove('strike-through')
-    for (let key of keyboardContainer.querySelectorAll('.wild-cube')) key.classList.remove('wild-cube')
+    changeRows(restrictionContainer, inputValues.wrap.restrictionArr2, false, 0)
+    changeRows(solutionContainer, inputValues.wrap.setNameArr2, true, 0)
 
-    changeRows(restrictionContainer, inputValues.wrapValue.restrictionArr2)
-    changeRows(solutionContainer, inputValues.wrapValue.setNameArr2, true)
-
-    // GEN NEW PUZZLE
-
+    // Generate New Puzzle
     params = Object.values(puzzleParamaters)
     console.log(params)
 
+    console.log(workers)
+    if (workers.mainWorker) {
+        workers.mainWorker.terminate()
+    }
+    if (workers.queueWorker) {
+        workers.queueWorker.terminate()
+    }
+
     const mainPuzzleWorker = new Worker('onsets_worker.js');
+    workers.mainWorker = mainPuzzleWorker;
 
     if (queuedPuzzleData) {
         mainPuzzleWorker.postMessage([
@@ -215,11 +306,21 @@ function newPuzzle() {
 
     mainPuzzleWorker.onmessage = (e) => {
         puzzleData = e.data
+
+        // Display Blank Wild and Solution Toggle (If Applicable)
         blankWild = puzzleData.variations.includes('blankWild')
         twoSolutions = puzzleData.variations.includes('twoSolutions')
         blankWildContainer.style.display = (blankWild) ? '' : 'none'
-        solutionFormContainter.style.display = (twoSolutions) ? '' : 'none'
-        console.log(puzzleData.variationsMap.get('wild'))
+        solutionFormContainer.style.display = (twoSolutions) ? '' : 'none'
+
+        // Move solution toggle if goal is too tall
+        if (puzzleData.goalShape === 5 && twoSolutions) {
+            requiredContainer.parentElement.append(solutionFormContainer)
+        } else {
+            rightInputContainer.append(solutionFormContainer)
+        }
+        
+        // Set Wild Cube
         if (puzzleData.variationsMap.get('wild')) {
             inputValues.wildCube.solution1 = translateName(puzzleData.variationsMap.get('wild'))
             inputValues.wildCube.solution2 = translateName(puzzleData.variationsMap.get('wild'))
@@ -228,7 +329,22 @@ function newPuzzle() {
                 if (key.classList[1] === translateName(puzzleData.variationsMap.get('wild'))) key.classList.add('wild-cube')
             }
         }
+        let wildCubeName = null
+        switch (puzzleData.variationsMap.get('wild')) {
+            case "R": wildCubeName = 'red'; break;
+            case "B": wildCubeName = 'blue'; break;
+            case "G": wildCubeName = 'green'; break;
+            case "Y": wildCubeName = 'yellow'; break;
+            case "U": wildCubeName = 'union'; break;
+            case "∩": wildCubeName = 'intersect'; break;
+            case "-": wildCubeName = 'subtract'; break;
+            case "'": wildCubeName = 'not'; break;
+            case "V": wildCubeName = 'universe'; break;
+            case "Ʌ": wildCubeName = 'empty-set'; break;
+        }
+        console.log("WILD CUBE NAME: " + wildCubeName)
         
+        // Display forbidden cubes
         console.log(puzzleData);
         console.log(puzzleData.forbidden)
         for (let forbiddenCube of puzzleData.forbidden) {
@@ -244,9 +360,8 @@ function newPuzzle() {
             };
             forbiddenContainer.append(newForbiddenCube);
         };
-        let solutionScores = []
 
-        // GOAL
+        // Display goal cubes
         function goalAddCube(cube, row) {
             const newGoalCube = document.createElement("div")
             if (cube < 0) newGoalCube.classList.add('upsidedown')
@@ -258,7 +373,6 @@ function newPuzzle() {
         console.log(puzzleData.goalShape)
         let goalRow = document.createElement('div')
         goalRow.classList.add('goal-row')
-        // puzzleData.goalShape = 5;
         switch (puzzleData.goalShape) {
             case 1:
                 goalContainer.append(goalRow)
@@ -309,7 +423,9 @@ function newPuzzle() {
                 break;
         }
 
-        // REQUIRED
+        // Determine required cubes from solutions
+        let solutionScores = []
+
         if (puzzleData.variations.includes("twoSolutions")) {
             console.log(puzzleData.solution)
             for (let currSolution of puzzleData.solution) {
@@ -337,11 +453,12 @@ function newPuzzle() {
         let resourcesArr = puzzleData.modifiedCubes[0].concat(puzzleData.modifiedCubes[2]).concat(puzzleData.modifiedCubes[3])
         console.log(resourcesArr)
 
+        // Create required and resources arr
         requiredContainer.dataset.values = ""
         resourcesContainer.dataset.values = ""
 
         for (let i = 0; i < highStandard.length; i++) {
-            const cube = {'name': undefined, 'symbol': undefined};
+            const cube = {name: null, symbol: null};
             switch(i) {
                 case 0: cube.name = "blue"; cube.symbol = 'B'; break;
                 case 1: cube.name = "red"; cube.symbol = 'R'; break;
@@ -380,21 +497,8 @@ function newPuzzle() {
             resourcesArr = deleteFirstArrItem(resourcesArr, x);
             (x === "<") ? requiredArr.push("must-contain") : requiredArr.push("equals");
         }
-        let wildCubeName = undefined
-        switch (puzzleData.variationsMap.get('wild')) {
-            case "R": wildCubeName = 'red'; break;
-            case "B": wildCubeName = 'blue'; break;
-            case "G": wildCubeName = 'green'; break;
-            case "Y": wildCubeName = 'yellow'; break;
-            case "U": wildCubeName = 'union'; break;
-            case "∩": wildCubeName = 'intersect'; break;
-            case "-": wildCubeName = 'subtract'; break;
-            case "'": wildCubeName = 'not'; break;
-            case "V": wildCubeName = 'universe'; break;
-            case "Ʌ": wildCubeName = 'empty-set'; break;
-        }
-        console.log(wildCubeName)
-        console.log(puzzleData.variationsMap.get('wild'))
+
+        // Place cubes from required arr into required
         for (let requiredCube of requiredArr) {
             const newRequiredCube = document.createElement("div")
             newRequiredCube.classList.add("cube", "restraint-cube", requiredCube);
@@ -404,6 +508,8 @@ function newPuzzle() {
             }
             requiredContainer.append(newRequiredCube);
         };
+
+        // Place cubes from resources arr into resources
         console.log(resourcesArr)
         for (let resourceCube of resourcesArr) {
             const newResourcesCube = document.createElement("div")
@@ -429,6 +535,7 @@ function newPuzzle() {
         }
         console.log(filterDuplicates(puzzleData.universe))
 
+        // Display Map
         for (let cell of mapArr) {
             if (!cell.dataset.hasStrikeThrough) {
                 cell.dataset.hasStrikeThrough = true;
@@ -438,6 +545,7 @@ function newPuzzle() {
             }
         }
 
+        // Display Cards
         for (let card of filterDuplicates(puzzleData.universe)) {
             switch (card) {
                 case "BR": mapArr[0].classList.add('whitebg'); break;
@@ -477,6 +585,7 @@ function newPuzzle() {
             cardsContainer.append(newCard)
         }
 
+        // Display Variations
         console.log(variationsContainer)
         const variationsDisplay = variationsContainer.querySelector('ul')
         for (let x of puzzleData.variations) {variationsDisplay.append(document.createElement('li'))}
@@ -507,27 +616,54 @@ function newPuzzle() {
         console.log(puzzleData.variations)
         console.log(variationsDisplay)
         
+        // Queue New Puzzle
         const queuePuzzleWorker = new Worker('onsets_worker.js');
+        workers.queueWorker = queuePuzzleWorker
         queuePuzzleWorker.postMessage(params)
 
         queuePuzzleWorker.onmessage = (e) => {
             queuedPuzzleData = e.data
             queuePuzzleWorker.terminate();
+            console.log("DONE QUEUE PUZZLE")
         }
         console.groupEnd()
 
         mainPuzzleWorker.terminate();
+
+        // currInput = 'restriction1'
+        // inputCube('green')
+        // inputCube('must-contain')
+        // inputCube('blue')
+        // inputCube('intersect')
+        // inputCube('red')
+        // currInput = "setName1"
+        // inputCube('blue')
+        // inputCube('union')
+        // inputCube('left-parenthesis')
+        // inputCube('red')
+        // inputCube('intersect')
+        // inputCube('green')
+        // inputCube('right-parenthesis')
+        // solutionFormToggleDiv.click()
+        // currInput = 'restriction2'
+        // inputCube('green')
+        // inputCube('must-contain')
+        // inputCube('yellow')
+        // currInput = "setName2"
+        // inputCube('blue')
+        // inputCube('intersect')
+        // inputCube('left-parenthesis')
+        // inputCube('green')
+        // inputCube('union')
+        // inputCube('red')
+        // inputCube('right-parenthesis')
+        // submitInput()
     };
 };
 
-function addColorChild(card, color) {
-    const newColor = document.createElement('div')
-    newColor.classList.add(color)
-    card.append(newColor)
-};
-// HEADING 
+// Heading
 const settingsIcon = document.querySelector('#settings-ico')
-// CUBE CONTAINERS
+// Cube Containers
 const boardContainer = document.querySelector('#board-container')
 const forbiddenContainer = document.querySelector('#forbidden-container');
 const requiredContainer = document.querySelector('#required-container');
@@ -535,48 +671,66 @@ const resourcesContainer = document.querySelector('#resources-container');
 const solutionContainer = document.querySelector('#solution-container');
 const restrictionContainer = document.querySelector('#restriction-container');
 const goalContainer = document.querySelector('#goal-container');
-// MISC PUZZLE CONTAINERS
+// Misc. Puzzle Containers
 const cardsContainer = document.querySelector('#cards-container');
 const variationsContainer = document.querySelector('#variations-container')
 const map = document.querySelector('#map')
 const blankWildContainer = document.querySelector('#blank-wild-container')
 const submitButton = document.querySelector('#submit-button');
 const mapArr = map.querySelectorAll("td")
-// TWO SOLUTIONS TOGGLE
-const solutionFormContainter = document.querySelector('#solution-form-container')
+// Two Solutions Toggle
+const rightInputContainer = document.querySelector('#right-input-container')
+const solutionFormContainer = document.querySelector('#solution-form-container')
 const solution1Toggle = document.querySelector('#solution1-toggle')
 const solution2Toggle = document.querySelector('#solution2-toggle')
 const solutionFormToggleDiv = document.querySelector('#solution-form-toggle-div')
-// KEYBOARD
+// Keyboard
 const keyboardContainer = document.querySelector('#keyboard-container');
 const keyboardButtons = document.querySelectorAll(".keyboard-row > div")
 
+const workers = {
+    mainWorker: null,
+    queueWorker: null
+}
+
 const inputValues = {
-    "flatArray": {
-        "setNameArr1": [],
-        "setNameArr2": [],
-        "restrictionArr1": [],
-        "restrictionArr2": []
+    selectedCubeIndex: {
+        setNameArr1: {row: 0, column: null},
+        setNameArr2: {row: 0, column: null},
+        restrictionArr1: {row: 0, column: null},
+        restrictionArr2: {row: 0, column: null},
     },
-    "wrapValue": {
-        "setNameArr1": {'values':[0, 0], 'row':0},
-        "setNameArr2": {'values':[0, 0], 'row':0},
-        "restrictionArr1": {'values':[0, 0], 'row':0},
-        "restrictionArr2": {'values':[0, 0], 'row':0}
+    cursorRow: {
+        setNameArr1: [0],
+        setNameArr2: [0],
+        restrictionArr1: [0],
+        restrictionArr2: [0],
     },
-    "divNodes": {
-        "setNameArr1": [],
-        "setNameArr2": [],
-        "restrictionArr1": [],
-        "restrictionArr2": []
+    flatArray: {
+        setNameArr1: [],
+        setNameArr2: [],
+        restrictionArr1: [],
+        restrictionArr2: [],
     },
-    "blankWild": {
-        "solution1": [false, false, false, false],
-        "solution2": [false, false, false, false]
+    wrap: {
+        setNameArr1: {elements: [[], []], widths: [[], []], values: [0, 0], row: 0},
+        setNameArr2: {elements: [[], []], widths: [[], []], values: [0, 0], row: 0},
+        restrictionArr1: {elements: [[], []], widths: [[], []], values: [0, 0], row: 0},
+        restrictionArr2: {elements: [[], []], widths: [[], []], values: [0, 0], row: 0},
     },
-    "wildCube": {
-        "solution1": undefined,
-        "solution2": undefined
+    divNodes: {
+        setNameArr1: [],
+        setNameArr2: [],
+        restrictionArr1: [],
+        restrictionArr2: [],
+    },
+    blankWild: {
+        solution1: [false, false, false, false],
+        solution2: [false, false, false, false],
+    },
+    wildCube: {
+        solution1: null,
+        solution2: null,
     }
 };
 let activeSolution = 'solution1';
@@ -593,9 +747,276 @@ let stopTimer = new Date(); console.log((stopTimer.getTime() - setTimer.getTime(
 console.log(' > DONE')
 
 keyboardContainer.addEventListener('click', function(e) {e.stopPropagation()})
+document.addEventListener('click', hideKeyboard);
+
+restrictionContainer.addEventListener('click', showKeyboard);
+solutionContainer.addEventListener('click', showKeyboard);
+
+function showKeyboard(e) {
+    
+    let target = (e.target.id) ? e.target.id : e.target.parentNode.id
+    const targetElement = document.querySelector(`#${target}`)
+
+    e.stopPropagation();
+    cursor.classList.add('blink-animation')
+    keyboardContainer.classList.remove("hidden")
+
+    let wrap, container, selectedCubeIndex, row, column, cursorRow, frontCursor, clickedRow
+    switch (currInput) {
+        case "restriction1":
+            container = restrictionContainer;
+            wrap = inputValues.wrap.restrictionArr1;
+            selectedCubeIndex = inputValues.selectedCubeIndex.restrictionArr1
+            cursorRow = inputValues.cursorRow.restrictionArr1
+            break;
+        case "setName1":
+            container = solutionContainer;
+            wrap = inputValues.wrap.setNameArr1
+            selectedCubeIndex = inputValues.selectedCubeIndex.setNameArr1
+            cursorRow = inputValues.cursorRow.setNameArr1
+            break;
+        case "restriction2":
+            container = restrictionContainer;
+            wrap = inputValues.wrap.restrictionArr2;
+            selectedCubeIndex = inputValues.selectedCubeIndex.restrictionArr2
+            cursorRow = inputValues.cursorRow.restrictionArr2
+            break;
+        case "setName2":
+            container = solutionContainer;
+            wrap = inputValues.wrap.setNameArr2;
+            selectedCubeIndex = inputValues.selectedCubeIndex.setNameArr2
+            cursorRow = inputValues.cursorRow.setNameArr2
+            break;
+        default:
+    };
+
+    if (!targetElement.classList.contains('active') && currInput) {
+
+        const activeContainer = document.querySelector('#restriction-container.active, #solution-container.active')
+        if (activeContainer) {
+            activeContainer.classList.remove('active')
+        }
+        for (let row of wrap.elements) {
+            for (let node of row) {
+                node.dataset.cursorOffset = 0
+            }
+        }
+        selectedCubeIndex.row = wrap.row
+        cursorRow[0] = wrap.row
+        selectedCubeIndex.column = wrap.elements[wrap.row].length - 1
+
+        alignCursor()
+        alignNodes()
+    }
+
+    if (targetElement.classList.contains('active')) {
+
+        let previousSelectedCubeRow
+        
+        if (getSelectedCube()) {
+            previousSelectedCubeRow = getSelectedCube().dataset.row
+        } else {
+            previousSelectedCubeRow = 0
+        }
+
+        if (e.target === container) {
+
+            row = Math.floor((e.offsetY - 2) / 50)
+            
+            if (row < 0) row = 0;
+            if (row > wrap.row) row--
+
+            cursorRow[0] = row
+            clickedRow = row
+
+            let leftBound = (container.offsetWidth - wrap.values[row]) / 2
+            let rightBound = leftBound + wrap.values[row]
+            if (e.offsetX < leftBound) { // Clicked to the left of all cubes
+
+                frontCursor = true;
+                if (row > 0) { // Ensure cube is not very first cube
+                    row--
+                    column = wrap.elements[row].length - 1
+                } else { // If cube is first cube, set index accordingly
+                    row = 0
+                    column = null
+                }
+
+            } else if (e.offsetX > rightBound) { // Clicked to the right of all cubes
+                column = wrap.widths[row].length - 1
+                // Move cursor to first position of next row if applicable
+
+                if (wrap.row > row) { 
+                    clickedRow = row + 1
+                    cursorRow[0] = row + 1
+                    frontCursor = true;
+                }
+
+            } else {
+
+                let difference = e.offsetX - leftBound
+                column = -1;
+                if (difference === 0) column = 0;
+                for (let i = 0; difference > 0; i++) {
+                    difference -= wrap.widths[row][i]
+                    column++
+                }
+
+                let clickedCube = wrap.elements[row][column]
+
+                // Clicking on left half of cube will keep column same as left cube
+                let halfWidth = (clickedCube.classList.contains('cube')) ? 23 : 8
+                if (difference + halfWidth < 0) {
+                    if (column > 0) { // Default, select cube to the left
+                        column--
+                    } else {  // If cube is first of its row
+                        frontCursor = true;
+                        if (row === 0) { // Cube is very first cube
+                            column = null
+                        } else { // Default, select last cube of previous row
+                            row--
+                            column = wrap.elements[row].length - 1
+                        }
+                    }
+                } else if (column === wrap.elements[row].length - 1) { // If clicked to the right of last cube in row
+                    if (wrap.row > row) { // Move cursor to first position of next row if applicable
+                        clickedRow = row + 1
+                        cursorRow[0] = row + 1
+                        frontCursor = true;
+                    }
+                }
+
+            } 
+
+        } else {
+
+            let clickedCube = e.target
+            if (clickedCube.classList.contains('pointer')) return;
+            let halfWidth = (clickedCube.classList.contains('cube')) ? 23 : 8
+            clickedRow = parseInt(clickedCube.dataset.row)
+            row = clickedRow
+            column = wrap.elements[clickedRow].indexOf(clickedCube)
+            cursorRow[0] = clickedRow
+            // Clicking on left half of cube select the previous cube
+            if (e.offsetX < halfWidth) {
+                if (column > 0) { // Default, select cube to the left
+                    column--
+                } else { // If cube is first of its row
+                    frontCursor = true;
+                    if (row === 0) { // Cube is very first cube
+                        column = null
+                    } else { // Default, select last cube of previous row
+                        row--
+                        column = wrap.elements[row].length - 1
+                    }
+                }
+            } else if (column === wrap.elements[row].length - 1) {
+                // If clicked to the right of last cube in row
+                if (wrap.row > row) { // Move cursor to first position of next row if applicable
+                    clickedRow = row + 1
+                    cursorRow[0] = row + 1
+                    frontCursor = true;
+                }
+            }
+        }
+        selectedCubeIndex.row = row
+        selectedCubeIndex.column = column
+
+        for (let i = 0; i < wrap.elements[previousSelectedCubeRow].length; i++) {
+            if (cursorRow[0] == previousSelectedCubeRow) break;
+            wrap.elements[previousSelectedCubeRow][i].dataset.cursorOffset = 0
+        }
+        for (let i = 0; i < wrap.elements[clickedRow].length; i++) {
+            if (i > column || frontCursor) {
+                wrap.elements[clickedRow][i].dataset.cursorOffset = 6
+            } else [
+                wrap.elements[clickedRow][i].dataset.cursorOffset = 0
+            ]
+        }
+
+        alignCursor([70, 70], frontCursor)
+        alignNodes()
+
+    } else if (target === 'restriction-container') {
+        if (puzzleData.metaData.includes('noRestrictions')) {
+            notify('No Restriction Cubes Avaiable!', 'red', 'bounce', 1000, '40px', '260px')
+            hideKeyboard()
+            return;
+        }
+        currInput = (activeSolution === 'solution1') ? 'restriction1' : 'restriction2'
+        restrictionContainer.classList.add('active')
+        restrictionContainer.append(cursor)
+        alignCursor([0, 0])
+    } else {
+        currInput = (activeSolution === 'solution1') ? 'setName1' : 'setName2'
+        solutionContainer.classList.add('active')
+        solutionContainer.append(cursor)
+        alignCursor([0, 0])
+    };
+};
+
+function hideKeyboard() {
+
+    if (!currInput) return;
+
+    const activeContainer = document.querySelector('#restriction-container.active, #solution-container.active')
+
+    let selectedCubeIndex, wrap, cursorRow
+    switch (currInput) {
+        case "restriction1":
+            cursorRow = inputValues.cursorRow.restrictionArr1;
+            wrap = inputValues.wrap.restrictionArr1;
+            selectedCubeIndex = inputValues.selectedCubeIndex.restrictionArr1
+            break;
+        case "setName1":
+            cursorRow = inputValues.cursorRow.setNameArr1;
+            wrap = inputValues.wrap.setNameArr1
+            selectedCubeIndex = inputValues.selectedCubeIndex.setNameArr1
+            break;
+        case "restriction2":
+            cursorRow = inputValues.cursorRow.restrictionArr2;
+            wrap = inputValues.wrap.restrictionArr2;
+            selectedCubeIndex = inputValues.selectedCubeIndex.restrictionArr2
+            break;
+        case "setName2":
+            cursorRow = inputValues.cursorRow.setNameArr2;
+            wrap = inputValues.wrap.setNameArr2;
+            selectedCubeIndex = inputValues.selectedCubeIndex.setNameArr2
+            break;
+    };
+
+    if (wrap) { // Clicked on container while another container was still active
+        for (let row of wrap.elements) {
+            for (let node of row) {
+                node.dataset.cursorOffset = 0
+            }
+        }
+
+        selectedCubeIndex.row = wrap.row
+        cursorRow[0] = wrap.row
+        selectedCubeIndex.column = wrap.elements[wrap.row].length - 1
+        alignCursor()
+        alignNodes()
+    }
+
+    cursor.classList.remove('blink-animation')
+    if (activeContainer) {
+        activeContainer.classList.remove('active')
+    }
+    keyboardContainer.classList.add("hidden")
+
+    currInput = null;
+}
+
+// Add colors when clicking on Blank Wild Card
 blankWildContainer.addEventListener('click', (e) => {
+    // If not clicking on color, then return
     if (e.target.classList.value.includes('card')) return;
+
+    // Else, add toggle wild classlist to display color
     e.target.classList.toggle('wild')
+
+    // Toggle color index in inputValues
     let index;
     switch (e.target.classList[0]) {
         case "blue": index = 0; break;
@@ -610,27 +1031,51 @@ blankWildContainer.addEventListener('click', (e) => {
     };
 })
 
-solutionFormContainter.addEventListener('click', toggleSolution)
 
-// TOGGLE SOLUTION
+// Toggle between Solution 1 and 2:
+solutionFormContainer.addEventListener('click', toggleSolution)
 function toggleSolution(e) {
+
+    // If clicking on active toggle, return
     if (e.target.dataset.active === 'true') return;
+
+    // Else, move toggle and swap inputs
     solutionFormToggleDiv.classList.toggle('move')
-    if (solutionFormToggleDiv.classList.contains('move')) {    // CLICKED ON SECOND TOGGLE
+
+    if (solutionFormToggleDiv.classList.contains('move')) {
+        // Clicked on second toggle
+
+        // Swap active toggles
         solution1Toggle.dataset.active = 'false'
         solution2Toggle.dataset.active = 'true'
         activeSolution = 'solution2'
+
+        // Replace current divNodes with that from other input
         inputValues.divNodes.restrictionArr1 = []
         inputValues.divNodes.setNameArr1 = []
         for (let node of restrictionContainer.children) inputValues.divNodes.restrictionArr1.push(node.cloneNode())
         for (let node of solutionContainer.children) inputValues.divNodes.setNameArr1.push(node.cloneNode())
+
+        // Replace current inputs with that from other input 
         restrictionContainer.innerHTML = ""
         solutionContainer.innerHTML = ""
-        for (let node of inputValues.divNodes.restrictionArr2) restrictionContainer.append(node)
-        for (let node of inputValues.divNodes.setNameArr2) solutionContainer.append(node)
-        for (let node of restrictionContainer.children) if (node.classList.contains('wild-cube')) node.addEventListener('click', toggleWildPicker)
-        for (let node of solutionContainer.children) if (node.classList.contains('wild-cube')) node.addEventListener('click', toggleWildPicker)
+        for (let node of inputValues.wrap.restrictionArr2.elements.flat()) restrictionContainer.append(node)
+        for (let node of inputValues.wrap.setNameArr2.elements.flat()) solutionContainer.append(node)
+
+        // Add wild picker event to wild cubes and set style
+        for (let node of restrictionContainer.children) {
+            if (node.classList.contains('wild-cube')) {
+                node.addEventListener('click', toggleWildPicker)
+            }
+        }
+        for (let node of solutionContainer.children) {
+            if (node.classList.contains('wild-cube')) {
+                node.addEventListener('click', toggleWildPicker)
+            }
+        }
         changeWildStyle(inputValues.wildCube.solution2)
+
+        // Replace blank wild card with that from other input
         if (blankWild) {
             for (let i = 0; i < blankWildContainer.children.length; i++) {
                 if (inputValues.blankWild.solution2[i]) {
@@ -640,30 +1085,58 @@ function toggleSolution(e) {
                 }
             }
         }
-        if (inputValues.wrapValue.restrictionArr2.row !== inputValues.wrapValue.restrictionArr1.row
-        && inputValues.wrapValue.setNameArr2.row !== inputValues.wrapValue.setNameArr1.row) {
-            changeRows(restrictionContainer, inputValues.wrapValue.restrictionArr2)
-            changeRows(solutionContainer, inputValues.wrapValue.setNameArr2, true)
-        } else if (inputValues.wrapValue.restrictionArr2.row !== inputValues.wrapValue.restrictionArr1.row) {
-            changeRows(restrictionContainer, inputValues.wrapValue.restrictionArr2)
-        } else if (inputValues.wrapValue.setNameArr2.row !== inputValues.wrapValue.setNameArr1.row) {
-            changeRows(solutionContainer, inputValues.wrapValue.setNameArr2)
+
+        // Fix row sizes
+        if (inputValues.wrap.restrictionArr2.row !== inputValues.wrap.restrictionArr1.row
+            && inputValues.wrap.setNameArr2.row !== inputValues.wrap.setNameArr1.row) {
+            changeRows(restrictionContainer, inputValues.wrap.restrictionArr2)
+            changeRows(solutionContainer, inputValues.wrap.setNameArr2, true)
+        } else if (inputValues.wrap.restrictionArr2.row !== inputValues.wrap.restrictionArr1.row) {
+            changeRows(restrictionContainer, inputValues.wrap.restrictionArr2)
+        } else if (inputValues.wrap.setNameArr2.row !== inputValues.wrap.setNameArr1.row) {
+            changeRows(solutionContainer, inputValues.wrap.setNameArr2)
         }
-    } else {    // CLICKED ON FIRST TOGGLE
+        
+        currInput = 'restriction2'
+        alignNodes()
+        currInput = 'setName2'
+        alignNodes()
+        currInput = 'null'
+
+    } else {
+        // Clicked on first toggle
+
+        // Swap active toggles
         solution1Toggle.dataset.active = 'true'
         solution2Toggle.dataset.active = 'false'
         activeSolution = 'solution1'
+
+        // Replace current divNodes with that from other input
         inputValues.divNodes.restrictionArr2 = []
         inputValues.divNodes.setNameArr2 = []
         for (let node of restrictionContainer.children) inputValues.divNodes.restrictionArr2.push(node.cloneNode())
         for (let node of solutionContainer.children) inputValues.divNodes.setNameArr2.push(node.cloneNode())
+
+        // Replace current inputs with that from other input 
         restrictionContainer.innerHTML = ""
         solutionContainer.innerHTML = ""
-        for (let node of inputValues.divNodes.restrictionArr1) restrictionContainer.append(node)
-        for (let node of inputValues.divNodes.setNameArr1) solutionContainer.append(node)
-        for (let node of restrictionContainer.children) if (node.classList.contains('wild-cube')) node.addEventListener('click', toggleWildPicker)
-        for (let node of solutionContainer.children) if (node.classList.contains('wild-cube')) node.addEventListener('click', toggleWildPicker)
+        for (let node of inputValues.wrap.restrictionArr1.elements.flat()) restrictionContainer.append(node)
+        for (let node of inputValues.wrap.setNameArr1.elements.flat()) solutionContainer.append(node)
+
+        // Add wild picker event to wild cubes and set style
+        for (let node of restrictionContainer.children) {
+            if (node.classList.contains('wild-cube')) {
+                node.addEventListener('click', toggleWildPicker)
+            }
+        }
+        for (let node of solutionContainer.children) {
+            if (node.classList.contains('wild-cube')) {
+                node.addEventListener('click', toggleWildPicker)
+            }
+        }
         changeWildStyle(inputValues.wildCube.solution1)
+
+        // Replace blank wild card with that from other input
         if (blankWild) {
             for (let i = 0; i < blankWildContainer.children.length; i++) {
                 if (inputValues.blankWild.solution1[i]) {
@@ -673,35 +1146,78 @@ function toggleSolution(e) {
                 };
             };
         };
-        if (inputValues.wrapValue.restrictionArr1.row !== inputValues.wrapValue.restrictionArr2.row &&
-        inputValues.wrapValue.setNameArr1.row !== inputValues.wrapValue.setNameArr2.row) {
-            changeRows(restrictionContainer, inputValues.wrapValue.restrictionArr1)
-            changeRows(solutionContainer, inputValues.wrapValue.setNameArr1, true)
-        } else if (inputValues.wrapValue.restrictionArr1.row !== inputValues.wrapValue.restrictionArr2.row) {
-            changeRows(restrictionContainer, inputValues.wrapValue.restrictionArr1)
-        } else if (inputValues.wrapValue.setNameArr1.row !== inputValues.wrapValue.setNameArr2.row) {
-            changeRows(solutionContainer, inputValues.wrapValue.setNameArr1)
+
+        // Fix row sizes
+        if (inputValues.wrap.restrictionArr1.row !== inputValues.wrap.restrictionArr2.row &&
+        inputValues.wrap.setNameArr1.row !== inputValues.wrap.setNameArr2.row) {
+            changeRows(restrictionContainer, inputValues.wrap.restrictionArr1)
+            changeRows(solutionContainer, inputValues.wrap.setNameArr1, true)
+        } else if (inputValues.wrap.restrictionArr1.row !== inputValues.wrap.restrictionArr2.row) {
+            changeRows(restrictionContainer, inputValues.wrap.restrictionArr1)
+        } else if (inputValues.wrap.setNameArr1.row !== inputValues.wrap.setNameArr2.row) {
+            changeRows(solutionContainer, inputValues.wrap.setNameArr1)
         }
+
+        currInput = 'restriction1'
+        alignNodes()
+        currInput = 'setName1'
+        alignNodes()
+        currInput = 'null'
+
     };
+
+};
+
+// resizeNewAnswer()
+// window.onresize = resizeNewAnswer
+
+function resizeNewAnswer() {
+    // DEPRECATED, BUT FIND A WAY TO AVOID ROUNDING ISSUES WITH CARD PLACEMENT
+    // MAYBE USE SVG INSTEAD OF DIVS TO CONSTRUCT CARDS
+    console.log("DEBUG")
+    console.log(document.body.offsetWidth)
+    console.log(document.body.getBoundingClientRect().width)
+    console.log(newAnswer.getBoundingClientRect().width)
+    console.log(newAnswer.getBoundingClientRect().x)
+
+    let getCard = document.querySelector(".card-set .card.double")
+    if (getCard) {
+        console.log(getCard)
+        console.log(getCard.getBoundingClientRect().width)
+        console.log(getCard.getBoundingClientRect().x)
+    }
+
+    let bodyWidth = document.body.getBoundingClientRect().width
+    let newAnswerWidth = Math.round(bodyWidth * .9)
+    let leftOffset = Math.round((bodyWidth - newAnswerWidth) / 2)
+
+
+    newAnswer.style.width = newAnswerWidth + "px"
+    newAnswer.style.left = leftOffset + "px"
 }
 
 submitButton.addEventListener('click', submitInput);
-restrictionContainer.addEventListener('click', showKeyboard);
-solutionContainer.addEventListener('click', showKeyboard);
 const newAnswer = document.createElement('div')
 const answerBackground = document.createElement('div')
 newAnswer.id = 'new-answer'
+
 answerBackground.id = 'answer-background'
 document.body.append(answerBackground)
 document.body.append(newAnswer)
+
+// When clicking on answer background, hide newAnswer and answerBackground
 answerBackground.addEventListener('click', function(){
     newAnswer.classList.remove('shown')
     answerBackground.classList.remove('shown')
 })
 
 document.addEventListener('keydown', function(keypress){
-    // console.log(keypress.key);
+    // Input cube on keypress when keyboard is active
+    
     if (!currInput) return;
+    if (keypress.key === 'ArrowLeft' || keypress.key === 'ArrowRight') {
+        moveCursor(keypress.key)
+    }
     switch (keypress.key) {
         case 'b': inputCube('blue'); break;
         case 'r': inputCube('red'); break;
@@ -721,35 +1237,76 @@ document.addEventListener('keydown', function(keypress){
     };
 });
 
+function getSelectedCube(width) {
+    let selectedCubeIndex, wrap
+    switch (currInput) {
+        case "restriction1":
+            wrap = inputValues.wrap.restrictionArr1;
+            selectedCubeIndex = inputValues.selectedCubeIndex.restrictionArr1
+            break;
+        case "setName1":
+            wrap = inputValues.wrap.setNameArr1
+            selectedCubeIndex = inputValues.selectedCubeIndex.setNameArr1
+            break;
+        case "restriction2":
+            wrap = inputValues.wrap.restrictionArr2;
+            selectedCubeIndex = inputValues.selectedCubeIndex.restrictionArr2
+            break;
+        case "setName2":
+            wrap = inputValues.wrap.setNameArr2;
+            selectedCubeIndex = inputValues.selectedCubeIndex.setNameArr2
+            break;
+    }
+    let value = width ? wrap.widths : wrap.elements
+    let cube = value[selectedCubeIndex.row][selectedCubeIndex.column]
+    return cube ? cube : null
+}
+
 function inputCube(cube) {
+
     if (wildPickerContainer.classList.contains('shown')) return;
-    let input, flatArray, wrap;
+    let input, flatArray, wrap, selectedCubeIndex
     let isRestriction = false;
+
+    // Determine current input
     switch (currInput) {
         case "restriction1":
             input = restrictionContainer;
             flatArray = inputValues.flatArray.restrictionArr1;
-            wrap = inputValues.wrapValue.restrictionArr1;
+            wrap = inputValues.wrap.restrictionArr1;
+            selectedCubeIndex = inputValues.selectedCubeIndex.restrictionArr1
             isRestriction = true;
             break;
         case "setName1":
             input = solutionContainer;
             flatArray = inputValues.flatArray.setNameArr1;
-            wrap = inputValues.wrapValue.setNameArr1
+            wrap = inputValues.wrap.setNameArr1
+            selectedCubeIndex = inputValues.selectedCubeIndex.setNameArr1
             break;
         case "restriction2":
             input = restrictionContainer;
             flatArray = inputValues.flatArray.restrictionArr2;
-            wrap = inputValues.wrapValue.restrictionArr2;
+            wrap = inputValues.wrap.restrictionArr2;
+            selectedCubeIndex = inputValues.selectedCubeIndex.restrictionArr2
             isRestriction = true;
             break;
         case "setName2":
             input = solutionContainer;
             flatArray = inputValues.flatArray.setNameArr2;
-            wrap = inputValues.wrapValue.setNameArr2;
+            wrap = inputValues.wrap.setNameArr2;
+            selectedCubeIndex = inputValues.selectedCubeIndex.setNameArr2
             break;
     };
-    let currCube;
+
+    if (puzzleData.metaData.includes('noRestrictions') && isRestriction) {
+        notify('No Restriction Cubes Available!', 'red', 'bounce', 1000, '40px', '260px');
+        return;
+    }
+
+    // Determine inputted cube
+    let currCube = null;
+
+    currCube = 2;
     switch (cube) {
         case "blue": currCube = "B"; break;
         case "red": currCube = "R"; break;
@@ -761,7 +1318,7 @@ function inputCube(cube) {
         case "not": currCube = "'"; break;
         case "universe": currCube = "V"; break;
         case "empty-set": currCube = "Ʌ"; break;
-        case "must-contain": 
+        case "must-contain":
             if (!isRestriction) return;
             currCube = "<"; break;
         case "equals":
@@ -770,14 +1327,25 @@ function inputCube(cube) {
         case "left-parenthesis": currCube = "("; break;
         case "right-parenthesis": currCube = ")"; break;
         case "backspace":
-            let cubeWidth = 48;
-                if (!flatArray.length) return;
-                if (/[()]/.test(flatArray.pop())) cubeWidth = 16;
-            wrap.values[wrap.row] -= cubeWidth;
-            checkInputWidth(input, wrap, 0)
-            input.lastElementChild.remove()
-            return;
+
+        const selectedCubeElement = getSelectedCube()
+
+        // If no cubes available, return
+        if (!selectedCubeElement) return;
+
+        // Set cube data
+        let cubeWidth = 48;
+        currCube = selectedCubeElement.dataset.symbol
+        if (/[()]/.test(currCube)) cubeWidth = 16;
+        
+        // Modify row sizes and check lengths
+        wrap.values[selectedCubeIndex.row] -= cubeWidth
+        checkInputWidth(cubeWidth);
+        
+        selectedCubeElement.remove()
+        return;
     };
+
     const solutionCube = document.createElement("div");
     solutionCube.classList.add(cube);
     let cubeWidth = 16;
@@ -789,17 +1357,837 @@ function inputCube(cube) {
         solutionCube.classList.add('wild-cube')
         solutionCube.addEventListener('click', toggleWildPicker)
     }
-    if (checkInputWidth(input, wrap, cubeWidth)) {
-        flatArray.push(currCube)
-        input.append(solutionCube);
+    solutionCube.dataset.symbol = currCube
+
+    // Give and remove hidden classlist for fade in effect
+    solutionCube.classList.add('hidden')
+
+    if (checkInputWidth(cubeWidth, solutionCube)) {
+        solutionCube.classList.remove('hidden')
     }
 };
+
+function checkInputWidth(cubeWidth, element) {
+
+    let input, selectedCubeIndex, wrap, cursorRow
+    switch (currInput) {
+        case "restriction1":
+            input = restrictionContainer;
+            selectedCubeIndex = inputValues.selectedCubeIndex.restrictionArr1
+            wrap = inputValues.wrap.restrictionArr1;
+            cursorRow = inputValues.cursorRow.restrictionArr1
+            break;
+        case "setName1":
+            input = solutionContainer;
+            selectedCubeIndex = inputValues.selectedCubeIndex.setNameArr1
+            wrap = inputValues.wrap.setNameArr1
+            cursorRow = inputValues.cursorRow.setNameArr1
+            break;
+        case "restriction2":
+            input = restrictionContainer;
+            selectedCubeIndex = inputValues.selectedCubeIndex.restrictionArr2
+            wrap = inputValues.wrap.restrictionArr2;
+            cursorRow = inputValues.cursorRow.restrictionArr2
+            break;
+        case "setName2":
+            input = solutionContainer;
+            selectedCubeIndex = inputValues.selectedCubeIndex.setNameArr2
+            wrap = inputValues.wrap.setNameArr2;
+            cursorRow = inputValues.cursorRow.setNameArr2
+            break;
+    };
+
+    let case1 = false;
+    let containerWidth = input.offsetWidth
+    let nodeAnimationDuration = 70;
+    let cursorAnimationDuration = [0, 30];
+    let frontCursor;
+
+    if (element) {
+        
+        // Append element if one is passed
+        
+        // Create index for new cube
+        let newRow, newColumn
+        
+        if (wrap.values[selectedCubeIndex.row] + cubeWidth >= containerWidth - 10) {
+            // If current row is too wide, move to next row
+            // Also, make sure cursor is not front cursor
+
+            // Maximum solution size
+            if (wrap.values[1]) {
+                if (wrap.values[1] + cubeWidth >= containerWidth - 10) {
+                    if (input === restrictionContainer) {
+                        notify(`Restriction is too big!`, 'red', 'bounce', 1000, '40px', '190px')
+                    } else {
+                        notify(`Solution is too big!`, 'red', 'bounce', 1000, '40px', '170px')
+                    };
+                    return false;
+                }
+            }
+
+            if (selectedCubeIndex.column === wrap.widths[selectedCubeIndex.row].length - 1) {
+                // Selected cube is last fitting cube in row
+                newRow = selectedCubeIndex.row + 1
+                newColumn = 0
+                wrap.values[newRow] += cubeWidth
+
+                if (cursorRow[0] === selectedCubeIndex.row) {
+                    // Case where cursor will end up onto next row
+                    cursorRow[0]++
+                    cursorAnimationDuration = [0, 0]
+
+                    wrap.row++
+                    changeRows()
+                } else {
+                    // Case where cursor is at leftmost position on non-first row
+                    
+                    let overflowData = stopOverflow(selectedCubeIndex.row)
+                    cursorAnimationDuration = overflowData[0]
+                    nodeAnimationDuration = overflowData[1]
+                    frontCursor = overflowData[2]
+                }
+
+            } else {
+                // Default
+
+                // Edge case where cube must move to next row but other objects are in front (i.e. parenthesis that fit)
+                let totalWidth = wrap.widths[selectedCubeIndex.row].slice(0, selectedCubeIndex.column + 1).reduce((a, b) => a + b, 0)
+                if (totalWidth + cubeWidth > containerWidth - 10) {
+                    
+                    case1 = true
+
+                    newRow = selectedCubeIndex.row
+                    newColumn = selectedCubeIndex.column + 1
+                    wrap.values[newRow] += cubeWidth
+
+                } else {
+                    newRow = selectedCubeIndex.row
+
+                    if (selectedCubeIndex.column === null) {
+                         // Special case for first cube
+                        newColumn = selectedCubeIndex.column + 0
+                    } else {
+                        newColumn = selectedCubeIndex.column + 1
+                    }
+                    wrap.values[newRow] += cubeWidth
+
+                    let overflowData = stopOverflow(selectedCubeIndex.row)
+                    cursorAnimationDuration = overflowData[0]
+                    nodeAnimationDuration = overflowData[1]
+                    if (overflowData[2] !== null) frontCursor = overflowData[2]
+                }
+
+            }
+
+            // If wrap value does not contain index for spare row, make one
+            if (!wrap.values[wrap.row + 1]) wrap.values[wrap.row + 1] = 0
+            if (!wrap.widths[wrap.row + 1]) wrap.widths[wrap.row + 1] = []
+            if (!wrap.elements[wrap.row + 1]) wrap.elements[wrap.row + 1] = []
+
+        } else if (cursorRow[0] !== selectedCubeIndex.row) {
+            // Case where cursor is at leftmost position and cube fits into previous row
+            newRow = selectedCubeIndex.row
+            newColumn = selectedCubeIndex.column + 1
+            wrap.values[newRow] += cubeWidth
+
+            frontCursor = true;
+        } else if (selectedCubeIndex.column === null) {
+            // Case where no cubes in input yet
+            newRow = selectedCubeIndex.row
+            newColumn = 0;
+            wrap.values[newRow] += cubeWidth
+        } else {
+            // Default, new index is 1 column to the right of current selected cube
+            newRow = selectedCubeIndex.row
+            newColumn = selectedCubeIndex.column + 1
+            wrap.values[newRow] += cubeWidth
+        }
+
+        // Add new cube into wrap indexes
+        wrap.widths[newRow].splice(newColumn, 0, cubeWidth)
+        wrap.elements[newRow].splice(newColumn, 0, element)
+
+        // Set position
+        let totalWidth = (wrap.values[newRow])
+        let leftBound = (containerWidth - totalWidth + cubeWidth) / 2
+        // Offset is sum of widths up to column
+        let offset = wrap.widths[newRow].slice(0, newColumn).reduce((a, b) => a + b, 0)
+        let position = leftBound + offset
+
+        element.dataset.offset = offset
+        element.dataset.row = newRow
+        element.dataset.cursorOffset = 0
+        element.style.top = 2 + (newRow * 50) + "px"
+        element.style.left = position + "px";
+
+        // Edge case where cube must move to next row but other objects are in front (i.e. parenthesis that fit)
+
+        if (case1) {
+
+            cursorRow[0]++
+
+            let overflowData = stopOverflow(selectedCubeIndex.row)
+            cursorAnimationDuration = overflowData[0]
+            nodeAnimationDuration = overflowData[1]
+            if (overflowData[2] !== null) frontCursor = overflowData[2]
+
+            newRow = selectedCubeIndex.row + 1
+            newColumn = 0
+
+            for (let i = 1; i < wrap.elements[cursorRow[0]].length; i++) {
+                wrap.elements[cursorRow[0]][i].dataset.cursorOffset = 6
+            }
+
+        }
+
+        cursor.style.top = 8 + (newRow * 50) + "px"
+
+        input.append(element)
+        selectedCubeIndex.row = newRow;
+        selectedCubeIndex.column = newColumn;
+
+        // Adjust offset for succceeding cubes
+        for (let i = newColumn + 1; i < wrap.elements[newRow].length; i++) {
+            if (case1) break;
+            let element = wrap.elements[newRow][i]
+            element.dataset.offset = parseInt(element.dataset.offset) + cubeWidth
+        }
+
+    } else {
+        // Backspace, Remove element
+
+        // if (wrap.row > 0 && wrap.values[wrap.row] === 0 && boardContainer.offsetHeight > 450) {
+        if (wrap.row > 0 && wrap.values[wrap.row] === 0) {
+            // If current row is empty
+
+            wrap.row--
+            cursorRow[0]--
+            changeRows()
+
+            wrap.widths[selectedCubeIndex.row].splice(selectedCubeIndex.column, 1)
+            wrap.elements[selectedCubeIndex.row].splice(selectedCubeIndex.column, 1)
+
+            if (selectedCubeIndex.row) {
+                selectedCubeIndex.row--
+                selectedCubeIndex.column = wrap.elements[wrap.row].length - 1
+            }
+            else {
+                selectedCubeIndex.column = null
+            }
+
+            alignCursor(0)
+            return;
+
+        }
+
+        cursorAnimationDuration = [0, 70]
+        const currCube = getSelectedCube()
+
+        // Remove selected cube from wrap values
+        wrap.widths[selectedCubeIndex.row].splice(selectedCubeIndex.column, 1)
+        wrap.elements[selectedCubeIndex.row].splice(selectedCubeIndex.column, 1)
+
+        // Adjust offset for succceeding cubes
+        for (let i = selectedCubeIndex.column; i < wrap.elements[selectedCubeIndex.row].length; i++) {
+            wrap.elements[selectedCubeIndex.row][i].dataset.offset -= cubeWidth
+        }
+
+        if (selectedCubeIndex.column) {
+
+            if (selectedCubeIndex.row !== cursorRow[0]) {
+                // If cursor was at leftmost position of next row
+
+                let remainingSpace = (containerWidth - 10) - (wrap.values[selectedCubeIndex.row])
+                let nextCubeWidth = wrap.widths[selectedCubeIndex.row + 1][0]
+                if (nextCubeWidth && nextCubeWidth < remainingSpace) {
+                    // Default, move cursor to rightmost position of current row
+                    let cursorOffset = parseInt(currCube.dataset.offset) + 2
+                    let leftBound = (containerWidth - (wrap.values[selectedCubeIndex.row] + cubeWidth)) / 2
+                    position = leftBound + cursorOffset + cubeWidth
+
+                    cursor.animate(
+                        [{ left: position + "px" }], {
+                        fill: 'forwards',
+                        duration: 0,
+                        easing: 'ease',
+                    });
+                    cursor.style.top = 8 + (cursorRow[0] * 50) + "px"
+                    // Then, let it animate to desired position with align cursor
+                    for (let node of wrap.elements[cursorRow[0]]) { node.dataset.cursorOffset = 0 }
+                    cursorRow[0]--
+                } else {
+                    // Not enough room to move next row cube into row, activate frontCursor
+                    selectedCubeIndex.column = wrap.elements[selectedCubeIndex.row].length
+                    frontCursor = true;
+                }
+
+            }
+
+            // Default, move selected cube to the left
+            selectedCubeIndex.column--
+
+        } else if (selectedCubeIndex.row) {
+            // If deleted cube is first of its row, set position accordingly and activate frontCursor
+            selectedCubeIndex.row--
+            selectedCubeIndex.column = wrap.elements[selectedCubeIndex.row].length - 1
+            frontCursor = true;
+        } else {
+            // Else deleted cube was first cube
+            selectedCubeIndex.row = 0
+            selectedCubeIndex.column = null
+            frontCursor = true;
+
+        }
+
+        let fillData = stopEmptySpace(selectedCubeIndex.row)
+        cursorAnimationDuration = fillData[0]
+        nodeAnimationDuration = fillData[1]
+        if (fillData[2] !== null) frontCursor = fillData[2]
+
+    };
+    // console.log(selectedCubeIndex)
+    // console.log(wrap.elements)
+    // console.log(wrap.widths)
+    // console.log(cursorRow)
+
+    alignCursor(cursorAnimationDuration, frontCursor)
+    alignNodes(nodeAnimationDuration)
+
+    return true;
+    
+    if (wrap.row === 1 && wrap.values[1] === 0 && boardContainer.offsetHeight > 540) {
+        wrap.row--
+        changeRows(input, wrap)
+    } else if (wrap.values[wrap.row] + cubeWidth >= input.offsetWidth) {
+        if (wrap.row === 0) {
+            wrap.row++
+            changeRows(input, wrap)
+        } else {
+            if (input === restrictionContainer) {
+                notify(`Restriction is too big!`, 'red', 'bounce', 1000, '40px', '190px')
+            } else {
+                notify(`Solution is too big!`, 'red', 'bounce', 1000, '40px', '170px')
+            };
+            return false;
+        }
+    }
+    wrap.values[wrap.row] += cubeWidth
+    return true;
+}
+
+window.onresize = () => {
+    alignNodes()
+    alignCursor()
+}
+
+function alignNodes(duration = 70, rows = []) {
+
+    let input, wrap
+    switch (currInput) {
+        case "restriction1":
+            input = restrictionContainer;
+            wrap = inputValues.wrap.restrictionArr1;
+            break;
+        case "setName1":
+            input = solutionContainer;
+            wrap = inputValues.wrap.setNameArr1
+            break;
+        case "restriction2":
+            input = restrictionContainer;
+            wrap = inputValues.wrap.restrictionArr2;
+            break;
+        case "setName2":
+            input = solutionContainer;
+            wrap = inputValues.wrap.setNameArr2;
+            break;
+    };
+
+    let containerWidth = input.offsetWidth
+
+    for (let node of input.children) {
+
+        if (node.id === 'cursor') continue;
+        if (rows.includes(parseInt(node.dataset.row))) return // Future feature for optimization
+
+        let row = parseInt(node.dataset.row)
+        let leftBound = (containerWidth - wrap.values[row]) / 2
+        let position = leftBound + parseInt(node.dataset.offset) + parseInt(node.dataset.cursorOffset)
+
+        node.animate(
+            [{ left: position + "px" }], {
+            fill: 'forwards',
+            duration: duration,
+            easing: 'ease',
+        });
+        node.animate(
+            [{ top: (50 * row) + 2 + "px" }], {
+            fill: 'forwards',
+            duration: duration,
+            easing: 'ease',
+        });
+    };
+}
+
+function stopOverflow(startIndex) {
+
+    let input, selectedCubeIndex, wrap, cursorRow
+    switch (currInput) {
+        case "restriction1":
+            input = restrictionContainer;
+            selectedCubeIndex = inputValues.selectedCubeIndex.restrictionArr1
+            wrap = inputValues.wrap.restrictionArr1;
+            cursorRow = inputValues.cursorRow.restrictionArr1
+            break;
+        case "setName1":
+            input = solutionContainer;
+            selectedCubeIndex = inputValues.selectedCubeIndex.setNameArr1
+            wrap = inputValues.wrap.setNameArr1
+            cursorRow = inputValues.cursorRow.setNameArr1
+            break;
+        case "restriction2":
+            input = restrictionContainer;
+            selectedCubeIndex = inputValues.selectedCubeIndex.restrictionArr2
+            wrap = inputValues.wrap.restrictionArr2;
+            cursorRow = inputValues.cursorRow.restrictionArr2
+            break;
+        case "setName2":
+            input = solutionContainer;
+            selectedCubeIndex = inputValues.selectedCubeIndex.setNameArr2
+            wrap = inputValues.wrap.setNameArr2;
+            cursorRow = inputValues.cursorRow.setNameArr2
+            break;
+    };
+
+    let containerWidth = input.offsetWidth
+    let cursorAnimationDuration = [0, 30];
+    let nodeAnimationDuration = 120;
+    let frontCursor = null;
+    let defaultBehavior = false;
+
+    if (startIndex === undefined) {
+        startIndex = 0
+        defaultBehavior = true;
+    }
+
+    // Have extra cubes move into new row cubes
+    for (let i = startIndex; i < wrap.elements.length - 1; i++) {
+
+        let overflowAmount = (wrap.values[i]) - (containerWidth - 10)
+
+        if (overflowAmount >= 0 && i === wrap.row) {
+            wrap.row++
+            changeRows()
+        }
+        
+        while (overflowAmount >= 0) {
+
+            let width = wrap.widths[i].pop()
+            overflowAmount -= width
+            console.log(width)
+
+            let element = wrap.elements[i].pop()
+            let newRow = parseInt(element.dataset.row) + 1
+            let offset = 0
+            wrap.values[i] -= width
+            wrap.elements[i + 1].unshift(element)
+            wrap.widths[i + 1].unshift(width)
+
+            for (let j = 0; j < wrap.elements[i + 1].length; j++) {
+                let element = wrap.elements[i + 1][j]
+                element.dataset.offset = parseInt(element.dataset.offset) + width
+            }
+
+            element.dataset.row = newRow
+            element.dataset.offset = offset
+            element.dataset.cursorOffset = 0
+            // nodeAnimationDuration = 70;
+            wrap.values[i + 1] += width
+
+            // Moves next row if selected cube does not fit onto row
+            if (selectedCubeIndex.column === wrap.elements[selectedCubeIndex.row].length - 1) {
+                // Ensure this doesn't happen if cursor is on leftmost position of row
+                if (selectedCubeIndex.row === cursorRow[0]) {
+                    cursorRow[0]++
+                    cursorAnimationDuration = [100, 100];
+                    frontCursor = true
+                    for (let node of wrap.elements[cursorRow[0]]) { node.dataset.cursorOffset = 6 }
+                    nodeAnimationDuration = 100
+                };
+            }
+
+        }
+    }
+
+    return [cursorAnimationDuration, nodeAnimationDuration, frontCursor]
+
+}
+
+function stopEmptySpace(startIndex) {
+
+    let input, selectedCubeIndex, wrap, cursorRow
+    switch (currInput) {
+        case "restriction1":
+            input = restrictionContainer;
+            selectedCubeIndex = inputValues.selectedCubeIndex.restrictionArr1
+            wrap = inputValues.wrap.restrictionArr1;
+            cursorRow = inputValues.cursorRow.restrictionArr1
+            break;
+        case "setName1":
+            input = solutionContainer;
+            selectedCubeIndex = inputValues.selectedCubeIndex.setNameArr1
+            wrap = inputValues.wrap.setNameArr1
+            cursorRow = inputValues.cursorRow.setNameArr1
+            break;
+        case "restriction2":
+            input = restrictionContainer;
+            selectedCubeIndex = inputValues.selectedCubeIndex.restrictionArr2
+            wrap = inputValues.wrap.restrictionArr2;
+            cursorRow = inputValues.cursorRow.restrictionArr2
+            break;
+        case "setName2":
+            input = solutionContainer;
+            selectedCubeIndex = inputValues.selectedCubeIndex.setNameArr2
+            wrap = inputValues.wrap.setNameArr2;
+            cursorRow = inputValues.cursorRow.setNameArr2
+            break;
+    };
+    let containerWidth = input.offsetWidth
+    let cursorAnimationDuration = [0, 70];
+    let nodeAnimationDuration = 120;
+    let frontCursor = null;
+
+    if (startIndex === undefined) {
+        startIndex = 0;
+        defaultBehavior = true
+    }
+
+    // Have subsequent cubes fill in remaining space
+    for (let i = startIndex; i < wrap.elements.length - 1; i++) {
+
+        // Break if no subsequent cubes
+        if (!wrap.widths[i + 1][0]) break;
+
+        let remainingSpace = (containerWidth - 10) - (wrap.values[i])
+        while (wrap.widths[i + 1][0] < remainingSpace) {
+
+            let width = wrap.widths[i + 1].shift()
+            remainingSpace -= width
+
+            let offset = wrap.widths[i].reduce((a, b) => a + b, 0)
+
+            let element = wrap.elements[i + 1].shift()
+            wrap.values[i + 1] -= width
+            wrap.elements[i].push(element)
+            wrap.widths[i].push(width)
+
+            let newRow = parseInt(element.dataset.row) - 1
+            element.dataset.row = newRow
+            element.dataset.offset = offset
+            if (newRow === cursorRow[0]) {
+                element.dataset.cursorOffset = 6
+            };
+            nodeAnimationDuration = 100;
+            wrap.values[i] += width
+
+            for (let j = 0; j < wrap.elements[i + 1].length; j++) {
+                wrap.elements[i + 1][j].dataset.offset -= width
+            }
+
+            // Moves cursor to previous row when cubes behind cursor get realigned to previous row
+            if (selectedCubeIndex.row !== cursorRow[0] && selectedCubeIndex.column < wrap.elements[i].length) {
+                for (let node of wrap.elements[cursorRow[0]]) { node.dataset.cursorOffset = 0 }
+                cursorRow[0]--
+                cursorAnimationDuration = [0, 0];
+                frontCursor = false
+            }
+
+            // Next row becomes empty
+            if (!wrap.elements[i + 1].length) {
+                wrap.row--
+                changeRows()
+            }
+        }
+    }
+
+    return [cursorAnimationDuration, nodeAnimationDuration, frontCursor]
+
+}
+
+function moveCursor(key) {
+    let selectedCubeIndex, wrap, cursorRow
+    switch (currInput) {
+        case "restriction1":
+            selectedCubeIndex = inputValues.selectedCubeIndex.restrictionArr1
+            wrap = inputValues.wrap.restrictionArr1;
+            cursorRow = inputValues.cursorRow.restrictionArr1
+            break;
+        case "setName1":
+            selectedCubeIndex = inputValues.selectedCubeIndex.setNameArr1
+            wrap = inputValues.wrap.setNameArr1
+            cursorRow = inputValues.cursorRow.setNameArr1
+            break;
+        case "restriction2":
+            selectedCubeIndex = inputValues.selectedCubeIndex.restrictionArr2
+            wrap = inputValues.wrap.restrictionArr2;
+            cursorRow = inputValues.cursorRow.restrictionArr2
+            break;
+        case "setName2":
+            selectedCubeIndex = inputValues.selectedCubeIndex.setNameArr2
+            wrap = inputValues.wrap.setNameArr2;
+            cursorRow = inputValues.cursorRow.setNameArr2
+            break;
+    };
+    let frontCursor;
+    let cursorAnimationDuration = [0, 100]
+    let fixRow = [];
+
+    if (key === 'ArrowLeft') {
+        // Left Arrow
+
+        if (selectedCubeIndex.row !== cursorRow[0]) {
+            // Move cursor up a row
+            cursorAnimationDuration = [0, 0];
+            fixRow.push(cursorRow[0])
+            cursorRow[0]--
+        }
+
+        if (selectedCubeIndex.column > 0) {
+            // Default, move left
+            selectedCubeIndex.column--
+        } else if (selectedCubeIndex.row) {
+            // If not on first row, to leftmost spot of current row
+            selectedCubeIndex.row--
+            selectedCubeIndex.column = wrap.elements[selectedCubeIndex.row].length - 1
+            frontCursor = true
+        } else {
+            // If on first row, move to leftmost position
+            selectedCubeIndex.row = 0
+            selectedCubeIndex.column = null
+            frontCursor = true
+        };
+
+    } else {
+        // Right arrow
+
+        if (selectedCubeIndex.column === null) {
+            // If cursor is in leftmost position, move to the right of first cube if it exists
+            if (wrap.elements[0].length) {
+                selectedCubeIndex.column = 0
+            }
+        } else if (selectedCubeIndex.column + 2 < wrap.elements[selectedCubeIndex.row].length) {
+            // Default, move right
+            selectedCubeIndex.column++
+        } else if (wrap.elements[selectedCubeIndex.row + 1].length) {
+            // Move onto next row if available
+            if (selectedCubeIndex.column + 2 === wrap.elements[selectedCubeIndex.row].length) {
+                // If cursor reaches position before rightmost position, move onto leftmost spot of next row
+                // Selected cube will still be rightmost cube of current row
+                selectedCubeIndex.column++
+                fixRow.push(cursorRow[0])
+                cursorRow[0]++
+                cursorAnimationDuration = [0, 0];
+                frontCursor = true;
+            } else {
+                // If cursor is already on next row, set selected cube to be first cube on next row
+                selectedCubeIndex.row++
+                selectedCubeIndex.column = 0
+            }
+        } else if (selectedCubeIndex.column + 1 < wrap.elements[selectedCubeIndex.row].length) {
+            // If on last row, move to rightmost spot of last cube
+            selectedCubeIndex.column++
+        };
+
+    };
+
+    alignCursor(cursorAnimationDuration, frontCursor)
+
+    for (let row of fixRow) {
+        for (let node of wrap.elements[row]) {
+            node.dataset.cursorOffset = 0
+        }
+    }
+
+    if (frontCursor) {
+        for (let node of wrap.elements[cursorRow[0]]) {
+            node.dataset.cursorOffset = 6
+        }
+    } else {
+        for (let i = 0; i < wrap.elements[selectedCubeIndex.row].length; i++) {
+            if (i <= selectedCubeIndex.column) {
+                wrap.elements[selectedCubeIndex.row][i].dataset.cursorOffset = 0;
+            } else {
+                wrap.elements[selectedCubeIndex.row][i].dataset.cursorOffset = 6;
+            }
+        }
+    }
+
+    alignNodes(120)
+
+}
+
+function alignCursor(duration = [0, 30], frontCursor) {
+
+    let input, selectedCubeIndex, wrap, cursorRow
+    switch (currInput) {
+        case "restriction1":
+            input = restrictionContainer;
+            selectedCubeIndex = inputValues.selectedCubeIndex.restrictionArr1
+            wrap = inputValues.wrap.restrictionArr1;
+            cursorRow = inputValues.cursorRow.restrictionArr1[0]
+            break;
+        case "setName1":
+            input = solutionContainer;
+            selectedCubeIndex = inputValues.selectedCubeIndex.setNameArr1
+            wrap = inputValues.wrap.setNameArr1
+            cursorRow = inputValues.cursorRow.setNameArr1[0]
+            break;
+        case "restriction2":
+            input = restrictionContainer;
+            selectedCubeIndex = inputValues.selectedCubeIndex.restrictionArr2
+            wrap = inputValues.wrap.restrictionArr2;
+            cursorRow = inputValues.cursorRow.restrictionArr2[0]
+            break;
+        case "setName2":
+            input = solutionContainer;
+            selectedCubeIndex = inputValues.selectedCubeIndex.setNameArr2
+            wrap = inputValues.wrap.setNameArr2;
+            cursorRow = inputValues.cursorRow.setNameArr2[0]
+            break;
+    };
+
+    let containerWidth = input.offsetWidth
+
+    if (frontCursor) {
+        let cursorLeftBound = (containerWidth - wrap.values[cursorRow]) / 2
+        let cursorPosition = cursorLeftBound + 2
+        cursor.animate(
+            [{ top: 8 + cursorRow * 50 + "px" }], {
+            fill: 'forwards',
+            duration: duration[0],
+            easing: 'ease',
+        });
+        cursor.animate(
+            [{ left: cursorPosition + "px" }], {
+            fill: 'forwards',
+            duration: duration[1],
+            easing: 'ease',
+        });
+
+        cursor.classList.remove('blink-animation')
+        void cursor.offsetWidth;
+        cursor.classList.add('blink-animation')
+        return;
+    }
+
+    if (getSelectedCube() === null) {
+        let cursorPosition = (containerWidth / 2) + 2
+        cursor.animate(
+            [{ top: 8 + "px" }], {
+            fill: 'forwards',
+            duration: duration[1],
+            easing: 'ease',
+        });
+        cursor.animate(
+            [{ left: cursorPosition + "px" }], {
+            fill: 'forwards',
+            duration: duration[1],
+            easing: 'ease',
+        });
+
+        cursor.classList.remove('blink-animation')
+        void cursor.offsetWidth;
+        cursor.classList.add('blink-animation')
+        return;
+    }
+
+    let cursorLeftBound = (containerWidth - wrap.values[selectedCubeIndex.row]) / 2
+    let cursorOffset = parseInt(getSelectedCube().dataset.offset) + 2
+    let cubeWidth = getSelectedCube('width')
+    let cursorPosition = cursorLeftBound + cursorOffset + cubeWidth
+
+    cursor.animate(
+        [{ top: 8 + (selectedCubeIndex.row * 50) + "px" }], {
+        fill: 'forwards',
+        duration: duration[0],
+        easing: 'ease',
+    });
+    cursor.animate(
+        [{ left: cursorPosition + "px" }], {
+        fill: 'forwards',
+        duration: duration[1],
+        easing: 'ease',
+    });
+
+    // Reset cursor animation
+    cursor.classList.remove('blink-animation')
+    void cursor.offsetWidth;
+    cursor.classList.add('blink-animation')
+}
+
+function changeRows(element, wrap, dontAnimateBoard, totalRows) {
+
+    if (!wrap) {
+        switch (currInput) {
+            case "restriction1":
+                element = restrictionContainer
+                wrap = inputValues.wrap.restrictionArr1;
+                totalRows = inputValues.wrap.setNameArr1.row + inputValues.wrap.restrictionArr1.row
+                break;
+            case "setName1":
+                element = solutionContainer
+                wrap = inputValues.wrap.setNameArr1
+                totalRows = inputValues.wrap.setNameArr1.row + inputValues.wrap.restrictionArr1.row
+                break;
+            case "restriction2":
+                element = restrictionContainer
+                wrap = inputValues.wrap.restrictionArr2;
+                totalRows = inputValues.wrap.setNameArr2.row + inputValues.wrap.restrictionArr2.row
+                break;
+            case "setName2":
+                element = solutionContainer
+                wrap = inputValues.wrap.setNameArr2;
+                totalRows = inputValues.wrap.setNameArr2.row + inputValues.wrap.restrictionArr2.row
+                break;
+        };
+    } else {
+        if (activeSolution === 'solution1') {
+            totalRows = inputValues.wrap.setNameArr1.row + inputValues.wrap.restrictionArr1.row
+        } else {
+            totalRows = inputValues.wrap.setNameArr2.row + inputValues.wrap.restrictionArr2.row
+        }
+    };
+    let elementHeight, parentHeight, boardHeight;
+    elementHeight = 52 + 50 * wrap.row + "px"
+    parentHeight = 90 + 50 * wrap.row + "px"
+    boardHeight = 540 + 50 * totalRows + "px"
+    element.animate(
+        [{height: elementHeight}], {
+            fill: 'forwards',
+            duration: 100,
+            easing: 'ease',
+    });
+    element.parentNode.animate(
+        [{height: parentHeight}], {
+            fill: 'forwards',
+            duration: 100,
+            easing: 'ease',
+    });
+    if (dontAnimateBoard) return;
+    boardContainer.animate(
+        [{height: boardHeight}], {
+            fill: 'forwards',
+            duration: 100,
+            easing: 'ease',
+    });
+}
+
 // const testDiv = document.createElement('div')
 // testDiv.style.cssText = 'height: 50px; width: 50px; background-color: red; position: absolute; left: 40px; top: 50px'
 // const testDiv2 = document.createElement('div')
 // testDiv2.style.cssText = 'height: 50px; width: 50px; background-color: red; position: absolute; left: 100px; top: 50px'
-// testDiv.addEventListener('click', () => {notify('Incorrect!', 'green', 'bounce', undefined, undefined, undefined, 1)})
-// testDiv2.addEventListener('click', () => {notify('Incorrect!', 'green', 'bounce', undefined, undefined, undefined, 2)})
+// testDiv.addEventListener('click', () => {notify('Incorrect!', 'green', 'bounce', null, null, null, 1)})
+// testDiv2.addEventListener('click', () => {notify('Incorrect!', 'green', 'bounce', null, null, null, 2)})
 // document.body.append(testDiv, testDiv2)
 const notification = document.createElement('div')
 notification.classList.add('notification')
@@ -836,9 +2224,7 @@ function notify(message, color, animation, duration = 1500, height, width, extra
     //     newContent.classList.add('extra-content')
     //     newContent.innerText = extraContent.content
     //     notification.append(newContent)
-    // } else {
-
-    // };
+    // }
     if (duration === 'persistent') return;
     notification.animate(
         [
@@ -851,120 +2237,62 @@ function notify(message, color, animation, duration = 1500, height, width, extra
         delay: duration,
     });
 }
-// notify('Incorrect!', 'red', 'bounce', 'persistent', undefined, '170px', {
-//     'type': 'div',
-//     'content': 'See Why',
-//     'event' : {
-//     }
-// })
-
-function changeRows(element, wrap, dontAnimateBoard) {
-    let elementHeight, parentHeight, boardHeight;
-    let totalRows
-    if (activeSolution === 'solution1') {
-        totalRows = inputValues.wrapValue.setNameArr1.row + inputValues.wrapValue.restrictionArr1.row
-    } else {
-        totalRows = inputValues.wrapValue.setNameArr2.row + inputValues.wrapValue.restrictionArr2.row
-    }
-    elementHeight = 52 + 48 * wrap.row + "px"
-    parentHeight = 90 + 48 * wrap.row + "px"
-    boardHeight = 540 + 48 * totalRows + "px"
-    element.animate(
-        [{height: elementHeight}], {
-            fill: 'forwards',
-            duration: 100,
-            easing: 'ease',
-    });
-    element.parentNode.animate(
-        [{height: parentHeight}], {
-            fill: 'forwards',
-            duration: 100,
-            easing: 'ease',
-    });
-    if (dontAnimateBoard) return;
-    boardContainer.animate(
-        [{height: boardHeight}], {
-            fill: 'forwards',
-            duration: 100,
-            easing: 'ease',
-    });
-}
-
-function checkInputWidth(input, wrap, cubeWidth) {
-    if (wrap.row === 1 && wrap.values[1] === 0 && boardContainer.offsetHeight > 540) {
-        wrap.row--
-        changeRows(input, wrap)
-    } else if (wrap.values[wrap.row] + cubeWidth >= input.offsetWidth) {
-        if (wrap.row === 0) {
-            wrap.row++
-            changeRows(input, wrap)
-        } else {
-            if (input === restrictionContainer) {
-                notify(`Restriction is too big!`, 'red', 'bounce', 1000, '40px', '190px')
-            } else {
-                notify(`Solution is too big!`, 'red', 'bounce', 1000, '40px', '170px')
-            };
-            return false;
-        }
-    }
-    wrap.values[wrap.row] += cubeWidth
-    return true;
-}
-
-document.addEventListener('click', hideKeyboard);
-
-function hideKeyboard() {
-    currInput = undefined;
-    keyboardContainer.classList.add("hidden")
-}
-
-function showKeyboard(e) {
-    e.stopPropagation();
-    (e.target.id) ? currInput = e.target.id : currInput = e.target.parentNode.id;
-    console.log()
-    if (((e.target.id) ? e.target.id : e.target.parentNode.id) === 'restriction-container') {
-        if (activeSolution === 'solution1') {
-            currInput = 'restriction1'
-        } else {
-            currInput = 'restriction2'
-        }
-    } else {
-        if (activeSolution === 'solution1') {
-            currInput = 'setName1'
-        } else {
-            currInput = 'setName2'
-        }
-    };
-    keyboardContainer.classList.remove("hidden")
-};
 
 function submitInput() {
     try {
         console.log(puzzleData)
         let universe = puzzleData.universe
-        let setNameArr1 = [...inputValues.flatArray.setNameArr1].join("");
-        let setNameArr2 = [...inputValues.flatArray.setNameArr2].join("");
-        let restrictionArr1 = [...inputValues.flatArray.restrictionArr1].join("");
-        let restrictionArr2 = [...inputValues.flatArray.restrictionArr2].join("");
+        let setNameArr1, setNameArr2, restrictionArr1, restrictionArr2;
+        for (let i = 0; i < 4; i++) {
+            let array = []
+            switch (i) {
+                case 0: 
+                    input = inputValues.wrap.restrictionArr1.elements.flat();
+                    for (let node of input) {array.push(node.dataset.symbol)}
+                    restrictionArr1 = array.join("")
+                    break;
+                case 1: 
+                    input = inputValues.wrap.setNameArr1.elements.flat(); 
+                    for (let node of input) {array.push(node.dataset.symbol)}
+                    setNameArr1 = array.join("")
+                    break;
+                case 2: 
+                    input = inputValues.wrap.restrictionArr2.elements.flat(); 
+                    for (let node of input) {array.push(node.dataset.symbol)}
+                    restrictionArr2 = array.join("")
+                    break;
+                case 3:
+                    input = inputValues.wrap.setNameArr2.elements.flat(); 
+                    for (let node of input) {array.push(node.dataset.symbol)}
+                    setNameArr2 = array.join("")
+                    break;
+            };
+        }
+        // let setNameArr1 = [...inputValues.flatArray.setNameArr1].join("");
+        // let setNameArr2 = [...inputValues.flatArray.setNameArr2].join("");
+        // let restrictionArr1 = [...inputValues.flatArray.restrictionArr1].join("");
+        // let restrictionArr2 = [...inputValues.flatArray.restrictionArr2].join("");
         let calcSymmetricDifference = true;
 
         if (!setNameArr1.length) {
             notify('Input a Solution!', 'red', 'bounce', 1000, '', '160px'); 
             console.log('NO SOLUTION 1'); return;
-        } else if (!restrictionArr1.length) {
+        } else if (!restrictionArr1.length && !puzzleData.metaData.includes('noRestrictions')) {
             notify('Input a Restriction!', 'red', 'bounce', 1000, '', '170px');
             console.log('NO RESTRICTION 1'); return;
         } else if (twoSolutions && !setNameArr2.length) {
             notify('Input a Solution!', 'red', 'bounce', 1000, '', '160px');
             console.log('NO SOLUTION 2'); return;
-        } else if (twoSolutions && !restrictionArr2.length) {
+        } else if (twoSolutions && !restrictionArr2.length && !puzzleData.metaData.includes('noRestrictions')) {
             notify('Input a Restriction!', 'red', 'bounce', 1000, '', '170px');
             console.log('NO RESTRICTION 2'); return;
         }
         
         if (!/[<=]/.test(restrictionArr1) || (!/[<=]/.test(restrictionArr2) && twoSolutions)) {
-            notify('Invalid Restriction!', 'red', 'bounce', 1000, '', '160px');
-            console.log('Restriction has no restriction'); return;
+            if (!puzzleData.metaData.includes('noRestrictions')) {
+                notify('Invalid Restriction!', 'red', 'bounce', 1000, '', '160px');
+                console.log('Restriction has no restriction'); return;
+            }
         }
 
         for (let i = 1; i <= 4; i++) {
@@ -1020,7 +2348,7 @@ function submitInput() {
             } else if (arr.length == 3) {
                 return setOperation([arr[0], arr[1], arr[2]]);
             } else if (arr.length > 3) {
-                return setOperation([calcSet(arr.slice(0, 3)), arr[3], ...arr.slice(4, arr.length)])
+                return calcSet([setOperation(arr.slice(0, 3)), arr[3], ...arr.slice(4, arr.length)])
             };
         };
         
@@ -1070,6 +2398,7 @@ function submitInput() {
 
         console.log(universe)
         console.log(doubleSet)
+        console.log(puzzleData.metaData[0])
 
         let nullRestriction = false;
         for (let i = 0; i <= (twoSolutions); i++) {
@@ -1095,12 +2424,12 @@ function submitInput() {
             let inputSetName;
             switch (i) {
                 case 0:
-                    inputRestriction = inputValues.flatArray.restrictionArr1;
-                    inputSetName = inputValues.flatArray.setNameArr1;
+                    inputRestriction = restrictionArr1.split("");
+                    inputSetName = setNameArr1.split("");
                     break;
                 case 1: 
-                    inputRestriction = inputValues.flatArray.restrictionArr2;
-                    inputSetName = inputValues.flatArray.setNameArr2;
+                    inputRestriction = restrictionArr2.split("");
+                    inputSetName = setNameArr2.split("");
                     break;
             }
             if (puzzleData.variationsMap.get('wild')) {
@@ -1145,7 +2474,6 @@ function submitInput() {
             }
             console.log(restrictedCards)
             if (!restrictedCards.length) nullRestriction = true;
-            
             if (i) {
                 solutionSet2 = parsedSetName.filter(val => !restrictedCards.includes(val))
             } else {
@@ -1262,6 +2590,7 @@ function submitInput() {
                 if (puzzleData.variationsMap.get('wild')) {
                     input = input.replaceAll(puzzleData.variationsMap.get('wild'), translateName(currWild))
                 }
+                console.log(input)
                 let inputScore = altCalcScore(input)
                 console.log(inputScore)
                 console.log(requiredScore)
@@ -1347,6 +2676,7 @@ function submitInput() {
         // TOGGLE (2 SOLUTIONS)
         
         if (twoSolutions) {
+
             const answerToggleContainer = document.createElement('div')
             answerToggleContainer.id = 'answer-toggle-container-1'
             answerToggleContainer.classList.add('answer-toggle-container')
@@ -1361,6 +2691,7 @@ function submitInput() {
             const answerToggleDiv = document.createElement('div')
             answerToggleDiv.classList.add('answer-toggle-div')
             console.log(inputValues)
+
             if (solutionFormToggleDiv.classList.contains('move')) {
                 inputValues.divNodes.restrictionArr2 = []
                 inputValues.divNodes.setNameArr2 = []
@@ -1372,10 +2703,18 @@ function submitInput() {
                 for (let node of restrictionContainer.children) {inputValues.divNodes.restrictionArr1.push(node.cloneNode())}
                 for (let node of solutionContainer.children) {inputValues.divNodes.setNameArr1.push(node.cloneNode())}
             }
+
             answerToggleContainer.addEventListener('click', (e) => {
-                if (e.target.dataset.active === 'true') {return}
+
+                if (e.target.dataset.active === 'true') {
+                    // Clicked on active toggle
+                    return
+                }
+
                 answerToggleDiv.classList.toggle('move')
-                if (answerToggleDiv.classList.contains('move')) {    // CLICKED ON SECOND TOGGLE
+
+                if (answerToggleDiv.classList.contains('move')) {
+                    // Clicked on right toggle
                     answerLeftToggle.dataset.active = 'false'
                     answerRightToggle.dataset.active = 'true'
                     inputRestriction.innerHTML = ""
@@ -1385,7 +2724,8 @@ function submitInput() {
                     evaluationParagraph.innerText = `Your solution evaluates to ${solutionSet2.length} cards:`
                     inputCardSet.innerHTML = ''
                     for (let node of inputCardsArr[1]) inputCardSet.append(node)
-                } else {    // CLICKED ON FIRST TOGGLE
+                } else {
+                    // Clicked on left toggle
                     answerLeftToggle.dataset.active = 'true'
                     answerRightToggle.dataset.active = 'false'
                     inputRestriction.innerHTML = ""
@@ -1396,9 +2736,12 @@ function submitInput() {
                     inputCardSet.innerHTML = ''
                     for (let node of inputCardsArr[0]) inputCardSet.append(node)
                 }
+
             })
+
             answerToggleContainer.append(answerLeftToggle, answerRightToggle, answerToggleDiv)
             answerContent.append(answerToggleContainer)
+
         } else {
             inputValues.divNodes.restrictionArr1 = []
             inputValues.divNodes.setNameArr1 = []
@@ -1406,10 +2749,13 @@ function submitInput() {
             for (let node of solutionContainer.children) {inputValues.divNodes.setNameArr1.push(node.cloneNode())}
         }
 
-        // INPUT SOLUTION
+        // Inputted Solution
         function inputAnswerCube(input, cube, currWild, cloneNode = false) {
+            cube.style.left = '0px'
+            cube.style.top = '0px'
             cloneNode ? input.append(cube.cloneNode()) : input.append(cube)
             if (!puzzleData.variationsMap.get('wild')) return;
+            // Give some wild class name 
             const recentCube = input.lastElementChild
             if (recentCube.classList[0] === translateName(puzzleData.variationsMap.get('wild'))) {
                 recentCube.classList.replace(recentCube.classList[0], currWild)
@@ -1417,19 +2763,35 @@ function submitInput() {
         };
 
         const inputSolutionContainer = document.createElement('div')
+        inputSolutionContainer.classList = 'answer-solution-sub-container'
+
+        // for (let node of nodes) {
+        //     const newNode = node.cloneNode('deep')
+        //     newNode.style.left = '0px'
+        //     newNode.style.top = '0px'
+        //     inputAnswer.append(newNode)
+        // }
         const inputRestriction = document.createElement('div')
+        inputRestriction.classList = 'answer-solution-sub-container'
         const inputSetName = document.createElement('div')
         const bar = document.createElement('div')
         inputSolutionContainer.classList = 'answer-solution-container'
         bar.style.cssText = 'width: 100%; height: 2px; background-color: gray; margin: 5px'
-        for (let node of inputValues.divNodes.restrictionArr1) inputAnswerCube(inputRestriction, node, inputValues.wildCube.solution1, true)
-        for (let node of inputValues.divNodes.setNameArr1) inputAnswerCube(inputSetName, node, inputValues.wildCube.solution1, true)
-        inputSolutionContainer.append(inputRestriction)
-        inputSolutionContainer.append(bar)
+        for (let node of inputValues.wrap.restrictionArr1.elements.flat()) {
+            inputAnswerCube(inputRestriction, node, inputValues.wildCube.solution1, true)
+        }
+        for (let node of inputValues.wrap.setNameArr1.elements.flat()) {
+            inputAnswerCube(inputSetName, node, inputValues.wildCube.solution1, true)
+        }
+        if (!puzzleData.metaData.includes('noRestrictions')) {
+            inputSolutionContainer.append(inputRestriction)
+            inputSolutionContainer.append(bar)
+        }
         inputSolutionContainer.append(inputSetName)
         answerContent.append(inputSolutionContainer)
 
         const evaluationParagraph = document.createElement('p')
+        evaluationParagraph.id = 'evaluation-paragraph'
         evaluationParagraph.innerText = `Your solution evaluates to ${solutionSet1.length} cards:`
         answerContent.append(evaluationParagraph)
         
@@ -1516,52 +2878,59 @@ function submitInput() {
                 if (answerToggleDiv.classList.contains('move')) {    // CLICKED ON SECOND TOGGLE
                     answerLeftToggle.dataset.active = 'false'
                     answerRightToggle.dataset.active = 'true'
-                    definedRestriction.innerHTML = ''
-                    definedSetName.innerHTML = ''
-                    for (let node of definedValueNodes[1][0]) definedRestriction.append(node);
-                    for (let node of definedValueNodes[1][1]) definedSetName.append(node);
-                    definedCardSet.innerHTML = ''
-                    for (let node of definedCardsArr[1]) definedCardSet.append(node);
+                    computerRestriction.innerHTML = ''
+                    computerSetName.innerHTML = ''
+                    for (let node of computerValueNodes[1][0]) computerRestriction.append(node);
+                    for (let node of computerValueNodes[1][1]) computerSetName.append(node);
+                    computerCardSet.innerHTML = ''
+                    for (let node of computerCardsArr[1]) computerCardSet.append(node);
                 } else {    // CLICKED ON FIRST TOGGLE
                     answerLeftToggle.dataset.active = 'true'
                     answerRightToggle.dataset.active = 'false'
-                    definedRestriction.innerHTML = ''
-                    definedSetName.innerHTML = ''
-                    for (let node of definedValueNodes[0][0]) definedRestriction.append(node);
-                    for (let node of definedValueNodes[0][1]) definedSetName.append(node);
-                    definedCardSet.innerHTML = ''
-                    for (let node of definedCardsArr[0]) definedCardSet.append(node);
+                    computerRestriction.innerHTML = ''
+                    computerSetName.innerHTML = ''
+                    for (let node of computerValueNodes[0][0]) computerRestriction.append(node);
+                    for (let node of computerValueNodes[0][1]) computerSetName.append(node);
+                    computerCardSet.innerHTML = ''
+                    for (let node of computerCardsArr[0]) computerCardSet.append(node);
                 };
             });
             answerToggleContainer.append(answerLeftToggle, answerRightToggle, answerToggleDiv);
             answerContent.append(answerToggleContainer);
         };
 
-        // DEFINED SOLUTION
-        const defindSolutionContainer = document.createElement('div')
-        const definedRestriction = document.createElement('div')
-        const definedSetName = document.createElement('div')
-        defindSolutionContainer.classList.add('answer-solution-container')
+        // Computer Solution
+        const computerSolutionContainer = document.createElement('div')
+        const computerRestriction = document.createElement('div')
+        const computerSetName = document.createElement('div')
+        computerSolutionContainer.classList.add('answer-solution-container')
 
-        const definedValueNodes = [[[], []], [[], []]]
+        const computerValueNodes = [[[], []], [[], []]]
 
         for (let i = 0; i <= twoSolutions; i++) {
             for (let j = 0; j < 2; j++) {
-                let currIterable;
+
+                // Set loop for all solutions and flags
+                let currIterable, noRestrictions
                 if (twoSolutions) {
                     if (j) {
                         currIterable = puzzleData.solution[i].flag;
-                    } else {
+                    } else if (puzzleData.solution[i].restriction) {
                         currIterable = puzzleData.solution[i].restriction.join("");
                     };
                 } else {
                     if (j) {
                         currIterable = puzzleData.solution.flag;
-                    } else {
+                    } else if (puzzleData.solution.restriction) {
                         currIterable = puzzleData.solution.restriction.join("");
                     };
                 }
+                if (!currIterable) {
+                    noRestrictions = true;
+                    continue;
+                }
 
+                // Place cubes in display
                 for (let k = 0; k < currIterable.length; k++) {
                     const solutionCube = document.createElement("div");
                     if (!(currIterable[k] === "(" || currIterable[k] === ")")) {
@@ -1583,19 +2952,24 @@ function submitInput() {
                         case '(': solutionCube.classList.add('left-parenthesis', 'black'); break;
                         case ')': solutionCube.classList.add('right-parenthesis', 'black'); break;
                     };
-                    definedValueNodes[i][j].push(solutionCube);
+                    computerValueNodes[i][j].push(solutionCube);
                 }
             }
         }
-        for (let node of definedValueNodes[0][0]) definedRestriction.append(node);
-        for (let node of definedValueNodes[0][1]) definedSetName.append(node);
-        defindSolutionContainer.append(definedRestriction, bar.cloneNode(), definedSetName)
-        answerContent.append(defindSolutionContainer)
+
+        for (let node of computerValueNodes[0][0]) computerRestriction.append(node);
+        for (let node of computerValueNodes[0][1]) computerSetName.append(node);
+        if (!puzzleData.metaData.includes("noRestrictions")) {
+            computerSolutionContainer.append(computerRestriction)
+            computerSolutionContainer.append(bar.cloneNode())
+        }
+        computerSolutionContainer.append(computerSetName)
+        answerContent.append(computerSolutionContainer)
         
-        // DEFINED CARDS
-        const definedCardSet = document.createElement('div')
-        definedCardSet.classList.add('card-set')
-        let definedCardsArr = [[], []]
+        // Computer Cards
+        const computerCardSet = document.createElement('div')
+        computerCardSet.classList.add('card-set')
+        let computerCardsArr = [[], []]
         console.log(twoSolutions)
         for (let i = 0; i <= (twoSolutions); i++) {
             let solutionSet = twoSolutions ? puzzleData.solution[i].cards : puzzleData.solution.cards
@@ -1624,11 +2998,11 @@ function submitInput() {
                     newCard.classList.add('double')
                 }
                 newCard.classList.add('card');
-                definedCardsArr[i].push(newCard)
+                computerCardsArr[i].push(newCard)
             };
         };
-        for (let node of definedCardsArr[0]) definedCardSet.append(node)
-        answerContent.append(definedCardSet)
+        for (let node of computerCardsArr[0]) computerCardSet.append(node)
+        answerContent.append(computerCardSet)
 
         newAnswer.append(answerContent)
     
@@ -1673,7 +3047,7 @@ menuBackground.addEventListener('click', (e) => {
     mapArrowBox.parentElement.classList.remove('dark') // REMOVE
 
     if (genNewPuzzle) {
-        queuedPuzzleData = undefined;
+        queuedPuzzleData = null;
         newPuzzle()
         genNewPuzzle = false
     }
@@ -1701,7 +3075,7 @@ settingsIcon.addEventListener('click', (e) => {
     mapArrowBox.parentElement.classList.toggle('dark') // REMOVE
 
     if (genNewPuzzle && !settingsContainer.classList.contains('shown')) {
-        queuedPuzzleData = undefined;
+        queuedPuzzleData = null;
         newPuzzle()
         genNewPuzzle = false
     }
@@ -1740,14 +3114,18 @@ function switchPage(activePage, title) {
     headerText = title
 }
 
-const settingsCardViewButton = document.querySelector('#card-view-button')
-const settingsCardViewPage = document.querySelector('#settings-card-view')
-settingsCardViewButton.addEventListener('click', () => {switchPage(settingsCardViewPage, 'Card View (Testing)')})
+function createPage(buttonID, pageID, title) {
+    const button = document.querySelector(buttonID)
+    const page = document.querySelector(pageID)
+    button.addEventListener('click', () => {switchPage(page, title)})
+}
 
-const settingsVariationsViewButton = document.querySelector('#variations-button')
-const settingsVariationsPage = document.querySelector('#settings-variations')
-settingsVariationsViewButton.addEventListener('click', () => {switchPage(settingsVariationsPage, 'Variations')})
+const pages = [
+    // ['#card-view-button', '#settings-card-view', 'Card View (Testing)'],
+    ['#variations-button', '#settings-variations', 'Variations'],
+]
 
+for (let page of pages) createPage(...page)
 
 
 const settingsToggles = document.querySelectorAll('.settings-toggle .toggle, .settings-checkbox')
@@ -1973,23 +3351,6 @@ function changeWildStyle(style) {
 // wildStylesSheet.insertRule('.wild-cube { background-color: white; }', wildStylesSheet.cssRules.length)
 // wildStylesSheet.insertRule('.wild-cube { background-color: white }', 0);
 
-// setTimeout(() => {
-//     currInput = 'restriction1'
-//     inputCube('green')
-//     inputCube('must-contain')
-//     inputCube('blue')
-//     inputCube('intersect')
-//     inputCube('red')
-//     currInput = "setName1"
-//     inputCube('blue')
-//     inputCube('union')
-//     inputCube('left-parenthesis')
-//     inputCube('red')
-//     inputCube('intersect')
-//     inputCube('green')
-//     inputCube('right-parenthesis')
-// }, 400);
-
 
 // currInput = 'restriction1'
 // inputCube('red')
@@ -2017,12 +3378,6 @@ function changeWildStyle(style) {
 // inputCube('right-parenthesis')
 // submitInput()
 
-// const terminateWorkers = new Worker('terminate_workers.js');
-// terminateWorkers.postMessage(new Date())
-// setInterval(() => {
-//     terminateWorkers.terminate()
-// }, 100)
-
 // DATABASES ARE PROBABLY FASTER
 // let newArr;
 // let map1 = new Map([["A", 2], ["B", 3], ["C", 4]])
@@ -2045,3 +3400,13 @@ function changeWildStyle(style) {
 // }
 // console.log(newArr)
 // console.log(b)
+
+document.addEventListener('keydown', function (keypress) {
+    if (keypress.key !== 'p') return
+    console.log(inputValues)
+
+    // answerContent.scrollTo({top: answerContent.scrollTop - 10})
+    // console.log(answerContent.scrollTop)
+    // console.log(answerContent.scrollHeight)
+    // console.log(answerContent.offsetHeight)
+});
